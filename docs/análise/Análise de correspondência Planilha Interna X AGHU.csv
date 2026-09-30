@@ -1,0 +1,24 @@
+,,,,,,
+Campo no AGHU,O que representa,Existe na Planilha Interna?,Tipo de correspondência,Aba(s) correspondente(s),Campo(s) correspondente(s),Considerações sobre a integração
+codigo_solicitacao,Identificador da solicitação no AGHU,Sim,Direta,"HP, IHQ, HPDerm, CCV, CG, Rev. Int., Congela, Rejeição",AGHU; Nº solicitação AGHU (Rejeição),Pode ser importado automaticamente.
+numero_amostra,Número da amostra dentro da solicitação,Parcial,Indireta,"HP, CG, CCV, Congela",QTDE Peças; QTDE Material; Qtde lâminas,"Não há um campo equivalente explícito. A planilha registra quantidades, mas não necessariamente o identificador da amostra. "
+cod_status_item,Código do status do item no AGHU,Parcial,Indireta,HP,Status,"A planilha possui campo de status interno, mas não usa a mesma codificação do AGHU. No AGHU está atualmente dividido nos status: A COLETAR, EM COLETA, COLETADO, ÁREA EXECUTORA, EXECUTANDO, PENDENTE, LIBERADO e CANCELADO."
+status_item_exame,Descrição do status do exame no AGHU,Parcial,Indireta,HP,Status,Os estados internos do setor são bem mais detalhados que os do AGHU. 
+data_solicitacao,Data em que a solicitação foi aberta no AGHU,Parcial,Indireta,"HP, IHQ, HPDerm, CCV, CG, Rev. Int., Congela, CASOS REVISAO, Rejeição",ENTRADA; DATA; data,"A planilha registra a entrada/recebimento no setor, que pode não ser a data de solicitação.*"
+nome_paciente,Nome do paciente,Sim,Direta,"HP, IHQ, HPDerm, CCV, CG, Rev. Int., Congela, CASOS REVISAO, Rejeição",NOME DO PACIENTE; NOME,Pode ser preenchido automaticamente para evitar redigitação.
+data_nascimento,Data de nascimento do paciente,Parcial,Derivada,"HP, HPDerm, CCV, CG",IDADE,"A planilha interna não guarda a data de nascimento, mas registra a idade. O sistema pode calcular a idade automaticamente a partir da data_nascimento, como um atributo derivado."
+prontuario,Número de prontuário do paciente,Sim,Direta,"HP, IHQ, HPDerm, CCV, CG, Rev. Int., Congela, Rejeição",REGISTRO; Prontuário,Pode ser preenchido automaticamente para evitar redigitação.
+especialidade,Especialidade associada à solicitação no AGHU,Parcial,Aproximada,"HP, CG, Rev. Int., Rejeição",Clínica; CLÍNICA; Especialidade (Rejeição),Nem sempre está preenchido da mesma forma nas duas planilhas.
+convenio,Convênio do atendimento,Não,Sem correspondência,-,-,No CSV aparece como SUS em todos os registros. Não vejo por que seria relevante internamente. *
+origem,"Origem da solicitação (ex.: ambulatório, internação, cirurgia, paciente externo)",Parcial,Aproximada,"HP, HPDerm, CG, Rev. Int., Rejeição",A/E; Origem (Rejeição); Clínica,Parte da origem parece ser traduzida para A/E e parte para clínica/local. 
+unidade,Unidade/setor associado à solicitação,Parcial,Aproximada,"HP, HPDerm, CG, Rev. Int.",Clínica; CLÍNICA,"Pode apoiar a identificação da origem, mas Jaque relatou que nem sempre a unidade do AGHU é a ideal por ser difícil de localizar o setor muitas vezes."
+codigo_lab,Código da bancada/unidade executora no AGHU,Parcial,Indireta,Todas,Aba do fluxo (HP/CG/CCV/IHQ/Congela),A planilha não registra explicitamente codigo_lab em uma coluna; o tipo de fluxo é inferido pela aba correspondente.
+informacoes_clinica,Informações clínicas inseridas na solicitação,Não,Sem correspondência,-,-,"Como relatado na visita, seria ótimo mostrar essa informação no sistema para evitar consulta manual ao AGHU."
+sigla_exame,Sigla/código do exame solicitado,Parcial,Aproximada,"HP, Rejeição",Procedimento; Exame (Rejeição); aba correspondente,A planilha usa nomenclaturas próprias em parte dos casos.
+nome_exame,Nome do exame solicitado,Parcial,Aproximada,"HP, Rejeição",Procedimento; Exame (Rejeição),Pode preencher automaticamente o tipo de procedimento.
+descricao_material,Descrição do material biológico enviado,Sim,Direta,"HP, IHQ, HPDerm, CCV, CG, Congela",MATERIAL; Material,"É uma das principais oportunidades de integração, já que a equipe relatou falta dessa informação na ficha e redigitação manual."
+,,,,,,
+Legenda,,,,,,
+Sim,Existe de forma equivalente na planilha interna,Direta,Campo praticamente equivalente,,,
+Parcial,"Existe, mas não com o mesmo significado ou estrutura",Indireta/Aproximada,Exige regra de conversão ou validação,,,
+Não,Não há campo correspondente evidente,Sem correspondência,Informação disponível apenas no AGHU,,,

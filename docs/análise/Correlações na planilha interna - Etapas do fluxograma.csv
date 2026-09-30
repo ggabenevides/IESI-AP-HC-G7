@@ -1,0 +1,11 @@
+Fase,Raia / setor,Etapas do fluxograma,Profissional indicado no fluxograma,Nº de campos relacionados (todas as abas)
+Origem (fora do SAP),Unidades assistenciais e externas / Blocos cirúrgicos,Enviar materiais biológicos; Solicitar exames no AGHU e enviar ao SAP,Unidades de origem (não é profissional do SAP),—
+Pré-analítica,Recepção,Receber e conferir amostras; Está correta?; Devolver material ao setor de origem; Cadastrar na planilha TEAMS e AGHU; É congelação?; Acionar equipe de plantão; Citopatológico? / Revisão de lâmina? / Histopatológico?,Não indicado,89
+Pré-analítica,Macroscopia,Análise macroscópica; Análise macroscópica preliminar (congelação),Não indicado,14
+Pré-analítica,Congelação,Congelação e cortes,Equipe de plantão,3
+Pré-analítica,Processamento técnico,É líquido?; Centrifugar; Cell-block?; Histotécnico ou preparo manual; Inclusão; Corte; Coloração; Montagem; Distribuição,Não indicado,24
+Pré-analítica,IHQ,Rotina da IHQ,Não indicado,39
+Analítica,Microscopia,Checagem com residentes e preceptoria; Fechou o diagnóstico?; Painel/Ampliação IHQ?; Recorte/Col. especial?; Revisão da peça?,Residentes e preceptoria,24
+Pós-analítica,Arquivo,Laudo no AGHU; Laudo em PDF; Necessita Siscan?; Cadastrar no Siscan; Arquivar ficha; Fim,Não indicado,13
+,,,,
+"Obs.: a contagem inclui campos que passam por mais de uma raia (ex.: 'Macroscopia → Processamento técnico'), por isso a soma é maior que o total de campos.",,,,

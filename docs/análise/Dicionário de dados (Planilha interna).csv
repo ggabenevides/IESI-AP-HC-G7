@@ -1,0 +1,120 @@
+Aba,Nome do Campo,Tipo de Dado,Formatação / Regra,Obrigatoriedade,Observações e Origem
+HP,Nº LAB,Alfanumérico,[SIGLA]-[Nº SEQUENCIAL]/[ANO] (Ex: HP-0001/26),Obrigatório,Chave primária do SAP para histopatologia.
+HP,AGHU,Numérico,Inteiro longo (Ex: 9865468),Obrigatório,Número do prontuário ou solicitação no sistema AGHU.
+HP,QTDE Peças,Inteiro,Numérico >= 1,Obrigatório,Quantidade de frascos/peças biológicas recebidas.
+HP,Retirada/ Saída do serviço,Texto / Sigla,Texto livre / Código do Setor,Opcional,Identificação do responsável ou setor que retirou o material/lâmina.
+HP,ENTRADA,Data / Hora,DD/MM/AAAA ou DD/MM/AAAA HH:MM,Obrigatório,Data/hora de recepção e cadastramento na planilha.
+HP,Urg.?,Lógico / Booleano,SIM / NÃO,Obrigatório,Flag para destaque visual e priorização de processamento.
+HP,NOME DO PACIENTE,Texto,Caixas altas (uppercase),Obrigatório,Nome completo do paciente conferido com a requisição e AGHU.
+HP,REGISTRO,Numérico,Inteiro longo,Obrigatório,Prontuário HC / Registro Geral do paciente.
+HP,IDADE,Inteiro,Numérico 0 a 120,Obrigatório,Idade do paciente no momento da coleta.
+HP,A/E,Categoria,"Caractere único (E=Externo, A=Ambulatório/Interno)",Obrigatório,Origem do atendimento do paciente.
+HP,Clínica,Texto,"Nome da Especialidade (Ex: Ginecologia, 8 NORTE)",Obrigatório,Especialidade ou enfermaria solicitante no HC.
+HP,Procedimento,Texto,Texto descritivo,Obrigatório,Categoria ou finalidade do procedimento médico.
+HP,MATERIAL,Texto,Texto livre em caixas altas,Obrigatório,Descrição anatômica detalhada do espécime enviado.
+HP,Patologista Designado,Texto,Nome / Sigla,Condicional,Médico patologista responsável por conduzir o caso.
+HP,DATA da Macro,Data,DD/MM/AAAA,Condicional,Data de realização da análise macroscópica.
+HP,Nº Fragmentos,Alfanumérico,"Notação de blocagem (Ex: A=02B=03, 0=04)",Condicional,Distribuição codificada dos fragmentos nos blocos de cassete.
+HP,H/M,Categoria,H (Histotécnico/Auto) ou M (Manual),Condicional,Define se o processamento técnico foi automático ou manual.
+HP,Col. Esp.,Alfanumérico,Código / N / GI,Condicional,Indicação de Coloração Especial solicitada (Ex: GI=Giemsa).
+HP,Sobra?,Lógico / Categoria,S (Sim) / N (Não) / NAO,Condicional,Indica se restou material em fixador após clivagem.
+HP,Macro (Resp.),Texto,Nome próprio,Condicional,Residente ou técnico responsável pelo corte macroscópico.
+HP,Tipo Material,Texto,Categoria livre,Condicional,"Classificação resumida da peça (Ex: BX GÁSTRICA, ÚTERO)."
+HP,Novo Recorte/coloração esp.,Texto,Notação técnica / Livre,Opcional,Solicitação complementar de novos cortes ou colorações.
+HP,Data Saída do Recorte,Data,DD/MM/AAAA,Opcional,Data de liberação do novo corte/coloração complementar.
+HP,Quantidade de blocos,Inteiro,Numérico >= 0,Condicional,Total de blocos de parafina gerados.
+HP,QTDE Lâminas,Inteiro,Numérico >= 0,Condicional,Total de lâminas histológicas confeccionadas.
+HP,Data Saída do Processamento (Laboratório),Data,DD/MM/AAAA,Condicional,Data de conclusão da etapa de processamento técnico.
+HP,Técnico Responsável,Texto,Nome próprio,Condicional,Profissional responsável pelo processamento técnico.
+HP,Material complementa?,Texto,SIM / NÃO / Livre,Opcional,Controle de envio posterior de material complementar.
+HP,Data saída complemento,Data,DD/MM/AAAA,Opcional,Data do processamento do material complementar.
+HP,Patologista,Texto / Sigla,"Sigla ou Nome (Ex: LM, BRUNO)",Condicional,Médico patologista responsável pela assinatura do laudo.
+HP,Data de Liberação do Laudo,Data,DD/MM/AAAA,Condicional,Data formal de emissão do laudo.
+HP,Dias Liberação,Inteiro,Numérico,Calculado,Cálculo do tempo de atendimento (TAT em dias).
+HP,Status,Categoria,Liberado / Pendente,Condicional,Situação atual da tramitação do exame.
+HP,Tem IHQ?,Lógico / Categoria,Sim / Não / IH-[Nº]/[ANO],Condicional,Sinalização se o caso desdobrou em Imunohistoquímica.
+IHQ,Nº IHQ,Alfanumérico,IH-[Nº SEQUENCIAL]/[ANO] (Ex: IH-0001/26),Obrigatório,Código de identificação do exame de Imunohistoquímica.
+IHQ,AGHU,Numérico,Inteiro longo,Obrigatório,Número do prontuário/solicitação no sistema AGHU.
+IHQ,ENTRADA,Data,DD/MM/AAAA,Obrigatório,Data de entrada do material no setor de IHQ.
+IHQ,NOME DO PACIENTE,Texto,Texto em caixa alta,Obrigatório,Nome completo do paciente.
+IHQ,REGISTRO,Numérico,Inteiro,Obrigatório,Prontuário geral do paciente.
+IHQ,N° HISTO,Alfanumérico,HP-[Nº SEQUENCIAL]/[ANO],Obrigatório,Rastreabilidade com o histopatológico de origem.
+IHQ,BLOCOS,Alfanumérico,"Letra/Código (Ex: B, A1)",Condicional,Identificação do bloco de parafina testado.
+IHQ,MATERIAL,Texto,Texto curto,Obrigatório,Sítio ou órgão do tecido analisado.
+IHQ,URGENTE?,Lógico,S / N,Obrigatório,Caracterização de prioridade na rotina de IHQ.
+IHQ,ENVIADO AO AC CAMARGO?,Lógico,Sim / Não,Condicional,Controle de envio para consultoria externa.
+IHQ,RESPONSÁVEL,Texto,Nome próprio,Condicional,Médico ou técnico condutor do painel.
+IHQ,Anticorpo 1 a 25,Texto,"Nome do marcador (Ex: HER2, PMS2)",Opcional,Lista de anticorpos específicos testados (até 25 marcadores).
+IHQ,Reações Saída,Texto / Data,DD/MM/AAAA ou Status,Opcional,Data ou status de conclusão do processamento técnico.
+IHQ,Quant Anticorpos,Inteiro,Numérico >= 1,Calculado/Cond.,Total de anticorpos empregados no painel.
+IHQ,Data Conclusão do Laudo,Data,DD/MM/AAAA,Condicional,Data de finalização do laudo de IHQ.
+IHQ,Patologista,Texto,Nome / Sigla,Condicional,Médico patologista responsável pelo laudo de IHQ.
+HPDerm,Nº Lab.,Alfanumérico,HD-[Nº SEQUENCIAL]/[ANO] (Ex: HD-0001/26),Obrigatório,Código de identificação dermatológica.
+HPDerm,QTDE DE PEÇAS,Inteiro,Numérico >= 1,Obrigatório,Quantidade de fragmentos ou biópsias cutâneas.
+HPDerm,AGHU,Numérico,Inteiro,Obrigatório,Prontuário no sistema AGHU.
+HPDerm,ENTRADA,Data,DD/MM/AAAA,Obrigatório,Data de recebimento da amostra.
+HPDerm,NOME DO PACIENTE,Texto,Texto em caixa alta,Obrigatório,Nome completo do paciente.
+HPDerm,REGISTRO,Numérico,Inteiro,Obrigatório,Prontuário geral do paciente.
+HPDerm,IDADE,Inteiro,Numérico 0 a 120,Obrigatório,Idade do paciente.
+HPDerm,A/E,Categoria,A (Ambulatório) / E (Externo),Obrigatório,Tipo de atendimento de origem.
+HPDerm,CLÍNICA,Texto,Nome do setor,Opcional,Setor requisitante (Ex: Dermatologia).
+HPDerm,MATERIAL,Texto,Texto livre,Obrigatório,Localização anatômica da biópsia cutânea.
+HPDerm,QTDE Lâminas,Inteiro,Numérico >= 1,Condicional,Número de lâminas confeccionadas.
+HPDerm,SAÍDA,Data,DD/MM/AAAA,Condicional,Data de liberação e entrega da lâmina/laudo.
+HPDerm,Observações,Texto,Texto livre,Opcional,Anotações técnicas de processamento.
+HPDerm,LAUDO,Texto,Texto longo / Aspas,Condicional,Texto explicativo da conclusão diagnóstica dermatopatológica.
+CCV,Número,Alfanumérico,CV-[Nº SEQUENCIAL]/[ANO] (Ex: CV-0001/26),Obrigatório,Identificação citopatológica oncótica.
+CCV,AGHU,Numérico,Inteiro,Obrigatório,Número do prontuário no AGHU.
+CCV,ENTRADA,Data,DD/MM/AAAA,Obrigatório,Data de recepção do esfregaço/amostra.
+CCV,NOME DO PACIENTE,Texto,Caixas altas,Obrigatório,Nome da paciente.
+CCV,REGISTRO,Numérico,Inteiro,Obrigatório,Número do prontuário HC.
+CCV,IDADE,Inteiro,Numérico 0 a 120,Obrigatório,Idade da paciente.
+CCV,Material,Texto,Texto curto,Obrigatório,Identificação da coleta (Ex: COLO UTERINO).
+CCV,Citotécnico,Texto,Nome próprio,Condicional,Citotécnico que realizou a triagem microscópica.
+CCV,SAÍDA PARA CITOPATOLOGISTA,Data,DD/MM/AAAA,Condicional,Data de encaminhamento para revisão médica.
+CCV,Digitação,Data,DD/MM/AAAA,Condicional,Data da digitação do laudo no sistema.
+CCV,Citopatologista,Texto,Nome próprio,Condicional,Médico citopatologista que validou o laudo.
+CCV,OBSERVAÇÕES,Texto,Texto livre,Opcional,Informações sobre integridade do esfregaço ou lâminas.
+CG,Nº LAB,Alfanumérico,CG-[Nº SEQUENCIAL]/[ANO] (Ex: CG-0001/26),Obrigatório,Identificação do exame citológico geral.
+CG,AGHU,Numérico,Inteiro,Obrigatório,Prontuário no AGHU.
+CG,QTDE Material,Inteiro,Numérico >= 1,Obrigatório,Quantidade de frascos/amostras recebidas.
+CG,ENTRADA,Data,DD/MM/AAAA,Obrigatório,Data de recebimento no SAP.
+CG,NOME DO PACIENTE,Texto,Caixas altas,Obrigatório,Nome completo do paciente.
+CG,REGISTRO,Numérico,Inteiro,Obrigatório,Prontuário geral do paciente.
+CG,Idade,Inteiro,Numérico 0 a 120,Obrigatório,Idade do paciente.
+CG,A/E,Categoria,A / E,Obrigatório,Origem do atendimento (Ambulatorial ou Externo).
+CG,CLÍNICA,Texto,Nome do setor,Opcional,Clínica requisitante (Ex: ENDOCRINO).
+CG,MATERIAL,Texto,Texto livre,Obrigatório,Descrição da amostra líquido/PAAF.
+CG,TECNICO RESPONSAVEL,Texto,Nome próprio,Condicional,Técnico que realizou o preparo e esfregaço.
+CG,Quantidade de lâminas,Inteiro,Numérico >= 1,Condicional,Número de lâminas geradas na rotina.
+CG,Tem Cell Block?,Lógico,Sim / Não,Condicional,Indica se foi confeccionado bloco celular em parafina.
+CG,Data da Saída,Data,DD/MM/AAAA,Condicional,Data de liberação e disponibilização do laudo.
+CG,Patologista Destinado,Texto,Nome / Título,Condicional,Médico destinado à avaliação.
+Rev. Int.,Nº LAB,Alfanumérico,RI-[Nº SEQUENCIAL]/[ANO] (Ex: RI-0001/26),Obrigatório,Registro da revisão interna.
+Rev. Int.,AGHU,Numérico,Inteiro,Obrigatório,Número de solicitação/prontuário AGHU.
+Rev. Int.,ENTRADA,Data,DD/MM/AAAA,Obrigatório,Data de solicitação/entrada do caso no setor.
+Rev. Int.,NOME DO PACIENTE,Texto,Caixas altas,Obrigatório,Nome completo do paciente.
+Rev. Int.,REGISTRO,Numérico,Inteiro,Obrigatório,Prontuário geral.
+Rev. Int.,A/E,Categoria,A / E,Obrigatório,Origem do caso.
+Rev. Int.,Clínica,Texto,Nome da especialidade,Opcional,Clínica requisitante (Ex: GINECOLOGIA).
+Rev. Int.,CASO P/ REVISÂO,Alfanumérico,Código do caso,Obrigatório,Número do histopatológico original em revisão.
+Rev. Int.,Data da liberação,Data,DD/MM/AAAA,Condicional,Data de conclusão da revisão diagnóstica.
+Congela,Nº CONGELA,Alfanumérico,CO-[Nº SEQUENCIAL]/[ANO] (Ex: CO-0001/26),Obrigatório,Código do exame de congelação peroperatório.
+Congela,AGHU,Numérico,Inteiro,Obrigatório,Prontuário/Solicitação AGHU.
+Congela,NOME,Texto,Caixas altas,Obrigatório,Nome completo do paciente.
+Congela,DATA,Data,DD/MM/AAAA,Obrigatório,Data da realização do ato cirúrgico.
+Congela,REGISTRO,Numérico,Inteiro,Obrigatório,Prontuário HC.
+Congela,SEXO,Categoria,M / F,Obrigatório,Sexo biológico do paciente.
+Congela,MATERIAL,Texto,Texto livre,Obrigatório,Amostra enviada do centro cirúrgico.
+Congela,RESIDENTE,Texto,Nome próprio,Condicional,Médico residente que acompanhou a peça.
+Congela,PATOLOGISTA RESPONSÁVEL,Texto,Nome próprio,Obrigatório,Médico patologista titular responsável.
+Congela,Qtde lâminas,Inteiro,Numérico >= 1,Condicional,Quantidade de lâminas preparadas no criostato.
+Rejeição,Nº REJEIÇÃO / REGISTRO,Alfanumérico,REJ-[Nº]/[ANO] ou Inteiro,Obrigatório,Código de controle de rejeição ou registro do paciente.
+Rejeição,AGHU,Numérico,Inteiro longo,Obrigatório,Número do prontuário ou solicitação no sistema AGHU.
+Rejeição,DATA,Data,DD/MM/AAAA,Obrigatório,Data da identificação da inconformidade na recepção.
+Rejeição,NOME DO PACIENTE,Texto,Caixas altas (uppercase),Obrigatório,Nome do paciente conforme a requisição.
+Rejeição,SETOR ORIGEM / CLÍNICA,Texto,"Texto curto (Ex: 10º NORTE, COB)",Obrigatório,Unidade assistencial que enviou o material.
+Rejeição,MATERIAL,Texto,Texto livre,Obrigatório,Descrição da amostra biológica rejeitada.
+Rejeição,MOTIVO DA REJEIÇÃO,Texto / Categoria,Texto livre / Código,Obrigatório,Causa do cancelamento/devolução.
+Rejeição,RESPONSÁVEL PELA DEVOLUÇÃO,Texto,Nome próprio / Sigla,Obrigatório,Profissional da recepção do SAP que registrou a recusa.
+Rejeição,RESPONSÁVEL PELO RECEBIMENTO DA DEVOLUÇÃO,Texto,Nome próprio,Condicional,Profissional do setor requisitante que recebeu o material devolvido.
