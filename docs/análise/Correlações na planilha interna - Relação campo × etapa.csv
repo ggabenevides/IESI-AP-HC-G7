@@ -1,0 +1,197 @@
+Aba,Célula (cabeçalho),Campo,Fase,Raia / setor (fluxograma),Etapa do fluxograma,Profissional responsável,Fonte da indicação,Observações
+HP_,A1,Nº LAB,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Chave primária do histopatológico (HP-nº/ano).
+HP_,B1,AGHU,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Nº de solicitação/prontuário no AGHU (solicitação feita pela unidade de origem).
+HP_,C1,QTDE Peças,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Contagem de frascos/peças na conferência.
+HP_,D1,Retirada/ Saída do serviço,Pós-analítica,Arquivo,Saída de material/lâminas do serviço (sem etapa própria no fluxograma),Não indicado,—,Etapa inferida: o campo identifica quem retirou o material/lâmina. Pode também corresponder a 'Devolver material ao setor de origem'.
+HP_,E1,ENTRADA,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Data/hora de recepção e cadastro.
+HP_,F1,Urg.?,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,"Sinalização de prioridade feita na entrada. Na aba HP está na col. T, depois dos campos da macro."
+HP_,G1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Conferido com a requisição e o AGHU.
+HP_,H1,REGISTRO,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HP_,I1,IDADE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HP_,J1,A/E,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Origem do material: raia 'Unidades assistenciais e externas'.
+HP_,K1,Clínica,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Setor solicitante (raia de origem: Unidades assistenciais / Blocos cirúrgicos).
+HP_,L1,Procedimento,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Lista suspensa (aba 'Caixas de listagem').
+HP_,M1,MATERIAL,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Descrição do espécime conferida na recepção.
+HP_,N1,DATA da Macro,Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),
+HP_,O1,Nº Fragmentos,Pré-analítica,Macroscopia,Análise macroscópica (clivagem/blocagem),Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),Define os blocos da etapa Inclusão.
+HP_,P1,Histo ou Manual,Pré-analítica,Processamento técnico,Histotécnico ou preparo manual,Não indicado,—,"Registrado junto dos campos da macro, mas define a rota do processamento (H = histotécnico/automático; M = manual)."
+HP_,Q1,Col. Esp.,Pré-analítica,Macroscopia → Processamento técnico,Pedido na Análise macroscópica; feita na Coloração,Não indicado,—,"Coloração especial pedida logo na macro. O pedido feito depois, na microscopia, fica em 'Novo Recorte/coloração esp.'."
+HP_,R1,Sobra?,Pré-analítica,Macroscopia,Análise macroscópica (sobra em fixador após clivagem),Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),
+HP_,S1,Macro (Resp.),Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico,Mapeamento,Registra o profissional da etapa.
+HP_,T1,Tipo Material,Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),Classificação resumida feita no bloco da macroscopia.
+HP_,U1,Quantidade de blocos,Pré-analítica,Processamento técnico,Inclusão,Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP_,V1,QTDE Lâminas,Pré-analítica,Processamento técnico,Corte → Coloração → Montagem,Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP_,W1,Data Saída do Processamento (Laboratório),Pré-analítica,Processamento técnico,Distribuição (saída para a Microscopia),Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP_,X1,Técnico Responsável,Pré-analítica,Processamento técnico,Histotécnico/preparo manual → Inclusão → Corte → Coloração → Montagem → Distribuição,Técnico,Mapeamento,Registra o profissional da etapa.
+HP_,Y1,Novo Recorte/coloração esp.,Analítica,Microscopia,Fechou o diagnóstico? Não → Recorte/Col. especial? Sim,Residentes e preceptoria,Fluxograma,Leva o caso de volta ao Processamento técnico (Corte/Coloração).
+HP_,Z1,Data Saída do Recorte,Pré-analítica,Processamento técnico,Corte/Coloração do recorte → volta à Checagem,Não indicado,—,
+HP_,AA1,Material complementa?,Analítica,Microscopia,Fechou o diagnóstico? Não → Revisão da peça? Sim → volta à Análise macroscópica,Residentes e preceptoria,Fluxograma,"Relação inferida (o mapeamento fala em 'envio posterior de material complementar'). Se o complemento vier da unidade de origem, entra de novo pela Recepção."
+HP_,AB1,Data saída complemento,Pré-analítica,Processamento técnico,Processamento do material complementar (Inclusão → … → Distribuição),Não indicado,—,
+HP_,AC1,Patologista,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico? Sim,Médico patologista (assina o laudo),Mapeamento,
+HP_,AD1,Data de Liberação do Laudo,Pós-analítica,Arquivo,Laudo no AGHU,Não indicado,—,Data de emissão do laudo.
+HP_,AE1,Dias Liberação,Transversal,Recepção → Arquivo,Indicador de prazo: ENTRADA → Laudo no AGHU,Não se aplica (campo calculado),—,"O mapeamento diz que é calculado, mas a coluna não tem fórmula (na HP_ o valor foi digitado; na HP está vazia)."
+HP_,AF1,Status,Pós-analítica,Arquivo,Laudo no AGHU (Liberado); 'Pendente' enquanto o caso tramita,Não indicado,—,
+HP_,AG1,Tem IHQ?,Analítica,Microscopia,Fechou o diagnóstico? Não → Painel/Ampliação IHQ? Sim → Rotina da IHQ,Residentes e preceptoria,Fluxograma,Liga o caso ao Nº IHQ da aba IHQ.
+HP,A1,Nº LAB,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Chave primária do histopatológico (HP-nº/ano).
+HP,B1,AGHU,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Nº de solicitação/prontuário no AGHU (solicitação feita pela unidade de origem).
+HP,C1,QTDE Peças,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Contagem de frascos/peças na conferência.
+HP,D1,ENTRADA,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Data/hora de recepção e cadastro.
+HP,E1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Conferido com a requisição e o AGHU.
+HP,F1,REGISTRO,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HP,G1,IDADE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HP,H1,A/E,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Origem do material: raia 'Unidades assistenciais e externas'.
+HP,I1,Clínica,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Setor solicitante (raia de origem: Unidades assistenciais / Blocos cirúrgicos).
+HP,J1,Procedimento,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Lista suspensa (aba 'Caixas de listagem').
+HP,K1,MATERIAL,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Descrição do espécime conferida na recepção.
+HP,L1,Patologista Designado,Pré-analítica,Recepção → Macroscopia,"Histopatológico? Sim → Análise macroscópica (designação do caso, sem etapa própria no fluxograma)",Médico patologista (conduz o caso),Mapeamento,Só existe na aba HP.
+HP,M1,DATA da Macro,Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),
+HP,N1,Nº Fragmentos,Pré-analítica,Macroscopia,Análise macroscópica (clivagem/blocagem),Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),Define os blocos da etapa Inclusão.
+HP,O1,H/M,Pré-analítica,Processamento técnico,Histotécnico ou preparo manual,Não indicado,—,"Registrado junto dos campos da macro, mas define a rota do processamento (H = histotécnico/automático; M = manual)."
+HP,P1,Col. Esp.,Pré-analítica,Macroscopia → Processamento técnico,Pedido na Análise macroscópica; feita na Coloração,Não indicado,—,"Coloração especial pedida logo na macro. O pedido feito depois, na microscopia, fica em 'Novo Recorte/coloração esp.'."
+HP,Q1,Sobra?,Pré-analítica,Macroscopia,Análise macroscópica (sobra em fixador após clivagem),Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),
+HP,R1,Macro (Resp.),Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico,Mapeamento,Registra o profissional da etapa.
+HP,S1,Tipo Material,Pré-analítica,Macroscopia,Análise macroscópica,Residente ou técnico (responsável pela macro),Mapeamento (campo Macro (Resp.)),Classificação resumida feita no bloco da macroscopia.
+HP,T1,Urg.?,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,"Sinalização de prioridade feita na entrada. Na aba HP está na col. T, depois dos campos da macro."
+HP,U1,Novo Recorte/coloração esp.,Analítica,Microscopia,Fechou o diagnóstico? Não → Recorte/Col. especial? Sim,Residentes e preceptoria,Fluxograma,Leva o caso de volta ao Processamento técnico (Corte/Coloração).
+HP,V1,Data Saída do Recorte,Pré-analítica,Processamento técnico,Corte/Coloração do recorte → volta à Checagem,Não indicado,—,
+HP,W1,Quantidade de blocos,Pré-analítica,Processamento técnico,Inclusão,Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP,X1,QTDE Lâminas,Pré-analítica,Processamento técnico,Corte → Coloração → Montagem,Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP,Y1,Data Saída do Processamento (Laboratório),Pré-analítica,Processamento técnico,Distribuição (saída para a Microscopia),Técnico (responsável pelo processamento),Mapeamento (campo Técnico Responsável),
+HP,Z1,Técnico Responsável,Pré-analítica,Processamento técnico,Histotécnico/preparo manual → Inclusão → Corte → Coloração → Montagem → Distribuição,Técnico,Mapeamento,Registra o profissional da etapa.
+HP,AA1,Material complementa?,Analítica,Microscopia,Fechou o diagnóstico? Não → Revisão da peça? Sim → volta à Análise macroscópica,Residentes e preceptoria,Fluxograma,"Relação inferida (o mapeamento fala em 'envio posterior de material complementar'). Se o complemento vier da unidade de origem, entra de novo pela Recepção."
+HP,AB1,Data saída complemento,Pré-analítica,Processamento técnico,Processamento do material complementar (Inclusão → … → Distribuição),Não indicado,—,
+HP,AC1,Patologista,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico? Sim,Médico patologista (assina o laudo),Mapeamento,
+HP,AD1,Data de Liberação do Laudo,Pós-analítica,Arquivo,Laudo no AGHU,Não indicado,—,Data de emissão do laudo.
+HP,AE1,Dias Liberação,Transversal,Recepção → Arquivo,Indicador de prazo: ENTRADA → Laudo no AGHU,Não se aplica (campo calculado),—,"O mapeamento diz que é calculado, mas a coluna não tem fórmula (na HP_ o valor foi digitado; na HP está vazia)."
+HP,AF1,Status,Pós-analítica,Arquivo,Laudo no AGHU (Liberado); 'Pendente' enquanto o caso tramita,Não indicado,—,
+HP,AG1,Tem IHQ?,Analítica,Microscopia,Fechou o diagnóstico? Não → Painel/Ampliação IHQ? Sim → Rotina da IHQ,Residentes e preceptoria,Fluxograma,Liga o caso ao Nº IHQ da aba IHQ.
+HP,AM2,(sem cabeçalho) =TODAY(),—,—,"Célula auxiliar, provavelmente para calcular prazos",Não se aplica,—,Não consta no mapeamento.
+IHQ,A1,Nº IHQ,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,
+IHQ,B1,AGHU,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,Dados de identificação repetidos do cadastro da Recepção.
+IHQ,C1,ENTRADA,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,
+IHQ,D1,NOME DO PACIENTE,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,Dados de identificação repetidos do cadastro da Recepção.
+IHQ,E1,REGISTRO,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,Dados de identificação repetidos do cadastro da Recepção.
+IHQ,F1,N° HISTO,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,Liga ao HP de origem (aba HP).
+IHQ,G1,BLOCOS,Pré-analítica,IHQ,Rotina da IHQ – escolha do bloco de parafina,Não indicado,—,
+IHQ,H1,MATERIAL,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,
+IHQ,I1,URGENTE?,Pré-analítica,IHQ,Rotina da IHQ – abertura do exame (vindo de 'Painel/Ampliação IHQ? Sim'),Não indicado,—,
+IHQ,J1,ENVIADO AO AC CAMARGO?,Pré-analítica,IHQ,Rotina da IHQ – envio para consultoria externa (sem etapa própria no fluxograma),Não indicado,—,
+IHQ,K1,RESPONSÁVEL,Pré-analítica,IHQ,Rotina da IHQ,Médico ou técnico que conduz o painel,Mapeamento,Registra o profissional da etapa.
+IHQ,L1,Anticorpo 1,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,M1,Anticorpo 2,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,N1,Anticorpo 3,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,O1,Anticorpo 4,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,P1,Anticorpo 5,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,Q1,Anticorpo 6,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,R1,Anticorpo 7,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,S1,Anticorpo 8,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,T1,Anticorpo 9,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,U1,Anticorpo 10,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,V1,Anticorpo 11,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,W1,Anticorpo 12,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,X1,Anticorpo 13,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,Y1,Anticorpo 14,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,Z1,Anticorpo 15,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AA1,Anticorpo 16,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AB1,Anticorpo 17,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AC1,Anticorpo 18,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AD1,Anticorpo 19,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AE1,Anticorpo 20,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AF1,Anticorpo 21,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AG1,Anticorpo 22,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AH1,Anticorpo 23,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AI1,Anticorpo 24,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AJ1,Anticorpo 25,Pré-analítica,IHQ,Rotina da IHQ – painel de anticorpos (definido em 'Painel/Ampliação IHQ?'),Não indicado,—,
+IHQ,AK1,Reações Saída,Pré-analítica,IHQ,Rotina da IHQ – fim das reações → volta à Checagem com residentes e preceptoria,Não indicado,—,
+IHQ,AL1,Quant Anticorpos,Pré-analítica,IHQ,Rotina da IHQ,Não se aplica (calculado/condicional),—,Sem fórmula na planilha; poderia ser =CONT.VALORES(L:AJ).
+IHQ,AM1,Data Conclusão do Laudo,Pós-analítica,Arquivo,Laudo no AGHU,Não indicado,—,Laudo de IHQ.
+IHQ,AN1,Patologista,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico?,Médico patologista (laudo de IHQ),Mapeamento,
+HPDerm,A1,Nº Lab.,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,Aba sem campos de macroscopia: a etapa 'Análise macroscópica' não é registrada.
+HPDerm,B1,QTDE DE PEÇAS,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,C1,AGHU,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,D1,ENTRADA,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,E1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,F1,REGISTRO,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,G1,IDADE,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,H1,A/E,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,I1,CLÍNICA,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,J1,MATERIAL,Pré-analítica,Recepção,Receber e conferir amostras → Cadastrar na planilha TEAMS e AGHU,Não indicado,—,
+HPDerm,K1,QTDE Lâminas,Pré-analítica,Processamento técnico,Corte → Coloração → Montagem,Não indicado,—,
+HPDerm,L1,SAÍDA,Pós-analítica,Arquivo,Laudo no AGHU,Não indicado,—,O mapeamento diz 'liberação e entrega da lâmina/laudo'; pode ser tanto a entrega da lâmina quanto a do laudo.
+HPDerm,M1,Observações,Pré-analítica,Processamento técnico,Anotações do processamento,Não indicado,—,
+HPDerm,N1,LAUDO,Analítica,Microscopia,Fechou o diagnóstico? Sim → Laudo no AGHU,Residentes e preceptoria,Fluxograma,Texto da conclusão diagnóstica.
+CCV,A1,Número,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,B1,AGHU,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,C1,ENTRADA,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,D1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,E1,REGISTRO,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,F1,IDADE,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,G1,Material,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CCV,H1,Citotécnico,Analítica,Microscopia,Triagem microscópica (antes da Checagem),Citotécnico,Mapeamento,A triagem pelo citotécnico não é uma etapa própria no fluxograma: o esfregaço (É líquido? Não) vai de Coloração/Montagem/Distribuição direto à Checagem.
+CCV,I1,SAÍDA PARA CITOPATOLOGISTA,Analítica,Microscopia,Envio da triagem para revisão médica (Checagem),Não indicado,—,
+CCV,J1,Digitação,Pós-analítica,Arquivo,Laudo no AGHU (digitação),Não indicado,—,
+CCV,K1,Citopatologista,Analítica,Microscopia,Checagem → Fechou o diagnóstico? (validação do laudo),Médico citopatologista,Mapeamento,
+CCV,L1,OBSERVAÇÕES,Pré-analítica,Recepção / Processamento técnico,Conferência da amostra e das lâminas (integridade do esfregaço),Não indicado,—,
+CG,A1,Nº LAB,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,B1,AGHU,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,C1,QTDE Material,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,D1,ENTRADA,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,E1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,F1,REGISTRO,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,G1,Idade,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,H1,A/E,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,I1,CLÍNICA,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,J1,MATERIAL,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Citopatológico? Sim,Não indicado,—,
+CG,K1,TECNICO RESPONSAVEL,Pré-analítica,Processamento técnico,É líquido? → Centrifugar → Cell-block? → Coloração → Montagem → Distribuição,Técnico,Mapeamento,Registra o profissional da etapa.
+CG,L1,Quantidade de lâminas,Pré-analítica,Processamento técnico,Coloração → Montagem,Técnico (responsável pelo processamento),Mapeamento (campo TECNICO RESPONSAVEL),
+CG,M1,Tem Cell Block?,Pré-analítica,Processamento técnico,Cell-block? (Sim → Histotécnico ou preparo manual),Técnico (responsável pelo processamento),Mapeamento (campo TECNICO RESPONSAVEL),
+CG,N1,Data da Saída,Pós-analítica,Arquivo,Laudo no AGHU,Não indicado,—,Liberação do laudo.
+CG,O1,Patologista Destinado,Pré-analítica → Analítica,Processamento técnico → Microscopia,Distribuição → Checagem (caso enviado ao médico avaliador),Médico patologista (avaliador),Mapeamento,
+Rev. Int.,A1,Nº LAB,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,B1,AGHU,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,C1,ENTRADA,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,D1,NOME DO PACIENTE,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,E1,REGISTRO,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,F1,A/E,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,G1,Clínica,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,
+Rev. Int.,H1,CASO P/ REVISÂO,Pré-analítica,Recepção,Receber e conferir → Cadastrar → Revisão de lâmina? Sim,Não indicado,—,"Nº do HP original. Pelo fluxograma, a revisão de lâmina vai direto à Microscopia."
+Rev. Int.,I1,Data da liberação,Analítica → Pós-analítica,Microscopia → Arquivo,Checagem com residentes e preceptoria → Laudo no AGHU,Residentes e preceptoria,Fluxograma,
+Congela,A1,Nº CONGELA,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,
+Congela,B1,AGHU,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,
+Congela,C1,NOME,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,
+Congela,D1,DATA,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,Data do ato cirúrgico.
+Congela,E1,REGISTRO,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,
+Congela,F1,SEXO,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,
+Congela,G1,MATERIAL,Pré-analítica,Recepção,Cadastrar → É congelação? Sim → Acionar equipe de plantão,Não indicado,—,Pedido vindo da raia 'Blocos cirúrgicos'.
+Congela,H1,RESIDENTE,Pré-analítica,Macroscopia / Congelação,Análise macroscópica preliminar → Congelação e cortes,Médico residente (acompanha a peça),Mapeamento,Registra o profissional da etapa.
+Congela,I1,PATOLOGISTA RESPONSÁVEL,Pré-analítica → Analítica,Congelação → Microscopia,Congelação e cortes → Checagem (diagnóstico durante a cirurgia),Médico patologista titular (equipe de plantão),Mapeamento + Fluxograma,
+Congela,J1,Qtde lâminas,Pré-analítica,Congelação / Processamento técnico,Congelação e cortes (criostato) → Coloração → Montagem,Equipe de plantão,Fluxograma,
+CASOS REVISAO,A4,data,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico?,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos. Data do caso em checagem.
+CASOS REVISAO,B4,aghu,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico?,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,C4,NOME DO PACIENTE,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico?,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,D4,NOME DO RESIDENTE,Analítica,Microscopia,Checagem com residentes e preceptoria → Fechou o diagnóstico?,Médico residente,Cabeçalho + Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,E4,LIBEROU LAUDO?,Analítica → Pós-analítica,Microscopia → Arquivo,Fechou o diagnóstico? Sim → Laudo no AGHU,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,F4,Solicitacao prévia da IHQ,Analítica,Microscopia,Painel/Ampliação IHQ? (IHQ já pedida),Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,G4,VAI ABRIR IHQ?,Analítica,Microscopia,Painel/Ampliação IHQ? Sim → Rotina da IHQ,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,H4,Nº IHQ,Pré-analítica,IHQ,Rotina da IHQ (liga à aba IHQ),Não indicado,—,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+CASOS REVISAO,I4,FECHOU CASO?,Analítica,Microscopia,Fechou o diagnóstico?,Residentes e preceptoria,Fluxograma,Aba fora do mapeamento; relação deduzida pelos cabeçalhos.
+Rejeição,A1,Título: SERVIÇO DE ANATOMIA PATOLÓGICA - REJEIÇÃO DE AMOSTRAS BIOLÓGICAS,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Não se aplica,—,Título da aba.
+Rejeição,A3,Data,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Data em que a inconformidade foi identificada.
+Rejeição,B3,Prontuário,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",
+Rejeição,C3,Nº solicitação AGHU,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",
+Rejeição,D3,Nº solicitação CMCE,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Não consta no mapeamento.
+Rejeição,E3,Exame,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)","Lista suspensa: HP, IH, CG, Congela, CCV…"
+Rejeição,F3,Nome do paciente,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",
+Rejeição,G3,Origem,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Lista suspensa. Setor de origem (raia 'Unidades assistenciais / Blocos cirúrgicos').
+Rejeição,H3,Médico solicitante,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)","Lista suspensa. Registra o médico da unidade de origem, não quem preenche."
+Rejeição,I3,Especialidade,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Validação em I4:I7.
+Rejeição,J3,Inconformidade,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Lista suspensa com os motivos de rejeição.
+Rejeição,K3,Detalhamento da inconformidade,Pré-analítica,Recepção,Está correta? Não → Devolver material ao setor de origem,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",
+Rejeição,L3,Resolveu?,Pré-analítica,Recepção,Devolver material ao setor de origem → FIM,Profissional da recepção do SAP,"Mapeamento (campo RESPONSÁVEL PELA DEVOLUÇÃO, que não existe na aba)",Resultado depois da devolução (FIM ou reenvio). Não consta no mapeamento.
+Caixas de listagem,A1,Procedimento (HP_),Pré-analítica,Recepção,"Lista usada no cadastro (HP_ / HP, campo Procedimento)",Não se aplica,—,
+Caixas de listagem,C1,Tipo de exame (Rej.),Pré-analítica,Recepção,Lista usada no registro de rejeição,Não se aplica,—,
+Caixas de listagem,D1,Origem (Rej.),Pré-analítica,Recepção,Lista usada no registro de rejeição,Não se aplica,—,
+Caixas de listagem,E1,Cirurgião e Especialidade (Rej.),Pré-analítica,Recepção,Lista usada no registro de rejeição,Não se aplica,—,
+Caixas de listagem,F1,"(especialidade do cirurgião, sem cabeçalho)",Pré-analítica,Recepção,Lista usada no registro de rejeição,Não se aplica,—,
+Caixas de listagem,G1,Inconformidade (Rej.),Pré-analítica,Recepção,Lista usada no registro de rejeição,Não se aplica,—,
+sss,A1,x,—,—,Tabela auxiliar (listas suspensas) – não é etapa do processo,Não se aplica,—,Aba sem conteúdo (só um 'x').
