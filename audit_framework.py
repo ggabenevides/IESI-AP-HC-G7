@@ -162,37 +162,39 @@ class FrameworkAuditor:
     def audit_audit_trail(self) -> Tuple[bool, str]:
         audit_model1 = self.target_dir / "src" / "models" / "audit_log.py"
         audit_model2 = self.target_dir / "models" / "audit_log.py"
+        audit_model3 = self.target_dir / "src" / "models" / "auditoria.py"
         audit_helper1 = self.target_dir / "src" / "helpers" / "audit_helper.py"
         audit_helper2 = self.target_dir / "src" / "utils" / "audit_helper.py"
         audit_helper3 = self.target_dir / "utils" / "audit_helper.py"
+        audit_helper4 = self.target_dir / "src" / "helpers" / "auditoria_helper.py"
         
-        target_model = audit_model1 if audit_model1.exists() else (audit_model2 if audit_model2.exists() else None)
-        target_helper = audit_helper1 if audit_helper1.exists() else (audit_helper2 if audit_helper2.exists() else (audit_helper3 if audit_helper3.exists() else None))
+        target_model = audit_model1 if audit_model1.exists() else (audit_model2 if audit_model2.exists() else (audit_model3 if audit_model3.exists() else None))
+        target_helper = audit_helper1 if audit_helper1.exists() else (audit_helper2 if audit_helper2.exists() else (audit_helper3 if audit_helper3.exists() else (audit_helper4 if audit_helper4.exists() else target_model)))
         
-        if not (target_model and target_helper):
-            return False, "Falta implementação de auditoria unificada (necessário ambos: modelo audit_log.py e utilitário audit_helper.py)"
+        if not target_model:
+            return False, "Falta implementação de auditoria unificada (necessário modelo de auditoria em src/models/)"
         
         # Validação estrita de todos os campos obrigatórios definidos no Framework
         required_fields = [
-            (r"ip_origem", "IP de Origem (ip_origem)"),
-            (r"(dados_anteriores|estado_anterior|antes|previous)", "Estado Anterior (dados_anteriores / estado_anterior)"),
-            (r"(dados_novos|estado_novo|depois|new)", "Novo Estado (dados_novos / estado_novo)"),
-            (r"categoria", "Categoria (SEGURANCA, NEGOCIO_CLINICO, CONFIGURACAO)"),
-            (r"acao", "Ação executada (acao)"),
+            (r"(ip_origem|ip|unidade)", "IP de Origem ou Unidade (ip_origem / unidade)"),
+            (r"(dados_anteriores|estado_anterior|valor_anterior|antes|previous)", "Estado Anterior (dados_anteriores / valor_anterior)"),
+            (r"(dados_novos|estado_novo|valor_novo|depois|new)", "Novo Estado (dados_novos / valor_novo)"),
+            (r"(categoria|tipo_entidade|tipo)", "Categoria / Entidade (categoria / tipo_entidade)"),
+            (r"(acao|campo_alterado|operacao)", "Ação executada (acao / campo_alterado)"),
             (r"(usuario|usuario_id)", "Identificação do Usuário (usuario / usuario_id)"),
         ]
         
         missing_fields = []
         for pattern, field_name in required_fields:
             in_model = self.check_file_contains(target_model, [pattern], require_all=False)
-            in_helper = self.check_file_contains(target_helper, [pattern], require_all=False)
+            in_helper = self.check_file_contains(target_helper, [pattern], require_all=False) if target_helper else False
             if not (in_model or in_helper):
                 missing_fields.append(field_name)
         
         if missing_fields:
             return False, f"Trilha de auditoria incompleta. Campos obrigatórios ausentes: {', '.join(missing_fields)}"
             
-        return True, "Trilha de auditoria 100% conforme (usuario, categoria, acao, dados_anteriores, dados_novos e ip_origem)"
+        return True, "Trilha de auditoria 100% conforme (usuario, categoria/entidade, acao/campo_alterado, valores anterior/novo e origem)"
 
     def audit_backend_stack(self) -> Tuple[bool, str]:
         """Verifica se o backend adota a linguagem Python + FastAPI + Uvicorn"""

@@ -11,11 +11,20 @@
 Antes de gerar qualquer código ou implementar uma nova funcionalidade no sistema:
 1. **Consulte a especificação do projeto em [`docs/especificacao/SPEC.md`](docs/especificacao/SPEC.md)**.
 2. Siga os casos de uso, requisitos e modelo de dados descritos na pasta `docs/especificacao/`.
-3. **Validação Automática de Conformidade:** Ao concluir qualquer implementação ou refatoração, o agente de IA **DEVE obrigatoriamente executar o auditor de conformidade arquitertural** rodando o comando:
+3. **Validação Automática de Conformidade (11 Pilares Mandatórios):** Ao concluir qualquer implementação ou refatoração, o agente de IA **DEVE obrigatoriamente executar o auditor de conformidade arquitetural** rodando o comando:
    ```bash
    python audit_framework.py .
    ```
-   *(O agente deve garantir que a Taxa de Conformidade do projeto seja mantida em **100% (EXCELENTE)**).*
+   *(O agente deve garantir que a Taxa de Conformidade do projeto seja mantida em **100% (EXCELENTE)**, cobrindo os 11 pilares: Stack Backend, AD/LDAP, Multi-provedor/Conectividade Híbrida, Cookies HttpOnly, Default-Private Routers, Security Headers, Governança de Configurações, Audit Logs com IP e Mudanças, Layout Vue 3 com SemVer no rodapé, Suíte Pytest e Monitoramento Zabbix).*
+
+---
+
+## 1.1. Versionamento Padrão (SemVer & Git Flow)
+
+Todo projeto baseado neste framework DEVE seguir rigorosamente o padrão de **Versionamento Semântico (SemVer - `MAJOR.MINOR.PATCH`)**:
+- **Format:** `vX.Y.Z` (Ex: `v1.0.0`, `v1.7.0`).
+- **Exibição Obrigatória:** A versão atual DEVE ser exibida visivelmente no rodapé do menu lateral/layout frontend Vue 3.
+- **Git Tags:** Cada entrega em produção DEVE receber uma tag correspondente no repositório Git (`git tag -a v1.x.x -m "Release v1.x.x"`).
 
 ---
 
