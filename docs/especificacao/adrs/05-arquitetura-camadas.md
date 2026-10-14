@@ -8,12 +8,12 @@ Como garantir o desacoplamento entre os ambientes de operação, de forma que se
 * Uso de ORM diretamente pelos _controllers_;
 * Lógica de negócio e acesso a dados nos _routers_;
 * Arquitetura hexagonal.
-## Consequências da decisão
+## Resultado da decisão
 **Arquitetura em camadas:**
 Distingue explicitamente os componentes do projeto e permite, em uma arquitetura de porte adequado ao sistema, o desacoplamento necessário para implementação, teste, operação, manutenção e versionamento com diferentes fontes de dados.
 **Fluxo de requisição na aplicação:**
 Roteador → Controller → Provedor
-### Consequências
+## Consequências
 * Positiva, porque permite o desacoplamento das camadas que compõem o sistema.
 * Positiva, porque facilita a auditabilidade e a reastrabilidade do acesso a dados.
 * Positiva, porque comporta alterações nas fontes de dados e migrações de legado independentemente da lógica de negócio.
