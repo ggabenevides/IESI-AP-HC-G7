@@ -29,7 +29,6 @@
 | RF024 | Controle de pendências | Identificar casos com etapas pendentes, indicando o que falta para permitir sua continuidade. | Essencial |
 | RF025 | Painel de processos em andamentos | Gestão visualiza andamento de processos em tempo real em painel informando etapa atual, tempo desde o início do processamento, etc. | Importante |
 | RF026 | Geração de documento de laudo para impressão | Após aprovação do residente, é gerado um arquivo formatado do laudo pronto para impressão. | Desejável |
-| RF027 | XXXXXXXX | XXXXXXXXXXXXXX | XXXXXXXXXXX |
 
 ### 📌 Legenda de Níveis de Prioridade:
 - **Essencial (Alta):** Funcionalidade indispensável para o funcionamento básico da aplicação. Sem ela, o sistema não pode ir para produção (ex: autenticação, cadastros base).
