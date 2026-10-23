@@ -190,32 +190,32 @@ Para cada requisito, a implementação deve seguir o padrão:
 * **Evaluation (Avaliação)**: Verificar se a devolução não pode ser registrada sem motivo e sem a não conformidade correspondente, se ela pode ser feita a partir de qualquer etapa em que a não conformidade foi identificada, se perfis sem permissão de chefia/administrador não conseguem cancelar casos, se casos devolvidos ou cancelados deixam de aparecer nas filas de trabalho e se o histórico anterior permanece íntegro e consultável.
 
 ## [CARE-RF023] Alertas de estagnação
-**Context (Contexto):** Os casos possuem data limite para fechar o diagnóstico. Algumas amostras podem estar estagnadas em etapas por mais tempo que o desejado.
-**Action (Ação):** O sistema informa há quanto tempo a amostra permanece na etapa, podendo emitir alerta caso passe do tempo padrão.
-**Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
-**Evaluation (Avaliação):** Verificar se o tempo contado no sistema condiz com a realidade, bem como analisar os tempos padrões das etapas.
+* **Context (Contexto):** Os casos possuem data limite para fechar o diagnóstico. Algumas amostras podem estar estagnadas em etapas por mais tempo que o desejado.
+* **Action (Ação):** O sistema informa há quanto tempo a amostra permanece na etapa, podendo emitir alerta caso passe do tempo padrão.
+* **Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
+* **Evaluation (Avaliação):** Verificar se o tempo contado no sistema condiz com a realidade, bem como analisar os tempos padrões das etapas.
 
 ## [CARE-RF024] Controle de pendências
-**Context (Contexto):** Todos os processos, para cada amostra, devem ser devidamente registrados.
-**Action (Ação):** O sistema indica/destaca os processos pendentes.
-**Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
-**Evaluation (Avaliação):** Verificar se as etapas possuem lacunas nos processos do sistema e indicar corretamente quais são.
+* **Context (Contexto):** Todos os processos, para cada amostra, devem ser devidamente registrados.
+* **Action (Ação):** O sistema indica/destaca os processos pendentes.
+* **Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
+* **Evaluation (Avaliação):** Verificar se as etapas possuem lacunas nos processos do sistema e indicar corretamente quais são.
 
 ## [CARE-RF025] Painel de processos em andamentos
-**Context (Contexto):** Durante o andamento do material, todas as etapas devem ser atualizadas em tempo real e visíveis para a gestão/equipe.
-**Action (Ação):** O sistema indica/destaca os processos pendentes.
-**Result (Resultado):** Interface dentro do sistema que sintetize o andamento das etapas.
-**Evaluation (Avaliação):** Verificar se os processos estão atualizados e condizentes com a realidade.
+* **Context (Contexto):** Durante o andamento do material, todas as etapas devem ser atualizadas em tempo real e visíveis para a gestão/equipe.
+* **Action (Ação):** O sistema indica/destaca os processos pendentes.
+* **Result (Resultado):** Interface dentro do sistema que sintetize o andamento das etapas.
+* **Evaluation (Avaliação):** Verificar se os processos estão atualizados e condizentes com a realidade.
 
 ## [CARE-RF026] Geração de documento de laudo para impressão
-**Context (Contexto):** Após a amostra passar pelos procedimentos necessários, um documento constando o diagnóstico deve ser emitido e enviado para o AGHU.
-**Action (Ação):** O sistema gera um arquivo formatado pronto para a impressão.
-**Evaluation (Avaliação):** Verificar se o resultado do diagnóstico emitido confere ao que o médico patologista laudou.
+* **Context (Contexto):** Após a amostra passar pelos procedimentos necessários, um documento constando o diagnóstico deve ser emitido e enviado para o AGHU.
+* **Action (Ação):** O sistema gera um arquivo formatado pronto para a impressão.
+* **Evaluation (Avaliação):** Verificar se o resultado do diagnóstico emitido confere ao que o médico patologista laudou.
 
 # REQUISITOS NÃO FUNCIONAIS
 
 ## [CARE-RNF001] Criptografia
-**Context (Contexto):** O sistema armazena e processa informações sensíveis relacionadas aos pacientes e aos procedimentos de anatomia patológica. Portanto, é necessário proteger o acesso às informações e impedir que usuários não autorizados acessem os dados.
+* **Context (Contexto):** O sistema armazena e processa informações sensíveis relacionadas aos pacientes e aos procedimentos de anatomia patológica. Portanto, é necessário proteger o acesso às informações e impedir que usuários não autorizados acessem os dados.
 * **Action (Ação):** O sistema deverá utilizar tokens JWT assinados com HS256 para validar a autenticidade dos tokens de acesso e armazenar os tokens de renovação (Refresh Tokens) em cookies com a propriedade HttpOnly, reduzindo o risco de acesso a esses tokens por scripts executados no navegador.
 * **Evaluation (Avaliação):** Verificar se requisições sem autenticação válida ou com tokens inválidos, adulterados ou expirados são rejeitadas. Confirmar também que os Refresh Tokens não podem ser acessados diretamente por JavaScript no navegador e que a renovação da autenticação funciona somente com tokens válidos.
 
