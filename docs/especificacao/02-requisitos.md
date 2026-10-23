@@ -55,6 +55,8 @@
 ## 3. Detalhamento SDD (CARE)
 Para cada requisito, a implementação deve seguir o padrão:
 
+# REQUISITOS FUNCIONAIS
+
 ### [CARE-RF001] Autenticação 
 * **Context (Contexto)**: O usuário possui credenciais institucionais válidas e precisa acessar o sistema de Anatomia Patológica.
 * **Action (Ação)**: O usuário informa suas credenciais (que já usa em outras aplicações do hospital).
@@ -186,3 +188,103 @@ Para cada requisito, a implementação deve seguir o padrão:
 * **Action (Ação)**: Na devolução, o profissional registra o motivo, quem devolveu, quem recebeu o material na unidade de origem e a solicitação de nova amostra. No cancelamento, a chefia/administrador informa obrigatoriamente o motivo.
 * **Result (Resultado)**: O sistema registra a devolução ou o cancelamento com data/hora, responsáveis, motivo e, na devolução, o setor/etapa de onde o material saiu. Em seguida, muda o status do caso (devolvido ou cancelado) e o retira das listas de trabalho ativas. Nenhum registro é excluído fisicamente: o caso e todo o seu histórico, inclusive os materiais já produzidos, continuam disponíveis para consulta e auditoria.
 * **Evaluation (Avaliação)**: Verificar se a devolução não pode ser registrada sem motivo e sem a não conformidade correspondente, se ela pode ser feita a partir de qualquer etapa em que a não conformidade foi identificada, se perfis sem permissão de chefia/administrador não conseguem cancelar casos, se casos devolvidos ou cancelados deixam de aparecer nas filas de trabalho e se o histórico anterior permanece íntegro e consultável.
+
+## [CARE-RF023] Alertas de estagnação
+**Context (Contexto):** Os casos possuem data limite para fechar o diagnóstico. Algumas amostras podem estar estagnadas em etapas por mais tempo que o desejado.
+**Action (Ação):** O sistema informa há quanto tempo a amostra permanece na etapa, podendo emitir alerta caso passe do tempo padrão.
+**Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
+**Evaluation (Avaliação):** Verificar se o tempo contado no sistema condiz com a realidade, bem como analisar os tempos padrões das etapas.
+
+## [CARE-RF024] Controle de pendências
+**Context (Contexto):** Todos os processos, para cada amostra, devem ser devidamente registrados.
+**Action (Ação):** O sistema indica/destaca os processos pendentes.
+**Result (Resultado):** O sistema calcula o tempo da amostra na etapa, destaca quando deveria estar se aproximando da finalização e emite alertas quando ultrapassa o tempo padrão.
+**Evaluation (Avaliação):** Verificar se as etapas possuem lacunas nos processos do sistema e indicar corretamente quais são.
+
+## [CARE-RF025] Painel de processos em andamentos
+**Context (Contexto):** Durante o andamento do material, todas as etapas devem ser atualizadas em tempo real e visíveis para a gestão/equipe.
+**Action (Ação):** O sistema indica/destaca os processos pendentes.
+**Result (Resultado):** Interface dentro do sistema que sintetize o andamento das etapas.
+**Evaluation (Avaliação):** Verificar se os processos estão atualizados e condizentes com a realidade.
+
+## [CARE-RF026] Geração de documento de laudo para impressão
+**Context (Contexto):** Após a amostra passar pelos procedimentos necessários, um documento constando o diagnóstico deve ser emitido e enviado para o AGHU.
+**Action (Ação):** O sistema gera um arquivo formatado pronto para a impressão.
+**Evaluation (Avaliação):** Verificar se o resultado do diagnóstico emitido confere ao que o médico patologista laudou.
+
+# REQUISITOS NÃO FUNCIONAIS
+
+## [CARE-RNF001] Criptografia
+**Context (Contexto):** O sistema armazena e processa informações sensíveis relacionadas aos pacientes e aos procedimentos de anatomia patológica. Portanto, é necessário proteger o acesso às informações e impedir que usuários não autorizados acessem os dados.
+**Action (Ação):** O sistema deverá utilizar tokens JWT assinados com HS256 para validar a autenticidade dos tokens de acesso e armazenar os tokens de renovação (Refresh Tokens) em cookies com a propriedade HttpOnly, reduzindo o risco de acesso a esses tokens por scripts executados no navegador.
+**Evaluation (Avaliação):** Verificar se requisições sem autenticação válida ou com tokens inválidos, adulterados ou expirados são rejeitadas. Confirmar também que os Refresh Tokens não podem ser acessados diretamente por JavaScript no navegador e que a renovação da autenticação funciona somente com tokens válidos.
+
+## [CARE-RNF002] Registro de auditoria das alterações
+
+**Context (Contexto):** O sistema gerencia informações sensíveis de pacientes e registros de procedimentos de anatomia patológica. É necessário rastrear as operações realizadas para garantir a rastreabilidade das alterações e apoiar a investigação de acessos ou modificações indevidas.
+**Action (Ação):** O sistema deverá registrar em uma tabela de auditoria (audit_logs) as operações de alteração de dados, incluindo o usuário responsável, a data e hora, o tipo de operação e os valores anteriores e posteriores, quando aplicável.
+**Evaluation (Avaliação):** Verificar se as operações de alteração geram registros de auditoria completos e se é possível identificar quem realizou cada alteração, quando ocorreu e quais informações foram modificadas. Confirmar que usuários comuns não podem alterar ou excluir indevidamente os registros de auditoria.
+
+## [CARE-RNF003] Proteção das respostas HTTP
+
+**Context (Contexto):** O sistema disponibiliza informações de pacientes e procedimentos por meio de requisições HTTP. É necessário reduzir os riscos de exposição indevida de dados, carregamento do sistema em páginas maliciosas e execução de scripts não autorizados.
+**Action (Ação):** O backend deverá configurar cabeçalhos HTTP de segurança, incluindo Cache-Control: no-store para respostas que contenham informações sensíveis, X-Frame-Options: DENY para impedir que a aplicação seja incorporada em frames de outros sites e uma política de segurança contra ataques de scripts (XSS).
+**Evaluation (Avaliação):** Inspecionar os cabeçalhos das respostas HTTP e verificar se as configurações esperadas estão presentes. Confirmar que páginas protegidas não podem ser incorporadas em frames externos e que as medidas adotadas reduzem os riscos de exposição e execução de scripts maliciosos.
+
+## [CARE-RNF004] Gerenciamento seguro de credenciais e configurações
+
+**Context (Contexto):** O sistema utiliza credenciais, chaves secretas e configurações necessárias para acessar serviços e bancos de dados. A exposição dessas informações pode comprometer a segurança dos dados dos pacientes.
+**Action (Ação):** O sistema deverá armazenar informações sensíveis em variáveis de ambiente ou em mecanismos seguros de gerenciamento de segredos, proibindo a inclusão de credenciais diretamente no código-fonte. As variáveis necessárias deverão ser validadas durante a inicialização da aplicação.
+**Evaluation (Avaliação):** Verificar se o sistema funciona com as configurações fornecidas pelo ambiente, se a inicialização identifica variáveis obrigatórias ausentes ou inválidas e se nenhuma credencial sensível está exposta no código-fonte ou nos registros da aplicação.
+
+## [CARE-RNF005] Controle centralizado de acesso
+
+**Context (Contexto):** Diferentes profissionais podem utilizar o sistema de anatomia patológica, mas nem todos devem ter acesso às mesmas informações e operações. É necessário centralizar as regras de acesso para evitar permissões inconsistentes entre os módulos.
+**Action (Ação):** O sistema deverá adotar um ponto central de controle de acesso, integrando o mecanismo de autenticação definido pela arquitetura ao modelo RBAC (Role-Based Access Control), no qual as permissões são atribuídas conforme os papéis dos usuários.
+**Evaluation (Avaliação):** Verificar se usuários com diferentes papéis possuem somente as permissões correspondentes às suas responsabilidades e se as regras de acesso são aplicadas de maneira consistente em todos os módulos e operações protegidas.
+
+## [CARE-RNF006] Integridade e consistência dos dados
+**Context (Contexto):** A utilização simultânea do sistema por profissionais de diferentes setores pode ocasionar alterações concorrentes nos mesmos registros. É necessário evitar perda de atualizações, inconsistências e divergências nas informações sobre pacientes, amostras e exames.
+**Action (Ação):** O sistema deverá implementar mecanismos de controle de concorrência e integridade dos dados, utilizando o banco de dados como fonte oficial das informações e definindo regras para validar e tratar alterações simultâneas.
+**Evaluation (Avaliação):** Simular alterações simultâneas em um mesmo registro e verificar se os dados permanecem consistentes, se as regras de integridade são respeitadas e se conflitos são tratados sem perda silenciosa de informações.
+
+## [CARE-RNF007] Continuidade operacional diante da indisponibilidade do AGHU
+
+**Context (Contexto):** O sistema precisa interoperar com o AGHU, mas esse sistema externo pode ficar temporariamente indisponível. Essa situação não deve comprometer desnecessariamente o registro das etapas internas da anatomia patológica.
+**Action (Ação):** O sistema deverá tratar falhas de comunicação com o AGHU de maneira controlada, permitindo a continuidade das operações internas que não dependam diretamente da integração e prevendo mecanismos seguros para reprocessar ou sincronizar operações pendentes após o restabelecimento da comunicação.
+**Evaluation (Avaliação):** Simular a indisponibilidade do AGHU e verificar se as operações internas independentes continuam funcionando, se as falhas são registradas e se as operações pendentes podem ser processadas posteriormente sem duplicação ou perda de dados.
+
+## [CARE-RNF008] Adequação da interface ao fluxo de trabalho
+
+**Context (Contexto):** Atualmente, parte do acompanhamento das atividades de anatomia patológica é realizada por meio de planilhas Excel. A transição para um sistema próprio exige uma interface adequada às atividades dos profissionais, reduzindo dificuldades de utilização e erros de preenchimento.
+**Action (Ação):** A interface deverá apresentar informações de maneira clara e organizada, oferecer formulários compatíveis com as atividades da unidade e permitir a execução das tarefas rotineiras com facilidade, respeitando os diferentes perfis de usuários.
+**Evaluation (Avaliação):** Realizar testes de usabilidade com representantes dos perfis de usuários e verificar se conseguem executar tarefas típicas, como localizar uma amostra, atualizar uma etapa e consultar o andamento de um exame, com baixo índice de erros e sem dificuldades significativas.
+
+## [CARE-RNF009] Desempenho das operações do sistema
+**Context (Contexto):** O sistema será utilizado por profissionais de diferentes setores, possivelmente de forma simultânea. Respostas lentas podem prejudicar o fluxo de trabalho e atrasar o registro e a consulta de informações.
+**Action (Ação):** O sistema deverá executar operações de consulta e cadastro em tempo adequado, mesmo sob uso simultâneo, adotando estratégias de otimização quando necessário.
+**Evaluation (Avaliação):** Realizar testes de desempenho com diferentes quantidades de usuários simultâneos, medindo o tempo de resposta das consultas e dos cadastros. Os limites aceitáveis de tempo e a quantidade esperada de usuários deverão ser definidos previamente com base nas necessidades da unidade.
+
+## [CARE-RNF010] Sincronização das informações entre usuários
+
+**Context (Contexto):** Diferentes profissionais podem consultar ou modificar os mesmos registros simultaneamente. É necessário garantir que as informações exibidas na interface correspondam aos dados registrados no backend e que as atualizações relevantes sejam disponibilizadas aos demais usuários.
+**Action (Ação):** O sistema deverá sincronizar as informações entre frontend e backend e propagar as alterações confirmadas aos usuários envolvidos, utilizando um mecanismo de atualização adequado aos requisitos de comunicação da aplicação. Deverá também tratar conflitos decorrentes de edições simultâneas.
+**Evaluation (Avaliação):** Abrir o mesmo registro em diferentes sessões, realizar alterações e verificar se as atualizações confirmadas são refletidas nas demais sessões dentro do intervalo definido pelo projeto. Confirmar também que edições concorrentes não provocam perda silenciosa de dados.
+
+## [CARE-RNF011] Manutenibilidade e organização do código
+
+**Context (Contexto):** O sistema poderá receber novas funcionalidades, correções e adaptações conforme as necessidades da unidade de anatomia patológica. Um código desorganizado ou sem documentação pode dificultar essas atividades e aumentar o risco de erros.
+**Action (Ação):** O projeto deverá seguir padrões de codificação, manter os componentes organizados em módulos com responsabilidades definidas, documentar aspectos relevantes da arquitetura e utilizar testes automatizados para verificar comportamentos importantes.
+**Evaluation (Avaliação):** Verificar a conformidade com os padrões definidos, a existência de documentação e testes relevantes e a possibilidade de modificar ou corrigir um módulo sem provocar falhas inesperadas em outros componentes.
+
+## [CARE-RNF012] Cópias de segurança e recuperação de dados
+
+**Context (Contexto):** Os registros de pacientes, amostras, exames e diagnósticos são essenciais para a continuidade das atividades da unidade. Falhas de infraestrutura, erros operacionais ou incidentes podem causar perda de informações importantes.
+**Action (Ação):** O sistema deverá realizar cópias de segurança automatizadas dos dados relevantes, armazená-las de maneira protegida e disponibilizar procedimentos documentados para restauração em caso de perda ou corrupção dos dados.
+**Evaluation (Avaliação):** Verificar a execução das rotinas de backup e realizar testes periódicos de restauração, confirmando a integridade dos dados recuperados. Os intervalos de backup e os tempos aceitáveis de recuperação deverão ser definidos conforme as necessidades operacionais.
+
+## [CARE-RNF013] Interoperabilidade com sistemas externos
+
+**Context (Contexto):** O sistema de anatomia patológica precisa integrar-se ao AGHU e poderá precisar interagir com outras tecnologias e plataformas utilizadas pela unidade. A ausência de mecanismos padronizados de comunicação pode dificultar a troca de informações e gerar retrabalho.
+**Action (Ação):** O sistema deverá disponibilizar mecanismos de integração compatíveis com as interfaces, os formatos de dados e os protocolos suportados pelos sistemas externos envolvidos, respeitando os requisitos de segurança, autenticação e validação das informações trocadas.
+**Evaluation (Avaliação):** Realizar testes de integração para verificar se as informações são transmitidas, recebidas e interpretadas corretamente pelos sistemas envolvidos, preservando sua integridade e identificando adequadamente falhas de comunicação.
