@@ -5,8 +5,14 @@
 ```mermaid
 flowchart LR
     %% Definição dos Atores
-    E((Enfermeiro))
-    M((Médico))
+    R((Recepcionista))
+    TM((Técnico de Macroscopia))
+    TP((Técnico de Processamento))
+    IHQ((Técnico de Imunohistoquímica))
+    MR((Médico Residente))
+    MP((Médico Patologista))
+    ARQ((Arquivista))
+    ADM((Gestor/Administrador))
     
     subgraph "Sistema Hospitalar"
         UC1([Realizar Triagem])
