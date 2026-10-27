@@ -4,8 +4,8 @@
 | ID | Título | Descrição | Prioridade |
 | :--- | :--- | :--- | :---: |
 | RF001 | Autenticação | Login via credenciais do hospital. | Essencial |
-| RF002 | Importação de dados | Importar dados de novos pacientes/casos do AGHU diretamente para o sistema de AP. | Essencial |
-| RF003 | Rastreabilidade de casos | Localizar e consultar casos e acompanhar histórico. | Essencial |
+| RF002 | Importação de dados | Importar dados de novos pacientes/solicitações de exame do AGHU diretamente para o sistema de AP. | Essencial |
+| RF003 | Rastreabilidade de solicitações | Localizar e consultar solicitações de exames e acompanhar histórico. | Essencial |
 | RF004 | Geração de ID interno | Atribuir um ID interno único a casos/amostras importadas do AGHU. | Essencial |
 | RF005 | Consulta por ID | Consultar amostras por código de barras/qrcode. | Essencial |
 | RF006 | Completude dos registros | Impedir conclusão de registro até que todos os campos sejam preenchidos, mantendo-os como rascunhos. | Essencial |
@@ -14,12 +14,12 @@
 | RF009 | Impressão de etiqueta | Gerar e imprimir uma etiqueta de identificação da interna da amostra. | Essencial |
 | RF010 | Gerência de permissões/visualização por perfil | Administrador atribui perfis de acordo com responsabilidades do usuário para garantir integridade de dados e simplicidade da interface | Importante |
 | RF011 | Registro das etapas | Registrar o andamento da amostra nas diferentes etapas do diagnóstico. | Essencial |
-| RF012 | Controle de urgências | Permitir identificar e filtrar casos classificados como urgentes. | Essencial |
+| RF012 | Controle de urgências | Permitir identificar e filtrar solicitações de exame classificados como urgentes. | Essencial |
 | RF013 | Rastreabilidade da amostra | Guardar informações sobre a data e responsável por cada etapa.| Essencial |
 | RF014 | Painel gerencial de KPIs | Visualização de painel de KPIs sem dados identicáveis dos pacientes para perfil gerencial. | Desejável |
-| RF015 | Máscaras de texto padrão | Oferecer máscaras de texto editáveis para macroscopia | Importante |
+| RF015 | Máscaras de texto padrão | Oferecer máscaras de texto editáveis para macroscopia e microscopia | Importante |
 | RF016 | Registro de conclusão do caso | Permitir realizar a conclusão do caso e armazenamento do laudo/responsável | Essencial |
-| RF017 | Controle de IHQ externa | Registrar encaminhamentos de exames para o laboratório externo e acompanhar o andamento. | Essencial |
+| RF017 | Controle de exame externo | Registrar encaminhamentos de exames para o laboratório externo e acompanhar o andamento. | Essencial |
 | RF018 | Visualização unificada de resultados | Administrador/residente tem acesso a tela com informações registradas para aprovação de maneira rápida e simples. | Importante |
 | RF019 | Geração de ficha de trabalho | Gerar e imprimir uma ficha contendo os dados relativos ao caso para acompanhamento físico. | Desejável |
 | RF020 | Registro de materiais produzidos | Registrar informações sobre recortes, cassetes, blocos e lâminas produzidos durante o processamento do caso. | Essencial |
@@ -64,19 +64,19 @@ Para cada requisito, a implementação deve seguir o padrão:
 * **Evaluation (Avaliação)**: Verificar se usuários com credenciais válidas no banco de dados do hospital conseguem acessar o sistema com as mesmas credenciais.
 
 ### [CARE-RF002] Importação de dados
-* **Context (Contexto)**: Existem novas solicitações ou casos de Anatomia Patológica cadastrados no AGHU.
+* **Context (Contexto)**: Existem novas solicitações de exame cadastradas no AGHU.
 * **Action (Ação)**: O sistema consulta os dados disponíveis no AGHU e importa as informações necessárias para o sistema interno.
 * **Result (Resultado)**: Os novos casos aparecem no sistema interno com os dados importados do AGHU associados corretamente à respectiva solicitação.
 * **Evaluation (Avaliação)**: Verificar se os dados de um caso existente são importados automaticamente e corretamentamente para o sistema interno.
 
-### [CARE-RF003] Ratreabilidade de casos
-* **Context (Contexto)**: O técnico/médico está autenticado no sistema e existem casos de anatomia patológica cadastrados no sistema.
+### [CARE-RF003] Rastreabilidade de casos
+* **Context (Contexto)**: O técnico/médico está autenticado no sistema e existem solitações de exame cadastradas no sistema.
 * **Action (Ação)**: O médico consulta um caso de anatomia patológica a partir do nome, status ou outro atributo e o sistema busca por um caso com atributo correspondente.
-* **Result (Resultado)**: O sistema retorna os casos correspondentes ao que foi consultado e eles são exibidos na interface.
-* **Evaluation (Avaliação)**: Verificar se a busca de um caso acontece de maneira que os casos retornados possuem atributos correspondentes aos atributos inseridos na busca.
+* **Result (Resultado)**: O sistema retorna as solicitações correspondentes ao que foi consultado e eles são exibidos na interface.
+* **Evaluation (Avaliação)**: Verificar se a busca de uma solicitação acontece de maneira que as solicitações retornadas possuem atributos correspondentes aos atributos inseridos na busca.
 
 ### [CARE-RF004] Geração de ID
-* **Context (Contexto)**: Existem casos e amostras importados do AGHU que precisam ser identificados de maneira única no sistema de Anatomia Patológica, independentemente dos identificadores utilizados no sistema de origem.
+* **Context (Contexto)**: Existem solicitações de exames importadas do AGHU que precisam ser identificados de maneira única no sistema de Anatomia Patológica, independentemente dos identificadores utilizados no sistema de origem.
 * **Action (Ação)**: O usuário importa um novo caso ou amostra do AGHU, e o sistema gera e associa automaticamente um identificador interno único ao registro importado.
 * **Result (Resultado)**: O sistema armazena o identificador gerado e o associa ao respectivo caso ou amostra, permitindo sua identificação e rastreabilidade ao longo do fluxo de anatomia patológica.
 * **Evaluation (Avaliação)**: Verificar se cada caso ou amostra importado recebe um identificador interno único, não duplicado entre os registros, persistente após consultas e atualizações e corretamente associado ao registro correspondente.
