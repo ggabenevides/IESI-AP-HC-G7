@@ -19,13 +19,15 @@ Ele consolida as melhores práticas de engenharia de software da equipe de TI (S
   - Suporte nativo ao **Active Directory (AD/LDAP Ebserh)** em produção com busca/validação prévia de usuários (`displayName`, `mail`, `department`).
   - Provedor **Mock** automático para desenvolvimento local sem dependência de rede.
   - Controle de sessão via **JWT Access Tokens** e **Refresh Tokens HttpOnly** com auto-renovação transparente no frontend.
+  - **Proteção de Rotas por Padrão (*Default-Private Router Pattern*):** Bloqueio automático de rotas hospitalares diretamente no `APIRouter` com `Depends(auth_handler.decode_token)`, liberando apenas exceções públicas explícitas (`/api/login`, `/api/health`).
   - **Middleware de Security Headers:** Proteção nativa no backend FastAPI contra armazenamento de dados hospitalares em cache (`no-store, no-cache`), Clickjacking (`X-Frame-Options: DENY`), MIME sniffing (`nosniff`) e Cross-Site Scripting (XSS).
 - **⚡ Backend Moderno e Assíncrono (FastAPI):**
   - Construído com Python 3.12+, FastAPI e SQLAlchemy 2.0 com pools de conexões assíncronas para o **PostgreSQL do AGHU**.
   - Documentação interativa **Swagger UI (`/docs`)** com autenticação integrada via botão cadeado (**Authorize**).
   - Manipulador global de erros garantindo respostas padronizadas em formato JSON (`{"detail": "..."}`).
-- **🎨 Frontend Reativo & UI Standard (Vue 3 / Vite):**
+- **🎨 Frontend Reativo, UI Standard & Versionamento (Vue 3 / Vite / SemVer):**
   - Vue 3 (Composition API / TypeScript) empacotado e servido diretamente pelo FastAPI.
+  - **Versionamento Semântico (SemVer `vX.Y.Z`):** Exibição visível da versão no rodapé do menu lateral/layout frontend e alinhamento com Git Tags.
   - Interceptadores Axios automáticos para injeção de tokens `Bearer` e renovação de sessão sem deslogar o usuário.
   - Biblioteca de componentes base reusáveis (`DataTable`, `Modal`, `Button`, `Card`, `ProfileDropdown`).
 - **🩺 Monitoramento & Resiliência:**
@@ -144,17 +146,18 @@ A aplicação ficará disponível consolidada em `http://IP-DA-VM:8000/`. Para o
 
 Para garantir que o desenvolvimento (seja feito por programadores ou com auxílio de copilotos de IA) esteja **100% conforme** com as diretrizes do hospital, o repositório disponibiliza o script auditor [`audit_framework.py`](./audit_framework.py).
 
-O auditor inspeciona automaticamente 10 dimensões mandatórias:
+O auditor inspeciona automaticamente **11 pilares mandatórios**:
 1. Stack Backend (Python 3.12+ / FastAPI / Uvicorn).
-2. Autenticação Corporativa (AD/LDAP Ebserh).
-3. Autorização Híbrida e Controle de Acesso RBAC.
+2. Autenticação Corporativa (AD/LDAP Ebserh + RBAC Híbrido).
+3. Conectividade Híbrida / Multi-provedor (Interfaces desacopladas PostgreSQL / CSV / Mocks).
 4. Autenticação Persistente e Cookies `HttpOnly` para Refresh Token.
-5. Proteção de Rotas por Padrão (*Default-Private Router Pattern*).
-6. Middleware de Security Headers HTTP (Defense-in-Depth).
-7. Governança de Segredos (`src/config.py` e `.env.example`).
+5. Proteção de Rotas por Padrão (*Default-Private Router Pattern* no `APIRouter`).
+6. Middleware de Security Headers HTTP (Defense-in-Depth contra XSS, Clickjacking e Cache).
+7. Governança de Segredos (`src/config.py` e `.env.example` sem hardcode).
 8. Trilha de Auditoria Imutável (`audit_logs` com `dados_anteriores`, `dados_novos` e `ip_origem`).
-9. Layout Frontend Vue 3 SPA (SidebarNav à esquerda + Marca + Versão SemVer no rodapé).
-10. Monitoramento Zabbix (`/api/health`) e Manifesto de IA ([`AGENTS.md`](./AGENTS.md)).
+9. Layout Frontend Vue 3 SPA & Versionamento (SidebarNav à esquerda + Marca + Versão **SemVer** no rodapé).
+10. Suíte de Testes Automatizados (Testes de status HTTP e auth com `pytest`).
+11. Monitoramento Zabbix (`/api/health`) e Manifesto para IA ([`AGENTS.md`](./AGENTS.md)).
 
 ### Como executar a verificação:
 ```bash
