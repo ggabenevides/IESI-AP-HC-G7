@@ -34,7 +34,7 @@
         </form>
 
         <div id="recepcao-leitura-mensagem" aria-live="polite" class="text-left">
-          <Alert v-if="recepcao.mensagemLeitura" variant="danger" class="mt-3">
+          <Alert v-if="recepcao.mensagemLeitura" :variant="recepcao.mensagemLeitura.variante ?? 'danger'" class="mt-3">
             <p class="font-semibold">{{ recepcao.mensagemLeitura.texto }}</p>
             <p v-if="recepcao.mensagemLeitura.dica" class="mt-1">{{ recepcao.mensagemLeitura.dica }}</p>
             <router-link
@@ -62,6 +62,18 @@
           <div>
             <h2 class="text-lg font-bold text-gray-800">Para receber</h2>
             <p class="text-sm text-gray-500">Solicitações do AGHU aguardando recebimento. Congelações primeiro, depois as mais antigas.</p>
+            <p v-if="recepcao.filtroCodigoAghu" class="mt-2 flex flex-wrap items-center gap-2 text-sm">
+              <span class="rounded-full bg-paper-info-soft px-3 py-1 font-bold text-paper-info-strong">
+                Amostras da solicitação {{ recepcao.filtroCodigoAghu }}
+              </span>
+              <button
+                type="button"
+                class="focus-ring rounded font-bold text-paper-info-strong underline hover:no-underline"
+                @click="recepcao.filtroCodigoAghu = null"
+              >
+                Mostrar todas
+              </button>
+            </p>
           </div>
           <span
             v-if="!recepcao.carregandoPendentes && !recepcao.aghuIndisponivel && fila.length > 0"
@@ -98,7 +110,10 @@
             <div class="flex flex-wrap items-center gap-2">
               <Badge :variant="item.congelacao ? 'danger' : 'primary'" size="sm">{{ item.tipo }}</Badge>
               <span class="font-bold text-gray-900">{{ item.exame }}</span>
-              <span class="text-sm tabular-nums text-gray-500">· Nº AGHU {{ item.codigoSolicitacao }}</span>
+              <span v-if="item.codigoAghu" class="text-sm tabular-nums text-gray-500">
+                · Nº AGHU {{ item.codigoAghu }}<template v-if="item.numeroAmostra"> · amostra {{ item.numeroAmostra }}</template>
+              </span>
+              <span v-else class="text-sm tabular-nums text-gray-500">· Nº AGHU {{ item.codigoSolicitacao }}</span>
             </div>
             <p class="mt-1 truncate text-sm text-gray-600">{{ item.material }} · {{ item.origem }}</p>
           </div>
@@ -137,7 +152,7 @@ import Alert from '../../Alert.vue';
 import Badge from '../../Badge.vue';
 import Button from '../../Button.vue';
 import Card from '../../Card.vue';
-import { HORAS_ALERTA_PENDENTE, ORIGENS } from '../../../constants/ap';
+import { HORAS_ALERTA_PENDENTE, rotuloOrigem } from '../../../constants/ap';
 import { formatarDataHora, horasDesde, tempoDecorrido } from '../../../helpers/formato';
 import { rotaDoCaso } from '../../../helpers/rotas';
 import { mensagemDeErro } from '../../../services/ap';
@@ -156,18 +171,21 @@ let relogio: ReturnType<typeof setInterval> | undefined;
 
 /** Fila de tarefas: congelações primeiro, depois da mais antiga para a mais nova. */
 const fila = computed(() =>
-  [...recepcao.pendentes]
+  recepcao.pendentes
+    .filter((s) => !recepcao.filtroCodigoAghu || s.codigoSolicitacaoAghu === recepcao.filtroCodigoAghu)
     .sort((a, b) => {
       const prioridade = (s: typeof a) => (s.tipoExameSugerido === 'CO' ? 0 : 1);
       return prioridade(a) - prioridade(b) || a.dataSolicitacao.localeCompare(b.dataSolicitacao);
     })
     .map((s) => ({
       codigoSolicitacao: s.codigoSolicitacao,
+      codigoAghu: s.codigoSolicitacaoAghu,
+      numeroAmostra: s.numeroAmostra,
       tipo: s.tipoExameSugerido,
       congelacao: s.tipoExameSugerido === 'CO',
       exame: s.nomeExame,
       material: s.descricaoMaterial,
-      origem: `${s.unidade} · ${ORIGENS[s.origem]}`,
+      origem: `${s.unidade} · ${rotuloOrigem(s.origem)}`,
       data: formatarDataHora(s.dataSolicitacao),
       espera: tempoDecorrido(s.dataSolicitacao, agora.value),
       atrasada: horasDesde(s.dataSolicitacao, agora.value) >= HORAS_ALERTA_PENDENTE,
