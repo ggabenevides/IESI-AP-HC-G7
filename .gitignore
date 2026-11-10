@@ -106,3 +106,6 @@ yarn-error.log*
 
 # Gemini-specific files
 GEMINI.md
+
+# CSV de dados
+data/privado/
