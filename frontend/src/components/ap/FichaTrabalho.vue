@@ -46,7 +46,7 @@
           <dt>Prontuário</dt>
           <dd>{{ caso.solicitacao.prontuario }}</dd>
           <dt>Origem</dt>
-          <dd>{{ ORIGENS[caso.solicitacao.origem] }}</dd>
+          <dd>{{ rotuloOrigem(caso.solicitacao.origem) }}</dd>
           <dt>Unidade solicitante</dt>
           <dd>{{ caso.solicitacao.unidade }}</dd>
         </dl>
@@ -63,7 +63,7 @@
         </div>
         <div>
           <dt>Médico solicitante</dt>
-          <dd>{{ caso.solicitacao.nomeSolicitante }}</dd>
+          <dd>{{ caso.solicitacao.nomeSolicitante || NAO_INFORMADO }}</dd>
         </div>
       </dl>
     </section>
@@ -112,7 +112,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import Barcode from './Barcode.vue';
-import { ETAPAS, ORIGENS, TIPOS_EXAME, fluxoDoCaso } from '../../constants/ap';
+import { ETAPAS, NAO_INFORMADO, TIPOS_EXAME, fluxoDoCaso, rotuloOrigem } from '../../constants/ap';
 import { formatarDataHora } from '../../helpers/formato';
 import type { CasoAp } from '../../types/ap';
 

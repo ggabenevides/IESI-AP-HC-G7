@@ -115,16 +115,27 @@ export interface Responsavel {
 
 /** Solicitação AGHU com os dados do paciente e do item/material (somente leitura no SAP). */
 export interface SolicitacaoAghu {
+  /**
+   * Chave da solicitação no SAP. Para dados vindos do backend é o id composto
+   * `<codigoSolicitacaoAghu>-<numeroAmostra>` (ex.: "1479377-2").
+   */
   codigoSolicitacao: string;
+  /** Código original da solicitação no AGHU (repete-se entre amostras). */
+  codigoSolicitacaoAghu?: string;
+  /** Número da amostra dentro da solicitação do AGHU. */
+  numeroAmostra?: string;
   prontuario: string;
   nomePaciente: string;
-  /** Data de nascimento (AAAA-MM-DD). */
+  /** Data de nascimento (AAAA-MM-DD). Pode vir vazia do AGHU. */
   dataNascimento: string;
-  sexo: 'Feminino' | 'Masculino';
-  origem: OrigemAtendimento;
+  /** Ausente no CSV do AGHU. */
+  sexo?: 'Feminino' | 'Masculino' | null;
+  /** Nulo quando a origem do AGHU não é reconhecida. */
+  origem: OrigemAtendimento | null;
   unidade: string;
   especialidade: string;
-  nomeSolicitante: string;
+  /** Ausente no CSV do AGHU. */
+  nomeSolicitante?: string | null;
   dataSolicitacao: string;
   siglaExame: string;
   nomeExame: string;
@@ -364,7 +375,9 @@ export type LeituraSolicitacao =
   | { tipo: 'PENDENTE'; solicitacao: SolicitacaoAghu }
   | { tipo: 'RECEBIDA'; solicitacao: SolicitacaoAghu; casoNumero: string }
   | { tipo: 'DEVOLVIDA'; solicitacao: SolicitacaoAghu; devolvidaEm: string; tipoNaoConformidade: TipoNaoConformidadeCodigo }
-  | { tipo: 'NAO_ENCONTRADA' };
+  | { tipo: 'NAO_ENCONTRADA' }
+  /** O código do AGHU (sem amostra) corresponde a mais de uma amostra pendente. */
+  | { tipo: 'MULTIPLAS_AMOSTRAS'; codigoSolicitacaoAghu: string; solicitacoes: SolicitacaoAghu[] };
 
 /** Caso resumido para a lista de resultados da busca global (F2). */
 export interface CasoResumoBusca {

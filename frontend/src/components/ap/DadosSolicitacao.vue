@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BeakerIcon, ClipboardDocumentListIcon, LockClosedIcon } from '@heroicons/vue/24/outline';
-import { ORIGENS } from '../../constants/ap';
+import { NAO_INFORMADO, rotuloOrigem } from '../../constants/ap';
 import { calcularIdade, formatarData, formatarDataHora } from '../../helpers/formato';
 import type { SolicitacaoAghu } from '../../types/ap';
 
@@ -41,19 +41,23 @@ const props = defineProps<{ solicitacao: SolicitacaoAghu }>();
 
 const campos = computed(() => {
   const s = props.solicitacao;
+  const idade = calcularIdade(s.dataNascimento);
   return [
     { rotulo: 'Nº da solicitação', valor: s.codigoSolicitacao },
-    { rotulo: 'Prontuário', valor: s.prontuario },
-    { rotulo: 'Nome do paciente', valor: s.nomePaciente, largo: true },
-    { rotulo: 'Nascimento e idade', valor: `${formatarData(s.dataNascimento)} · ${calcularIdade(s.dataNascimento)} anos` },
-    { rotulo: 'Sexo', valor: s.sexo },
-    { rotulo: 'Origem', valor: ORIGENS[s.origem] },
+    // Dados vindos do backend: código original no AGHU e número da amostra
+    ...(s.codigoSolicitacaoAghu ? [{ rotulo: 'Código no AGHU', valor: s.codigoSolicitacaoAghu }] : []),
+    ...(s.numeroAmostra ? [{ rotulo: 'Nº da amostra', valor: s.numeroAmostra }] : []),
+    { rotulo: 'Prontuário', valor: s.prontuario || NAO_INFORMADO },
+    { rotulo: 'Nome do paciente', valor: s.nomePaciente || NAO_INFORMADO, largo: true },
+    { rotulo: 'Nascimento e idade', valor: idade === null ? NAO_INFORMADO : `${formatarData(s.dataNascimento)} · ${idade} anos` },
+    { rotulo: 'Sexo', valor: s.sexo || NAO_INFORMADO },
+    { rotulo: 'Origem', valor: rotuloOrigem(s.origem) },
     { rotulo: 'Data da solicitação', valor: formatarDataHora(s.dataSolicitacao) },
-    { rotulo: 'Unidade solicitante', valor: s.unidade, largo: true },
-    { rotulo: 'Especialidade', valor: s.especialidade },
-    { rotulo: 'Médico solicitante', valor: s.nomeSolicitante },
+    { rotulo: 'Unidade solicitante', valor: s.unidade || NAO_INFORMADO, largo: true },
+    { rotulo: 'Especialidade', valor: s.especialidade || NAO_INFORMADO },
+    { rotulo: 'Médico solicitante', valor: s.nomeSolicitante || NAO_INFORMADO },
     { rotulo: 'Exame', valor: `${s.nomeExame} (${s.siglaExame})`, largo: true },
-    { rotulo: 'Status no AGHU', valor: s.statusAghuDescricao },
+    { rotulo: 'Status no AGHU', valor: s.statusAghuDescricao || NAO_INFORMADO },
   ];
 });
 </script>
