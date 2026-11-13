@@ -69,29 +69,9 @@
             <Button v-if="ativo && authStore.hasPermission('casos:cancelar')" variant="secondary" @click="cancelamentoAberto = true">
               <XCircleIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Cancelar caso
             </Button>
-            <div v-if="authStore.hasPermission('casos:consultar')" class="relative">
-              <Button variant="outline" :aria-expanded="menuImpressao" aria-haspopup="menu" @click="menuImpressao = !menuImpressao">
-                <PrinterIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Imprimir
-                <ChevronDownIcon class="h-4 w-4 ml-1" aria-hidden="true" />
-              </Button>
-              <div v-if="menuImpressao" class="fixed inset-0 z-10" @click="menuImpressao = false"></div>
-              <div
-                v-if="menuImpressao"
-                role="menu"
-                class="absolute right-0 z-20 mt-1 w-56 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg"
-              >
-                <button
-                  v-for="opcao in opcoesImpressao"
-                  :key="opcao.tipo"
-                  type="button"
-                  role="menuitem"
-                  class="focus-ring [--focus-ring-offset:-2px] block w-full px-4 py-2.5 text-left text-sm font-semibold text-gray-700 transition hover:bg-gray-50 active:bg-gray-100"
-                  @click="imprimir(opcao.tipo)"
-                >
-                  {{ opcao.rotulo }}
-                </button>
-              </div>
-            </div>
+            <p class="self-center text-xs text-gray-500" role="status">
+              Impressão indisponível até validação de permissão pelo SAP/HC.
+            </p>
           </div>
         </div>
         <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
@@ -297,7 +277,6 @@
         @registrado="aposAlteracao"
       />
       <CancelarCasoModal :show="cancelamentoAberto" :caso="caso" @close="cancelamentoAberto = false" @cancelado="cancelamentoAberto = false" />
-      <PrintPreview :show="impressao !== null" :caso="caso" :tipo="impressao ?? 'ETIQUETAS'" @close="impressao = null" />
     </template>
   </div>
 </template>
@@ -309,12 +288,10 @@ import { useToast } from 'vue-toastification';
 import {
   ArrowLeftIcon,
   CheckCircleIcon,
-  ChevronDownIcon,
   ClipboardDocumentIcon,
   DocumentMagnifyingGlassIcon,
   ExclamationTriangleIcon,
   LockClosedIcon,
-  PrinterIcon,
   XCircleIcon,
 } from '@heroicons/vue/24/outline';
 import Badge from '../../components/Badge.vue';
@@ -323,7 +300,6 @@ import Card from '../../components/Card.vue';
 import Tabs, { type TabItem } from '../../components/Tabs.vue';
 import DadosSolicitacao from '../../components/ap/DadosSolicitacao.vue';
 import NaoConformidadeModal from '../../components/ap/NaoConformidadeModal.vue';
-import PrintPreview from '../../components/ap/PrintPreview.vue';
 import StatusCasoBadge from '../../components/ap/StatusCasoBadge.vue';
 import ArvoreMateriais from '../../components/ap/caso/ArvoreMateriais.vue';
 import CancelarCasoModal from '../../components/ap/caso/CancelarCasoModal.vue';
@@ -346,7 +322,7 @@ import {
 import { formatarDataHora, horasDesde, tempoDecorrido } from '../../helpers/formato';
 import { useCasosStore } from '../../stores/casos';
 import { useAuthStore } from '../../stores/auth';
-import type { EtapaCodigo, ItemMaterial, TipoImpressao, TipoItemMaterial } from '../../types/ap';
+import type { EtapaCodigo, ItemMaterial, TipoItemMaterial } from '../../types/ap';
 
 const props = defineProps<{ numero: string }>();
 
@@ -361,16 +337,10 @@ const aba = ref('resumo');
 const itemDestacado = ref<string | undefined>();
 const ncAberta = ref(false);
 const cancelamentoAberto = ref(false);
-const menuImpressao = ref(false);
-const impressao = ref<TipoImpressao | null>(null);
 
 const ativo = computed(() => !!caso.value && casoEstaAtivo(caso.value.status));
 const textoBloqueio = computed(() => (caso.value ? STATUS_BLOQUEADOS[caso.value.status] : undefined));
 
-const opcoesImpressao: { tipo: TipoImpressao; rotulo: string }[] = [
-  { tipo: 'ETIQUETAS', rotulo: 'Etiquetas das amostras' },
-  { tipo: 'FICHA_TRABALHO', rotulo: 'Ficha de trabalho' },
-];
 
 /** Conta todos os itens da árvore por tipo. */
 const contarItens = (itens: ItemMaterial[], acc: Partial<Record<TipoItemMaterial, number>> = {}) => {
@@ -458,11 +428,6 @@ const copiar = async () => {
   } catch {
     toast.error('Não foi possível copiar. Selecione o número e copie manualmente.');
   }
-};
-
-const imprimir = (tipo: TipoImpressao) => {
-  menuImpressao.value = false;
-  impressao.value = tipo;
 };
 
 const aposAlteracao = async () => {

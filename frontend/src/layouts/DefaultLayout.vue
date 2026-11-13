@@ -202,7 +202,7 @@ const secoes = computed<SecaoMenu[]>(() => [
         para: '/rejeicoes-devolucoes',
         icone: ArrowUturnLeftIcon,
         requerLogin: true,
-        permissao: 'casos:consultar',
+        permissao: 'devolucoes:consultar',
       },
     ],
   },

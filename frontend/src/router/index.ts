@@ -83,7 +83,7 @@ const routes = [
     path: '/rejeicoes-devolucoes',
     name: 'Rejeições e devoluções',
     component: RejeicoesDevolucoes,
-    meta: { requiresAuth: true, requiresPermission: 'casos:consultar', menu: 'devolucoes' },
+    meta: { requiresAuth: true, requiresPermission: 'devolucoes:consultar', menu: 'devolucoes' },
   },
 ];
 

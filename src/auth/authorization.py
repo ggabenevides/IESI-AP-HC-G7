@@ -27,6 +27,7 @@ class Permissao(StrEnum):
     RECEPCAO_REGISTRAR_NAO_CONFORMIDADE = "recepcao:registrar_nao_conformidade"
     RECEPCAO_ACIONAR_PLANTAO = "recepcao:acionar_plantao"
     CASOS_CANCELAR = "casos:cancelar"
+    DEVOLUCOES_CONSULTAR = "devolucoes:consultar"
     DEVOLUCOES_ALTERAR_SITUACAO = "devolucoes:alterar_situacao"
     SEGURANCA_GERENCIAR = "seguranca:gerenciar"
     AUDITORIA_CONSULTAR = "auditoria:consultar"
@@ -37,7 +38,8 @@ class Permissao(StrEnum):
 PERMISSOES_POR_PERFIL: dict[Perfil, frozenset[Permissao]] = {
     Perfil.RECEPCIONISTA: frozenset({Permissao.CASOS_CONSULTAR, Permissao.RECEPCAO_RECEBER,
                                     Permissao.RECEPCAO_REGISTRAR_NAO_CONFORMIDADE,
-                                    Permissao.RECEPCAO_ACIONAR_PLANTAO}),
+                                    Permissao.RECEPCAO_ACIONAR_PLANTAO,
+                                    Permissao.DEVOLUCOES_CONSULTAR}),
     Perfil.PROFISSIONAL_MACROSCOPIA: frozenset({Permissao.CASOS_CONSULTAR,
                                                 Permissao.RECEPCAO_REGISTRAR_NAO_CONFORMIDADE,
                                                 Permissao.RECEPCAO_ACIONAR_PLANTAO}),

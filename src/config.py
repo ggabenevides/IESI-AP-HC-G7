@@ -19,6 +19,11 @@ class Settings:
     # 1. Configurações do Servidor
     ENV: str = os.getenv("ENV", "development").lower()
     AUTH_PROVIDER: str = os.getenv("AUTH_PROVIDER", "mock").lower()
+    AP_REQUEST_PROVIDER: str = os.getenv("AP_REQUEST_PROVIDER", "mock").lower()
+    AP_REQUEST_FIXTURE: str = os.getenv("AP_REQUEST_FIXTURE", "demo").strip().lower()
+    AP_MOCK_REQUESTS_AVAILABLE: bool = os.getenv("AP_MOCK_REQUESTS_AVAILABLE", "true").strip().lower() not in {
+        "0", "false", "no", "off"
+    }
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "info").lower()
     RAW_ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "*")
     ALLOWED_ORIGINS: List[str] = [
@@ -39,6 +44,12 @@ class Settings:
     @classmethod
     def validate_config(cls):
         """Valida a integridade das configurações e dispara avisos de segurança."""
+        if cls.AP_REQUEST_PROVIDER == "mock" and cls.ENV not in {"development", "test", "testing"}:
+            raise RuntimeError("AP_REQUEST_PROVIDER=mock is restricted to development/test")
+        if cls.AP_REQUEST_PROVIDER != "mock":
+            raise RuntimeError("Institutional AP request provider is not implemented")
+        if cls.AP_REQUEST_FIXTURE not in {"demo", "minimal"}:
+            raise RuntimeError("AP_REQUEST_FIXTURE must be 'demo' or 'minimal'")
         if cls.ENV == "production":
             if "change-in-production" in cls.JWT_SECRET or "SUA_CHAVE_SECRETA" in cls.JWT_SECRET:
                 logger.error(

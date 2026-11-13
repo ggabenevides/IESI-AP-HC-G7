@@ -54,6 +54,13 @@ O catálogo de permissões SHALL refletir a matriz preliminar ratificada pelo SA
 - **THEN** o sistema não concede essa permissão
 - **AND** a pendência fica documentada para decisão SAP/HC
 
+#### Scenario: Consulta de devoluções pela Recepção
+
+- **WHEN** uma identidade possui o perfil `RECEPCIONISTA`
+- **THEN** o catálogo concede `devolucoes:consultar` para listar rejeições e devoluções existentes
+- **AND** não concede `devolucoes:alterar_situacao` por consequência dessa permissão
+- **AND** identidades sem `devolucoes:consultar` continuam sem acesso à consulta, inclusive Coordenação/Administrador isolado
+
 ### Requirement: Interface coerente com autorização efetiva
 
 O frontend SHALL usar as permissões resolvidas para ocultar ações e opções indisponíveis e SHALL tratar respostas 401/403. A ocultação no frontend SHALL NOT substituir a autorização no backend.

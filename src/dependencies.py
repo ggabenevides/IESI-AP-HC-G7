@@ -6,7 +6,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .providers.interfaces.paciente_provider_interface import PacienteProviderInterface
 from .providers.implementations.paciente_postgres_provider import PacientePostgresProvider
 from .providers.implementations.paciente_csv_provider import PacienteCsvProvider
-from .resources.database import get_aghu_db_session
+from .resources.database import get_aghu_db_session, get_app_db_session
+from .providers.implementations.reception_sqlite_provider import ReceptionSqliteProvider
+from .providers.interfaces.reception_provider_interface import ReceptionProviderInterface
+
+
+def get_reception_provider(
+    session: AsyncSession = Depends(get_app_db_session),
+) -> ReceptionProviderInterface:
+    """Monta provider de estado AP usando a sessão local da aplicação."""
+    return ReceptionSqliteProvider(session)
 
 # 1. Funções "getter" simples e independentes (privadas por convenção)
 def _get_paciente_postgres_provider(

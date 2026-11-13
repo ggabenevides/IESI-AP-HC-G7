@@ -25,6 +25,8 @@ def test_login_retorna_perfis_e_permissoes_resolvidas(client):
     assert resposta.status_code == 200
     assert resposta.json()["profiles"] == [Perfil.RECEPCIONISTA.value]
     assert Permissao.RECEPCAO_RECEBER.value in resposta.json()["permissions"]
+    assert Permissao.DEVOLUCOES_CONSULTAR.value in resposta.json()["permissions"]
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value not in resposta.json()["permissions"]
     assert Permissao.CASOS_CANCELAR.value not in resposta.json()["permissions"]
 
 
@@ -57,6 +59,7 @@ def test_uniao_de_multiplos_perfis(client):
     dados = client.get("/api/users/me", headers=headers).json()
     assert len(dados["profiles"]) == 2
     assert Permissao.RECEPCAO_RECEBER.value in dados["permissions"]
+    assert Permissao.DEVOLUCOES_CONSULTAR.value in dados["permissions"]
     assert Permissao.CASOS_CANCELAR.value in dados["permissions"]
 
 
