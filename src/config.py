@@ -18,6 +18,7 @@ logger = logging.getLogger("config")
 class Settings:
     # 1. Configurações do Servidor
     ENV: str = os.getenv("ENV", "development").lower()
+    AUTH_PROVIDER: str = os.getenv("AUTH_PROVIDER", "mock").lower()
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "info").lower()
     RAW_ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "*")
     ALLOWED_ORIGINS: List[str] = [
@@ -29,12 +30,6 @@ class Settings:
     APP_DB_URL: str = os.getenv("APP_DB_URL", "sqlite+aiosqlite:///data/app.db")
     POSTGRES_DSN: str = os.getenv("POSTGRES_DSN", "")
     ORACLE_DSN: str = os.getenv("ORACLE_DSN", "")
-
-    # 3. Active Directory (LDAP)
-    AD_URL: str = os.getenv("AD_URL", "")
-    AD_BASEDN: str = os.getenv("AD_BASEDN", "DC=ebserhnet,DC=gov,DC=br")
-    AD_BIND_USER: str = os.getenv("AD_BIND_USER", "")
-    AD_BIND_PASSWORD: str = os.getenv("AD_BIND_PASSWORD", "")
 
     # 4. Segurança e Criptografia (JWT)
     JWT_SECRET: str = os.getenv("JWT_SECRET", "super-secret-key-change-in-production")
@@ -50,11 +45,8 @@ class Settings:
                     "❌ ERRO CRÍTICO DE SEGURANÇA: A variável 'JWT_SECRET' está usando a chave padrão. "
                     "Altere para uma chave secreta aleatória forte no arquivo .env antes de rodar em produção!"
                 )
-            if not cls.AD_URL:
-                logger.warning(
-                    "⚠️ AVISO: Variável 'AD_URL' não definida em produção. "
-                    "O sistema está operando no modo Mock de desenvolvimento."
-                )
+            if cls.AUTH_PROVIDER == "mock":
+                raise RuntimeError("AUTH_PROVIDER=mock é proibido em produção")
         logger.info(f"Configurações carregadas com sucesso. Ambiente: '{cls.ENV.upper()}'")
 
 

@@ -3,15 +3,15 @@
 ## 1. Confirmar política e contratos
 
 - [ ] 1.1 Consolidar a matriz preliminar papel × operação a partir dos casos de uso e validar concessões de Recepção com SAP/HC; registrar como pendentes/negadas as células sem confirmação, especialmente Citotécnico.
-- [ ] 1.2 Definir catálogo de permissões estáveis para consulta, execução, alteração e aprovação; documentar permissões reservadas a módulos futuros sem atribuí-las.
-- [ ] 1.3 Definir configuração de provedor de identidade e regra de falha de inicialização do mock em produção.
+- [x] 1.2 Definir catálogo inicial de permissões estáveis e manter sem concessão operações sem associação explícita nos casos de uso.
+- [x] 1.3 Configurar o Adapter mock explicitamente e bloquear seu uso em produção.
 
 ## 2. Identidade e autorização no backend
 
-- [ ] 2.1 Refatorar o provedor atual atrás do contrato de Adapter, normalizando identidade e preservando JWT/refresh existentes sem dependência de protocolo institucional.
-- [ ] 2.2 Implementar catálogo dos nove perfis, resolução de múltiplos perfis e permissões explícitas com 401/403 e negação por padrão.
-- [ ] 2.3 Expor identidade/perfis/permissões efetivos em `/api/users/me`; retirar decisões de autorização baseadas em grupos AD.
-- [ ] 2.4 Criar identidades mock fictícias por perfil e sem perfil, selecionáveis apenas em desenvolvimento/testes; impedir seleção arbitrária e uso em produção.
+- [x] 2.1 Refatorar o provedor atual atrás do contrato de Adapter, normalizando identidade e preservando JWT/refresh existentes sem dependência de protocolo institucional.
+- [x] 2.2 Implementar catálogo dos nove perfis, resolução de múltiplos perfis e permissões explícitas com 401/403 e negação por padrão.
+- [x] 2.3 Expor identidade/perfis/permissões efetivos em `/api/users/me`; remover autorização por grupos do provedor.
+- [x] 2.4 Criar identidades mock fictícias por perfil e sem perfil, selecionáveis apenas em desenvolvimento/testes; impedir seleção arbitrária e uso em produção.
 - [ ] 2.5 Proteger endpoints existentes e as operações de Recepção que forem expostas no backend; usar dependências por router/operação e nunca confiar em ocultação de UI.
 - [ ] 2.6 Registrar autor autenticado e auditoria em mutações usando o helper existente; não aceitar autor do cliente.
 
@@ -24,11 +24,11 @@
 
 ## 4. Verificação
 
-- [ ] 4.1 Testar autenticação mock para cada identidade, ausência de perfil, múltiplos perfis, seleção inválida e bloqueio do mock em produção.
+- [x] 4.1 Testar catálogo de nove perfis, usuário sem perfil, múltiplos perfis, credenciais inválidas e bloqueio do mock em produção.
 - [ ] 4.2 Testar permissões positivas e negativas no backend, incluindo chamada direta aos endpoints de Recepção e acesso sem token.
 - [ ] 4.3 Testar perfil alterado/removido no acesso seguinte, autoria e conteúdo de auditoria das mutações.
 - [ ] 4.4 Verificar UI por papel e que botões ocultos não substituem enforcement do backend.
-- [ ] 4.5 Rodar `npx vue-tsc --noEmit` (frontend/) e `python audit_framework.py .`; registrar resultados e limitações.
+- [x] 4.5 Rodar `npx.cmd vue-tsc --noEmit` (frontend/) e `python audit_framework.py .`; TypeScript passou e o auditor reportou 10/11 (90,9%), com a lacuna do RBAC persistido híbrido detalhada abaixo.
 
 ## Acceptance Criteria
 
@@ -39,3 +39,9 @@
 - Operações da Recepção protegidas recusam chamadas diretas sem permissão; a interface reflete os mesmos direitos.
 - Mutação auditável identifica o usuário autenticado e não permite forjar o autor via requisição.
 - Nenhum protocolo institucional é escolhido ou implementado nesta mudança.
+
+## Pendências para concluir o change
+
+- [ ] Migrar as operações existentes de Recepção dos serviços em memória do navegador para endpoints FastAPI que recebam e persistam a operação no servidor; proteger cada endpoint com a permissão correspondente e registrar autoria/auditoria. Até lá, o frontend mock não é uma barreira de segurança para estado local e o fluxo não está pronto para produção.
+- [ ] Validar a matriz papel × operação com SAP/HC e ratificar todas as concessões de Recepção; manter as células ainda ambíguas negadas.
+- [ ] Definir uma fonte persistente e governada para associação de perfis locais, se exigida para produção; não habilitar gestão por administrador local de desenvolvimento.

@@ -4,7 +4,7 @@
 
 `src/auth/auth.py` concentra `AuthHandler`, uma interface e implementações mock/AD que são selecionadas implicitamente pela presença de `AD_URL`. O mock só autentica `admin/admin`; o JWT expõe atributos e grupos de diretório, e `/api/users/me` retorna essa identidade. A proteção existente é autenticação JWT em routers, e `/api/admin/admin-only-data` usa um grupo AD. Não há resolução local de perfis RBAC. No frontend, Pinia mantém um único usuário e `isAdmin` consulta grupo AD; rotas exigem login, mas não perfil. Recepção, consulta, detalhe, devoluções e mutações são serviços mock em memória, sem backend de domínio. A arquitetura de serviços do frontend separa contrato e implementação mock; `src/helpers/audit_helper.py` e o modelo `AuditLog` já existem.
 
-Os documentos de negócio definem nove atores em `03-casos-uso.md`, RF009 em `02-requisitos.md` e regras de autorização em `00-validacao-negocio.md` (RN-03). Os casos de uso associam atores a operações, mas os documentos consultados não contêm uma matriz completa e validada de permissões por perfil. O perfil Citotécnico é explicitamente indicado como pendente de confirmação SAP. A proposta preserva essas incertezas: não cria concessões fictícias para módulos ainda ausentes.
+Os documentos de negócio definem nove atores em `03-casos-uso.md`, RF009 em `02-requisitos.md` e regras de autorização em `00-validacao-negocio.md` (RN-03). Os casos de uso associam atores a operações, mas os documentos consultados não contêm uma matriz completa e validada de permissões por perfil. O perfil Citotécnico é explicitamente indicado como pendente de confirmação. A proposta preserva essas incertezas: não cria concessões fictícias para módulos ainda ausentes.
 
 ## Goals / Non-Goals
 
@@ -28,7 +28,7 @@ A fonte inicial da política será um catálogo versionado no código/configura�
 
 ### 3. Catálogo de perfis e limites da matriz
 
-Registrar os identificadores: `RECEPCIONISTA_SAP`, `PROFISSIONAL_MACROSCOPIA`, `TECNICO_PROCESSAMENTO`, `TECNICO_IHQ`, `MEDICO_RESIDENTE`, `PATOLOGISTA_PRECEPTOR`, `CITOTECNICO`, `TECNICO_ARQUIVO`, `COORDENACAO_ADMINISTRADOR`.
+Registrar os identificadores: `RECEPCIONISTA`, `PROFISSIONAL_MACROSCOPIA`, `TECNICO_PROCESSAMENTO`, `TECNICO_IHQ`, `MEDICO_RESIDENTE`, `PATOLOGISTA_PRECEPTOR`, `CITOTECNICO`, `TECNICO_ARQUIVO`, `COORDENACAO_ADMINISTRADOR`.
 
 Permissões de módulos inexistentes permanecem não atribuídas e sem endpoints. Para Recepção, os casos de uso e specs atuais orientam operações existentes (receber/conferir, consultar casos, imprimir, registrar não conformidade/devolução, atualizar situação e cancelar). A associação entre cada papel e cada operação deverá ser transcrita apenas da matriz preliminar aprovada; como a matriz completa não está nos arquivos consultados, a proposta marca como pendente a ratificação SAP/HC antes de habilitar concessões controversas. Em especial, nenhuma permissão de triagem/parecer do Citotécnico será presumida. Enquanto não validada, as permissões questionadas ficam negadas.
 

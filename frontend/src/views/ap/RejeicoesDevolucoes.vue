@@ -87,6 +87,7 @@
           </template>
           <template #actions="{ item }">
             <Button
+              v-if="authStore.hasPermission('devolucoes:alterar_situacao')"
               variant="outline"
               size="sm"
               :aria-label="`Alterar situação da devolução de ${item.data} (${item.casoNumero ?? (item.solicitacaoCodigo ? `AGHU ${item.solicitacaoCodigo}` : 'sem etiqueta')})`"
@@ -124,9 +125,11 @@ import { ETAPAS, SITUACOES_DEVOLUCAO, TIPOS_NAO_CONFORMIDADE } from '../../const
 import { formatarDataHora } from '../../helpers/formato';
 import { rotaDoCaso } from '../../helpers/rotas';
 import { useDevolucoesStore } from '../../stores/devolucoes';
+import { useAuthStore } from '../../stores/auth';
 import type { EtapaCodigo, TipoNaoConformidadeCodigo } from '../../types/ap';
 
 const store = useDevolucoesStore();
+const authStore = useAuthStore();
 
 const filtros = reactive({
   periodoDias: 0,

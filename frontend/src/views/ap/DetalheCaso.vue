@@ -63,13 +63,13 @@
 
           <!-- Ações: Não conformidade, Cancelar caso, Imprimir -->
           <div class="flex flex-wrap gap-2">
-            <Button v-if="ativo" variant="danger" @click="ncAberta = true">
+            <Button v-if="ativo && authStore.hasPermission('recepcao:registrar_nao_conformidade')" variant="danger" @click="ncAberta = true">
               <ExclamationTriangleIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Não conformidade
             </Button>
-            <Button v-if="ativo" variant="secondary" @click="cancelamentoAberto = true">
+            <Button v-if="ativo && authStore.hasPermission('casos:cancelar')" variant="secondary" @click="cancelamentoAberto = true">
               <XCircleIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Cancelar caso
             </Button>
-            <div class="relative">
+            <div v-if="authStore.hasPermission('casos:consultar')" class="relative">
               <Button variant="outline" :aria-expanded="menuImpressao" aria-haspopup="menu" @click="menuImpressao = !menuImpressao">
                 <PrinterIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Imprimir
                 <ChevronDownIcon class="h-4 w-4 ml-1" aria-hidden="true" />
@@ -345,6 +345,7 @@ import {
 } from '../../constants/ap';
 import { formatarDataHora, horasDesde, tempoDecorrido } from '../../helpers/formato';
 import { useCasosStore } from '../../stores/casos';
+import { useAuthStore } from '../../stores/auth';
 import type { EtapaCodigo, ItemMaterial, TipoImpressao, TipoItemMaterial } from '../../types/ap';
 
 const props = defineProps<{ numero: string }>();
@@ -352,6 +353,7 @@ const props = defineProps<{ numero: string }>();
 const route = useRoute();
 const toast = useToast();
 const casosStore = useCasosStore();
+const authStore = useAuthStore();
 
 const caso = computed(() => casosStore.casoAtual);
 const carregando = computed(() => casosStore.carregandoCaso);
