@@ -6,7 +6,7 @@ O módulo de Recepção já possui contratos estáveis de serviços, mas suas re
 
 ## What Changes
 
-- Criar endpoints, modelos e persistência para as operações existentes de solicitações, casos, recebimentos, não conformidades, devoluções e eventos de impressão/plantão.
+- Criar endpoints, modelos e persistência para as operações existentes de solicitações, casos, recebimentos, não conformidades, devoluções e acionamento de plantão; a impressão física permanece no navegador, sem registro de evento.
 - Preservar os contratos de serviço consumidos pelas stores e views, substituindo gradualmente as implementações mock por chamadas HTTP.
 - Usar a identidade autenticada e o catálogo de permissões definidos em add-sector-access-profiles, sem criar usuários, sessões ou RBAC paralelos.
 - Aplicar autorização no backend em todas as consultas e mutações, negando por padrão operações sem permissão explícita ou ainda pendentes de validação SAP/HC.

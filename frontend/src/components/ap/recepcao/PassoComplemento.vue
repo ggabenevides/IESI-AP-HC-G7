@@ -157,8 +157,8 @@
     </form>
   </Card>
   <Card v-else-if="recepcao.solicitacao">
-    <Alert variant="warning" title="Vínculo IHQ aguardando validação de acesso">
-      O vínculo de uma solicitação IHQ a um caso existente ficará disponível depois que o SAP/HC validar a permissão correspondente.
+    <Alert variant="warning" title="Associação automática da IHQ em definição">
+      A associação das solicitações IHQ será automática. O mecanismo ainda está sendo definido e não há uma ação manual na Recepção.
     </Alert>
   </Card>
 </template>

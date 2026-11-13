@@ -1,10 +1,10 @@
 # case-detail Specification
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Autorização de consulta e cancelamento existentes
 
-A consulta de detalhe e a operação existente de cancelamento SHALL exigir permissões explícitas distintas quando a matriz validada assim determinar. O frontend SHALL refletir as permissões, e o backend SHALL aplicá-las em chamadas diretas.
+A consulta de detalhe e a operação existente de cancelamento SHALL exigir permissões explícitas distintas conforme o catálogo vigente. O frontend SHALL refletir as permissões, e o backend SHALL aplicá-las em chamadas diretas.
 
 #### Scenario: Cancelamento sem permissão
 

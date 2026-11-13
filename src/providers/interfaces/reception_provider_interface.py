@@ -63,3 +63,7 @@ class ReceptionProviderInterface(ABC):
     async def listar_devolucoes(self) -> list[dict[str, Any]]:
         """Lista devoluções com suas não conformidades."""
 
+    @abstractmethod
+    async def atualizar_situacao_devolucao(self, devolucao_id: int, situacao: str) -> dict[str, Any] | None:
+        """Atualiza situação e retorna os estados anterior/atual sem confirmar a transação."""
+

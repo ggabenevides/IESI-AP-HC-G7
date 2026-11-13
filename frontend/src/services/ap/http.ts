@@ -2,9 +2,9 @@
 import type { AxiosResponse } from 'axios';
 import api from '../api';
 import type {
+  CasoElegivelIhq,
   AuditLog,
   CasoAp,
-  CasoElegivelIhq,
   ConfirmarEntradaInput,
   DevolucaoDetalhada,
   ExameIhq,
@@ -14,7 +14,6 @@ import type {
   Responsavel,
   SituacaoDevolucao,
   SolicitacaoAghu,
-  TipoImpressao,
   VincularIhqInput,
 } from '../../types/ap';
 import { ServiceError, type AghuService, type AuditoriaService, type CasoService, type NaoConformidadeService } from './types';
@@ -68,9 +67,6 @@ export const casoServiceHttp: CasoService = {
     requisicao(() => api.post('/api/ap/recebimentos/ihq', input)),
   cancelar: (numeroInterno: string, motivo: string, _usuario: Responsavel) =>
     requisicao(() => api.post('/api/ap/casos/cancelamento', { numeroInterno, motivo })),
-  registrarImpressao: async (numeroInterno: string, tipo: TipoImpressao, _usuario: Responsavel) => {
-    await requisicao(() => api.post('/api/ap/casos/impressoes', { numeroInterno, tipo }));
-  },
   registrarAcionamentoPlantao: (numeroInterno: string, _usuario: Responsavel) =>
     requisicao(() => api.post('/api/ap/casos/acionamentos-plantao', { numeroInterno })),
   buscar: (termo: string, limite: number) =>

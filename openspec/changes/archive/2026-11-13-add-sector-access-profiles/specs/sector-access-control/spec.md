@@ -4,7 +4,7 @@
 
 Define autorização por perfis para o Sistema AP, com enforcement no backend e apresentação coerente das permissões nas funcionalidades existentes.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Catálogo de perfis sem concessão implícita
 
@@ -24,7 +24,7 @@ O sistema SHALL reconhecer os perfis `RECEPCIONISTA`, `PROFISSIONAL_MACROSCOPIA`
 
 ### Requirement: Permissões centralizadas e deny-by-default
 
-O backend SHALL resolver permissões explícitas a partir de um ou mais perfis e SHALL verificar autorização em cada operação protegida. O sistema SHALL distinguir consulta, execução, alteração e aprovação quando previstas na matriz validada. Ausência de concessão SHALL resultar em negação; possuir um perfil Coordenação/Administrador SHALL NOT conceder curinga implícito.
+O backend SHALL resolver permissões explícitas a partir de um ou mais perfis e verificar autorização em cada operação protegida. Uma identidade sem a permissão requerida SHALL receber 403. Coordenação/Administrador SHALL NOT receber curinga implícito.
 
 #### Scenario: Operação sem concessão
 
@@ -44,22 +44,22 @@ O backend SHALL resolver permissões explícitas a partir de um ou mais perfis e
 - **THEN** o sistema resolve a união das permissões explicitamente associadas a esses perfis
 - **AND** não infere permissões além dessa união
 
-### Requirement: Matriz SAP/HC como fonte de concessões
+### Requirement: Catálogo explícito e evolutivo de permissões
 
-O catálogo de permissões SHALL refletir a matriz preliminar ratificada pelo SAP/HC. Células sem confirmação SHALL permanecer negadas e identificadas como pendentes. Permissões específicas do Citotécnico SHALL permanecer pendentes de validação e não SHALL ser presumidas.
+O catálogo SHALL conceder somente permissões explícitas para operações existentes e SHALL distinguir consulta, execução, alteração e aprovação quando esses fluxos forem implementados. O catálogo SHALL evoluir junto com cada módulo; uma matriz global completa SHALL NOT bloquear a conclusão desta mudança. Operações ainda inexistentes SHALL permanecer sem endpoint e sem concessão.
 
-#### Scenario: Permissão pendente
+#### Scenario: Operação futura sem concessão
 
-- **WHEN** a matriz de um perfil/operação ainda não foi validada
-- **THEN** o sistema não concede essa permissão
-- **AND** a pendência fica documentada para decisão SAP/HC
+- **WHEN** um módulo futuro introduz uma operação ainda não incluída no catálogo
+- **THEN** o backend nega a operação por padrão até que ela seja definida e receba uma permissão explícita
+- **AND** a falta de uma matriz global completa não bloqueia os módulos já implementados
 
 #### Scenario: Consulta de devoluções pela Recepção
 
-- **WHEN** uma identidade possui o perfil `RECEPCIONISTA`
+- **WHEN** uma identidade possui o perfil `RECEPCIONISTA` ou `COORDENACAO_ADMINISTRADOR`
 - **THEN** o catálogo concede `devolucoes:consultar` para listar rejeições e devoluções existentes
-- **AND** não concede `devolucoes:alterar_situacao` por consequência dessa permissão
-- **AND** identidades sem `devolucoes:consultar` continuam sem acesso à consulta, inclusive Coordenação/Administrador isolado
+- **AND** concede `devolucoes:alterar_situacao` para atualizar sua situação
+- **AND** outros perfis não recebem essas permissões por consequência da consulta de casos
 
 ### Requirement: Interface coerente com autorização efetiva
 

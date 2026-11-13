@@ -7,7 +7,7 @@ O Sistema AP já oferece autenticação JWT no backend e uma experiência de Rec
 ## What Changes
 
 - Separar autenticação (obter identidade por provedor configurado) de autorização (resolver perfis e permissões da aplicação), negando acesso por padrão.
-- Definir os nove perfis de negócio e um catálogo de permissões por recurso/operação, sem conceder permissões de módulos futuros nem presumir decisões ainda não validadas.
+- Definir os nove perfis de negócio e um catálogo explícito de permissões para as operações existentes. O catálogo poderá evoluir junto com cada módulo; operações futuras não recebem acesso antecipado.
 - Aplicar autorização efetiva no servidor às capacidades que já existem na Recepção; a interface Vue refletirá as permissões, sem ser a barreira de segurança.
 - Oferecer identidades mockadas selecionáveis somente em desenvolvimento/testes e falhar a inicialização em produção se o provedor mock estiver configurado.
 - Preparar uma interface de provedor de identidade (Adapter) sem implementar nem escolher AD/LDAP, SSO, OIDC, SAML ou outro protocolo institucional.

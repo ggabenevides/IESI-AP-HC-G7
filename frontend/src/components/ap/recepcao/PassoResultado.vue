@@ -60,9 +60,10 @@
       </Alert>
 
       <div class="mt-6 flex flex-wrap justify-center gap-2">
-        <p class="self-center text-sm text-gray-500" role="status">
-          Impressão indisponível até a validação da permissão pelo SAP/HC.
-        </p>
+        <template v-if="resultado.tipo === 'CASO'">
+          <Button variant="secondary" @click="abrirPreviaImpressao('ETIQUETAS')">Imprimir etiquetas</Button>
+          <Button variant="secondary" @click="abrirPreviaImpressao('FICHA_TRABALHO')">Imprimir ficha</Button>
+        </template>
         <router-link
           :to="rotaDoCaso(resultado.caso.numeroInterno, { aba: resultado.tipo === 'IHQ' ? 'ihq' : undefined })"
           class="focus-ring inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2 font-bold text-gray-700 transition hover:bg-gray-50 active:bg-gray-100"
@@ -77,6 +78,14 @@
     </div>
 
   </Card>
+  <PrintPreview
+    v-if="resultado?.tipo === 'CASO'"
+    :show="previaImpressaoAberta"
+    :caso="resultado.caso"
+    :tipo="tipoImpressao"
+    @close="previaImpressaoAberta = false"
+    @impresso="previaImpressaoAberta = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -93,11 +102,13 @@ import Alert from '../../Alert.vue';
 import Badge from '../../Badge.vue';
 import Button from '../../Button.vue';
 import Card from '../../Card.vue';
+import PrintPreview from '../PrintPreview.vue';
 import { ETAPAS } from '../../../constants/ap';
 import { rotaDoCaso } from '../../../helpers/rotas';
 import { mensagemDeErro } from '../../../services/ap';
 import { useAuthStore } from '../../../stores/auth';
 import { useRecepcaoStore } from '../../../stores/recepcao';
+import type { TipoImpressao } from '../../../types/ap';
 
 const emit = defineEmits<{ (e: 'proxima'): void }>();
 
@@ -106,6 +117,13 @@ const authStore = useAuthStore();
 const recepcao = useRecepcaoStore();
 const resultado = computed(() => recepcao.resultado);
 const registrandoPlantao = ref(false);
+const previaImpressaoAberta = ref(false);
+const tipoImpressao = ref<TipoImpressao>('ETIQUETAS');
+
+const abrirPreviaImpressao = (tipo: TipoImpressao) => {
+  tipoImpressao.value = tipo;
+  previaImpressaoAberta.value = true;
+};
 
 const numeroGerado = computed(() => {
   const r = resultado.value;

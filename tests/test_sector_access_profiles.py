@@ -13,9 +13,9 @@ def autenticar(client, usuario: str, senha: str = "demo") -> dict[str, str]:
 def test_catalogo_contem_nove_perfis_e_nega_permissoes_desconhecidas():
     assert len(list(Perfil)) == 9
     assert resolver_permissoes(["PERFIL_INEXISTENTE"]) == []
-    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value not in resolver_permissoes(
-        [perfil.value for perfil in Perfil]
-    )
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value in resolver_permissoes([Perfil.RECEPCIONISTA.value])
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value in resolver_permissoes([Perfil.COORDENACAO_ADMINISTRADOR.value])
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value not in resolver_permissoes([Perfil.CITOTECNICO.value])
 
 
 def test_login_retorna_perfis_e_permissoes_resolvidas(client):
@@ -26,8 +26,29 @@ def test_login_retorna_perfis_e_permissoes_resolvidas(client):
     assert resposta.json()["profiles"] == [Perfil.RECEPCIONISTA.value]
     assert Permissao.RECEPCAO_RECEBER.value in resposta.json()["permissions"]
     assert Permissao.DEVOLUCOES_CONSULTAR.value in resposta.json()["permissions"]
-    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value not in resposta.json()["permissions"]
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value in resposta.json()["permissions"]
     assert Permissao.CASOS_CANCELAR.value not in resposta.json()["permissions"]
+
+
+def test_login_ignora_perfis_e_permissoes_forjados_pelo_cliente(client):
+    resposta = client.post("/api/login", data={
+        "username": "recepcionista",
+        "password": "demo",
+        "profiles": Perfil.COORDENACAO_ADMINISTRADOR.value,
+        "permissions": Permissao.CASOS_CANCELAR.value,
+    })
+
+    assert resposta.status_code == 200
+    headers = {"Authorization": f"Bearer {resposta.json()['access_token']}"}
+    identidade = client.get("/api/users/me", headers=headers)
+
+    assert identidade.status_code == 200
+    assert identidade.json()["profiles"] == [Perfil.RECEPCIONISTA.value]
+    assert Permissao.CASOS_CANCELAR.value not in identidade.json()["permissions"]
+    assert client.post("/api/ap/casos/cancelamento", headers=headers, json={
+        "numeroInterno": "HP-NAO-EXISTE/26",
+        "motivo": "Tentativa com permissão forjada",
+    }).status_code == 403
 
 
 def test_identidades_mock_disponibilizam_os_nove_perfis(client):
@@ -60,6 +81,7 @@ def test_uniao_de_multiplos_perfis(client):
     assert len(dados["profiles"]) == 2
     assert Permissao.RECEPCAO_RECEBER.value in dados["permissions"]
     assert Permissao.DEVOLUCOES_CONSULTAR.value in dados["permissions"]
+    assert Permissao.DEVOLUCOES_ALTERAR_SITUACAO.value in dados["permissions"]
     assert Permissao.CASOS_CANCELAR.value in dados["permissions"]
 
 

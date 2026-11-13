@@ -1,14 +1,13 @@
 # reception-api Specification
 
 ## Purpose
-
 Define a API FastAPI e o estado persistente do servidor para as operações já disponíveis no módulo de Recepção, com autorização central, autoria autenticada e compatibilidade com os serviços do frontend.
 
 ## Requirements
 
 ### Requirement: API de domínio para as operações atuais
 
-O backend SHALL expor operações protegidas para listar, contar e localizar solicitações; listar, obter, buscar e consultar elegibilidade de casos; confirmar recebimento e vincular solicitação IHQ a caso existente; cancelar caso; registrar evento de impressão e acionamento de plantão; registrar não conformidade; listar devoluções; atualizar situação de devolução; e consultar auditoria. A API SHALL preservar os resultados e tipos consumidos pelos contratos de serviço atuais e SHALL NOT criar fluxo de negócio novo.
+O backend SHALL expor operações protegidas para listar, contar e localizar solicitações; listar, obter e buscar casos; confirmar recebimento; cancelar caso; registrar acionamento de plantão e não conformidade; listar devoluções; atualizar situação de devolução; e consultar auditoria. A associação de solicitações IHQ SHALL ocorrer automaticamente por mecanismo futuro ainda a definir, sem ação manual de usuário nesta mudança. A API SHALL preservar os resultados e tipos consumidos pelos contratos de serviço atuais e SHALL NOT criar fluxo de negócio novo.
 
 #### Scenario: Contratos existentes atendidos pela API
 
@@ -20,7 +19,7 @@ O backend SHALL expor operações protegidas para listar, contar e localizar sol
 
 - **WHEN** o usuário solicita impressão de etiquetas ou ficha de trabalho
 - **THEN** o navegador continua gerando a saída física
-- **AND** o backend registra somente o evento de impressão existente e sua autoria
+- **AND** a operação não chama o backend nem cria evento de histórico ou auditoria
 
 ### Requirement: Regras de negócio e estado persistido
 
@@ -78,19 +77,31 @@ Toda rota de domínio SHALL exigir identidade autenticada e permissão explícit
 
 - **WHEN** uma identidade com a permissão devolucoes:consultar lista as devoluções
 - **THEN** o servidor retorna a lista persistida
-- **AND** o perfil Recepcionista SAP recebe essa permissão validada
+- **AND** Recepcionista SAP e Coordenação/Administrador recebem essa permissão validada
 - **AND** a permissão não autoriza alteração da situação
 
 #### Scenario: Consulta de devoluções sem permissão
 
-- **WHEN** uma identidade autenticada sem devolucoes:consultar, inclusive Coordenação/Administrador sem perfil de Recepcionista, lista as devoluções
+- **WHEN** uma identidade autenticada sem devolucoes:consultar lista as devoluções
 - **THEN** o servidor responde 403 e não retorna dados
 
-#### Scenario: Operação pendente de decisão SAP/HC
+#### Scenario: Associação IHQ automática ainda não definida
 
-- **WHEN** a operação é vincular IHQ, registrar impressão ou atualizar a situação da devolução enquanto não houver permissão explicitamente concedida no catálogo
-- **THEN** o servidor responde 403
-- **AND** não infere permissão de consulta, perfil administrador ou existência do endpoint
+- **WHEN** uma pessoa tenta vincular manualmente uma solicitação IHQ a um caso
+- **THEN** o backend responde 501 e não altera registros
+- **AND** não existe permissão de usuário para um vínculo manual
+- **AND** o mecanismo automático fica fora desta mudança até definição do HC
+
+#### Scenario: Atualização de situação permitida
+
+- **WHEN** Recepcionista SAP ou Coordenação/Administrador atualiza a situação de uma devolução
+- **THEN** o servidor persiste a situação e atualiza a não conformidade associada conforme as regras existentes
+- **AND** registra identidade autenticada, estado anterior e novo, IP e histórico do caso quando houver
+
+#### Scenario: Atualização sem permissão
+
+- **WHEN** outro perfil autenticado tenta atualizar diretamente a situação de uma devolução
+- **THEN** o servidor responde 403 e não altera o estado
 
 #### Scenario: Chamada sem token
 
@@ -116,7 +127,7 @@ Cada mutação bem-sucedida SHALL registrar identidade autenticada, categoria, a
 
 #### Scenario: Auditoria de mudança de estado
 
-- **WHEN** uma mutação altera caso, solicitação, conferência, devolução ou registra evento de impressão/plantão
+- **WHEN** uma mutação altera caso, solicitação, conferência ou devolução, ou registra acionamento de plantão
 - **THEN** a auditoria contém categoria NEGOCIO_CLINICO, ação e recurso identificáveis, estados relevantes anterior/novo e IP obtido no servidor
 - **AND** a mutação, histórico e log são confirmados na mesma unidade transacional
 

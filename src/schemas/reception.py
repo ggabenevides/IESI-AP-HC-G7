@@ -40,11 +40,6 @@ class CancelarCasoInput(PayloadRecepcao):
     motivo: str
 
 
-class RegistrarImpressaoInput(PayloadRecepcao):
-    numero_interno: str = Field(min_length=1)
-    tipo: Literal["ETIQUETAS", "FICHA_TRABALHO"]
-
-
 class AcionarPlantaoInput(PayloadRecepcao):
     numero_interno: str = Field(min_length=1)
 

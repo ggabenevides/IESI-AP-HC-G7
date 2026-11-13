@@ -69,9 +69,8 @@
             <Button v-if="ativo && authStore.hasPermission('casos:cancelar')" variant="secondary" @click="cancelamentoAberto = true">
               <XCircleIcon class="h-5 w-5 mr-2" aria-hidden="true" /> Cancelar caso
             </Button>
-            <p class="self-center text-xs text-gray-500" role="status">
-              Impressão indisponível até validação de permissão pelo SAP/HC.
-            </p>
+            <Button variant="secondary" @click="abrirPreviaImpressao('ETIQUETAS')">Imprimir etiquetas</Button>
+            <Button variant="secondary" @click="abrirPreviaImpressao('FICHA_TRABALHO')">Imprimir ficha</Button>
           </div>
         </div>
         <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
@@ -277,6 +276,13 @@
         @registrado="aposAlteracao"
       />
       <CancelarCasoModal :show="cancelamentoAberto" :caso="caso" @close="cancelamentoAberto = false" @cancelado="cancelamentoAberto = false" />
+      <PrintPreview
+        :show="previaImpressaoAberta"
+        :caso="caso"
+        :tipo="tipoImpressao"
+        @close="previaImpressaoAberta = false"
+        @impresso="previaImpressaoAberta = false"
+      />
     </template>
   </div>
 </template>
@@ -303,6 +309,7 @@ import NaoConformidadeModal from '../../components/ap/NaoConformidadeModal.vue';
 import StatusCasoBadge from '../../components/ap/StatusCasoBadge.vue';
 import ArvoreMateriais from '../../components/ap/caso/ArvoreMateriais.vue';
 import CancelarCasoModal from '../../components/ap/caso/CancelarCasoModal.vue';
+import PrintPreview from '../../components/ap/PrintPreview.vue';
 import FluxoCaso from '../../components/ap/caso/FluxoCaso.vue';
 import RegistrosEtapa from '../../components/ap/caso/RegistrosEtapa.vue';
 import {
@@ -322,7 +329,7 @@ import {
 import { formatarDataHora, horasDesde, tempoDecorrido } from '../../helpers/formato';
 import { useCasosStore } from '../../stores/casos';
 import { useAuthStore } from '../../stores/auth';
-import type { EtapaCodigo, ItemMaterial, TipoItemMaterial } from '../../types/ap';
+import type { EtapaCodigo, ItemMaterial, TipoImpressao, TipoItemMaterial } from '../../types/ap';
 
 const props = defineProps<{ numero: string }>();
 
@@ -337,6 +344,13 @@ const aba = ref('resumo');
 const itemDestacado = ref<string | undefined>();
 const ncAberta = ref(false);
 const cancelamentoAberto = ref(false);
+const previaImpressaoAberta = ref(false);
+const tipoImpressao = ref<TipoImpressao>('ETIQUETAS');
+
+const abrirPreviaImpressao = (tipo: TipoImpressao) => {
+  tipoImpressao.value = tipo;
+  previaImpressaoAberta.value = true;
+};
 
 const ativo = computed(() => !!caso.value && casoEstaAtivo(caso.value.status));
 const textoBloqueio = computed(() => (caso.value ? STATUS_BLOQUEADOS[caso.value.status] : undefined));

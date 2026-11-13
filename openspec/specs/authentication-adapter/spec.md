@@ -1,7 +1,6 @@
 # authentication-adapter Specification
 
 ## Purpose
-
 Isolar a autenticação de desenvolvimento atrás de um contrato estável de identidade, preparando a integração institucional sem escolher ou implementar seu protocolo.
 
 ## Requirements

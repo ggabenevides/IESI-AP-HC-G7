@@ -232,18 +232,21 @@ def test_plantao_e_limitado_a_congelacao_e_so_uma_vez(client):
     assert repetida.status_code == 409
 
 
-def test_operacoes_pendentes_e_consulta_de_devolucoes_respeitam_permissoes(client):
+def test_associacao_ihq_impressao_e_devolucao_seguem_politica_validada(client):
     entrada_ihq = {"solicitacaoCodigo": "7712356", "conferencia": conferencia(), "casoOrigemNumero": "HP-0001/26"}
     impressao = {"numeroInterno": "HP-0001/26", "tipo": "ETIQUETAS"}
     for username in [*PERFIS_MOCK, "sem-perfil"]:
         headers = token(client, username)
-        assert client.post("/api/ap/recebimentos/ihq", headers=headers, json=entrada_ihq).status_code == 403
-        assert client.post("/api/ap/casos/impressoes", headers=headers, json=impressao).status_code == 403
+        assert client.post("/api/ap/recebimentos/ihq", headers=headers, json=entrada_ihq).status_code == 501
+        # O caminho coincide com a rota GET /casos/{numero:path}; como não há POST
+        # para registrar impressão, o FastAPI responde 405 (método não permitido).
+        assert client.post("/api/ap/casos/impressoes", headers=headers, json=impressao).status_code == 405
         status_consulta = client.get("/api/ap/devolucoes", headers=headers).status_code
-        assert status_consulta == (200 if username == "recepcionista" else 403)
-        assert client.patch("/api/ap/devolucoes/1/situacao", headers=headers, json={
+        assert status_consulta == (200 if username in {"recepcionista", "admin"} else 403)
+        status_atualizacao = client.patch("/api/ap/devolucoes/1/situacao", headers=headers, json={
             "situacao": "NOVA_AMOSTRA_RECEBIDA",
-        }).status_code == 403
+        }).status_code
+        assert status_atualizacao == (404 if username in {"recepcionista", "admin"} else 403)
 
     assert client.post("/api/ap/recebimentos/ihq", json=entrada_ihq).status_code == 401
     assert client.get("/api/ap/devolucoes").status_code == 401

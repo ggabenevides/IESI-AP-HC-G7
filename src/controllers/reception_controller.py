@@ -44,6 +44,11 @@ STATUS_CASO_BLOQUEADOS = {
     "EM_ARQUIVAMENTO": "Em arquivamento",
     "ARQUIVADO": "Arquivado",
 }
+ROTULOS_SITUACAO_DEVOLUCAO = {
+    "AGUARDANDO_NOVA_AMOSTRA": "Aguardando nova amostra",
+    "NOVA_AMOSTRA_RECEBIDA": "Nova amostra recebida",
+    "ENCERRADA": "Encerrada",
+}
 
 
 def agora_iso() -> str:
@@ -149,6 +154,49 @@ class ReceptionController:
     async def listar_devolucoes(self) -> list[dict[str, Any]]:
         """Lista rejeições e devoluções para identidades com consulta autorizada."""
         return await self.provider.listar_devolucoes()
+
+    async def atualizar_situacao_devolucao(
+        self, devolucao_id: int, situacao: str, usuario: dict[str, Any], ip: str | None
+    ) -> dict[str, Any]:
+        """Atualiza situação, histórico e auditoria com autoria da identidade autenticada."""
+        alteracao = await self.provider.atualizar_situacao_devolucao(devolucao_id, situacao)
+        if alteracao is None:
+            raise HTTPException(status_code=404, detail="Devolução não encontrada.")
+
+        anterior = alteracao["anterior"]
+        atual = alteracao["atual"]
+        if anterior["situacao"] == atual["situacao"]:
+            return atual
+
+        responsavel = responsavel_autenticado(usuario)
+        if atual.get("casoNumero"):
+            await self.provider.adicionar_historico(
+                atual["casoNumero"],
+                _evento_historico(
+                    responsavel,
+                    "DEVOLUCAO_ATUALIZADA",
+                    "Situação da devolução atualizada",
+                    f"{ROTULOS_SITUACAO_DEVOLUCAO[anterior['situacao']]} → "
+                    f"{ROTULOS_SITUACAO_DEVOLUCAO[atual['situacao']]}.",
+                    ocorrido_em=agora_iso(),
+                ),
+            )
+        await _auditar(
+            self.session,
+            usuario,
+            ip,
+            "DEVOLUCAO_SITUACAO_ATUALIZADA",
+            f"devolucao:{devolucao_id}",
+            {
+                "situacao": anterior["situacao"],
+                "statusNaoConformidade": alteracao["statusNaoConformidadeAnterior"],
+            },
+            {
+                "situacao": atual["situacao"],
+                "statusNaoConformidade": alteracao["statusNaoConformidadeAtual"],
+            },
+        )
+        return atual
 
     async def ler_solicitacao(self, codigo: str) -> dict[str, Any]:
         """Classifica solicitação como pendente, recebida, devolvida ou inexistente."""

@@ -17,9 +17,9 @@ from ..providers.interfaces.reception_provider_interface import ReceptionProvide
 from ..resources.database import get_app_db_session
 from ..schemas.reception import (
     AcionarPlantaoInput,
+    AtualizarSituacaoDevolucaoInput,
     CancelarCasoInput,
     ConfirmarEntradaInput,
-    RegistrarImpressaoInput,
     RegistrarNaoConformidadeInput,
 )
 
@@ -41,11 +41,11 @@ def _ip_origem(request: Request) -> str | None:
     return request.client.host if request.client else None
 
 
-async def _negar_operacao_pendente(
+async def _negar_vinculo_ihq_nao_implementado(
     _usuario: dict[str, Any] = Depends(auth_handler.decode_token),
 ) -> None:
-    """Falha fechada para operações sem permissão confirmada no catálogo."""
-    raise HTTPException(status_code=403, detail="Operação aguardando definição de permissão SAP/HC")
+    """Recusa vínculo manual enquanto o mecanismo automático ainda é definido."""
+    raise HTTPException(status_code=501, detail="A associação automática de solicitações IHQ ainda não está implementada.")
 
 
 async def _conflito_integridade(session: AsyncSession, erro: IntegrityError) -> None:
@@ -149,7 +149,7 @@ async def confirmar_recebimento(
         await _conflito_integridade(session, erro)
 
 
-@router.post("/recebimentos/ihq", dependencies=[Depends(_negar_operacao_pendente)])
+@router.post("/recebimentos/ihq", dependencies=[Depends(_negar_vinculo_ihq_nao_implementado)])
 async def vincular_ihq_pendente() -> None:
     """Vínculo IHQ permanece fechado até a permissão ser validada por SAP/HC."""
 
@@ -169,11 +169,6 @@ async def cancelar_caso(
         )
     except IntegrityError as erro:
         await _conflito_integridade(session, erro)
-
-
-@router.post("/casos/impressoes", dependencies=[Depends(_negar_operacao_pendente)])
-async def registrar_impressao_pendente(_entrada: RegistrarImpressaoInput) -> None:
-    """Registro de impressão aguarda permissão explícita no catálogo central."""
 
 
 @router.post("/casos/acionamentos-plantao")
@@ -216,13 +211,26 @@ async def listar_devolucoes(
     provider: ReceptionProviderInterface = Depends(get_reception_provider),
     session: AsyncSession = Depends(get_app_db_session),
 ) -> list[dict[str, Any]]:
-    """Lista rejeições e devoluções para o perfil Recepcionista SAP."""
+    """Lista rejeições e devoluções para Recepção e Coordenação/Administrador."""
     return await _controller(provider, session).listar_devolucoes()
 
 
-@router.patch("/devolucoes/{devolucao_id}/situacao", dependencies=[Depends(_negar_operacao_pendente)])
-async def atualizar_situacao_devolucao_pendente(devolucao_id: int) -> None:
-    """Alteração já possui identificador sem concessão; permanece negada por padrão."""
+@router.patch("/devolucoes/{devolucao_id}/situacao")
+async def atualizar_situacao_devolucao(
+    devolucao_id: int,
+    entrada: AtualizarSituacaoDevolucaoInput,
+    request: Request,
+    usuario: dict[str, Any] = Depends(exigir_permissao(Permissao.DEVOLUCOES_ALTERAR_SITUACAO)),
+    provider: ReceptionProviderInterface = Depends(get_reception_provider),
+    session: AsyncSession = Depends(get_app_db_session),
+) -> dict[str, Any]:
+    """Atualiza situação para Recepcionista SAP ou Coordenação/Administrador."""
+    try:
+        return await _controller(provider, session).atualizar_situacao_devolucao(
+            devolucao_id, entrada.situacao, usuario, _ip_origem(request)
+        )
+    except IntegrityError as erro:
+        await _conflito_integridade(session, erro)
 
 
 @router.get("/auditoria")

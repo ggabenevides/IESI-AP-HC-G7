@@ -295,6 +295,55 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
             devolucoes.append({**payload, "naoConformidade": nc_payload, "rejeicaoNaRecepcao": not bool(devolucao.caso_numero)})
         return devolucoes
 
+    async def atualizar_situacao_devolucao(self, devolucao_id: int, situacao: str) -> dict[str, Any] | None:
+        """Atualiza devolução e não conformidade associada na sessão corrente."""
+        devolucao = await self.session.get(ApDevolucao, devolucao_id)
+        if devolucao is None:
+            return None
+        nc = await self.session.get(ApNaoConformidade, devolucao.nao_conformidade_id)
+        if nc is None:
+            return None
+
+        payload = _load(devolucao.payload)
+        nc_payload = _load(nc.payload)
+        anterior = {
+            **payload,
+            "id": devolucao.id,
+            "situacao": devolucao.situacao,
+            "naoConformidade": {**nc_payload, "id": nc.id, "status": nc.status},
+            "rejeicaoNaRecepcao": not bool(devolucao.caso_numero),
+        }
+        status_nc_anterior = nc.status
+        if devolucao.situacao == situacao:
+            return {
+                "anterior": anterior,
+                "atual": anterior,
+                "statusNaoConformidadeAnterior": status_nc_anterior,
+                "statusNaoConformidadeAtual": status_nc_anterior,
+            }
+
+        devolucao.situacao = situacao
+        payload["situacao"] = situacao
+        devolucao.payload = _dump(payload)
+        nc.status = "RESOLVIDA" if situacao in {"NOVA_AMOSTRA_RECEBIDA", "ENCERRADA"} else "ABERTA"
+        nc_payload["status"] = nc.status
+        nc.payload = _dump(nc_payload)
+        await self.session.flush()
+
+        atual = {
+            **payload,
+            "id": devolucao.id,
+            "situacao": devolucao.situacao,
+            "naoConformidade": {**nc_payload, "id": nc.id, "status": nc.status},
+            "rejeicaoNaRecepcao": not bool(devolucao.caso_numero),
+        }
+        return {
+            "anterior": anterior,
+            "atual": atual,
+            "statusNaoConformidadeAnterior": status_nc_anterior,
+            "statusNaoConformidadeAtual": nc.status,
+        }
+
     def _solicitacao_payload(self, registro: ApSolicitacao) -> dict[str, Any]:
         """Monta solicitação com os campos locais de estado como fonte oficial."""
         payload = _load(registro.payload)

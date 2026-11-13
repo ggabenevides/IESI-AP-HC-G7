@@ -26,15 +26,14 @@ Os caminhos propostos são:
 |---|---|---|
 | listarPendentes, contarPendentes, lerSolicitacao | GET /api/ap/solicitacoes/pendentes, GET /api/ap/solicitacoes/pendentes/contagem, GET /api/ap/solicitacoes/{codigo} | casos:consultar |
 | listar, obter, buscar | GET /api/ap/casos, GET /api/ap/casos/{numeroInterno}, GET /api/ap/casos/busca?termo=&limite= | casos:consultar |
-| buscarElegiveisIhq | GET /api/ap/casos/elegiveis-ihq?termo= | casos:consultar; a consulta não concede permissão para vincular |
+| buscarElegiveisIhq | GET /api/ap/casos/elegiveis-ihq?termo= | consulta auxiliar mantida sem operação de vínculo manual; associação IHQ será automática em mecanismo futuro a definir |
 | confirmarEntrada | POST /api/ap/recebimentos | recepcao:receber |
-| vincularIhq | POST /api/ap/recebimentos/ihq | pendente: não existe permissão confirmada para esta operação no catálogo; negar até decisão SAP/HC |
+| vincularIhq | sem operação manual nesta mudança | a associação de solicitação IHQ ao caso será automática; mecanismo e gatilho ainda serão definidos pelo HC |
 | cancelar | POST /api/ap/casos/cancelamento com numeroInterno e motivo no corpo | casos:cancelar |
-| registrarImpressao | POST /api/ap/casos/impressoes com numeroInterno e tipo no corpo | pendente: não criar permissão nem herdar consulta sem validação SAP/HC |
 | registrarAcionamentoPlantao | POST /api/ap/casos/acionamentos-plantao com numeroInterno no corpo | recepcao:acionar_plantao |
 | registrar | POST /api/ap/nao-conformidades | recepcao:registrar_nao_conformidade |
-| listarDevolucoes | GET /api/ap/devolucoes | devolucoes:consultar, concedida ao perfil Recepcionista SAP após validação SAP/HC |
-| atualizarSituacao | PATCH /api/ap/devolucoes/{id}/situacao | devolucoes:alterar_situacao, atualmente sem perfil associado; negar até validação SAP/HC |
+| listarDevolucoes | GET /api/ap/devolucoes | devolucoes:consultar, concedida a Recepcionista SAP e Coordenação/Administrador após validação SAP/HC |
+| atualizarSituacao | PATCH /api/ap/devolucoes/{id}/situacao | devolucoes:alterar_situacao, concedida a Recepcionista SAP e Coordenação/Administrador |
 | AuditoriaService.listar | GET /api/ap/auditoria | auditoria:consultar |
 
 Rotas estáticas de casos devem ser declaradas antes da rota dinâmica por número. Os caminhos podem ser ajustados durante a implementação por convenção do projeto, desde que o contrato e a cobertura de operações permaneçam equivalentes. Não expor uma operação sem dependência de permissão explícita; para os itens pendentes, responder 403 e não alterar estado até aprovação e inclusão formal no catálogo central.
@@ -51,7 +50,7 @@ ServiceError continua recebendo status e detail; a implementação Axios deve co
 
 O Controller deve reproduzir as regras existentes: solicitação única e aguardando recebimento; conferência completa; quantidade inteira positiva; procedimento obrigatório; justificativa quando urgente; número interno único por tipo/ano; vínculo IHQ a caso existente elegível com confirmação de prontuário divergente; cancelamento de caso ativo com motivo; acionamento de plantão somente uma vez e apenas para congelação; registro de não conformidade nos contextos existentes; atualização de situação de devolução conforme os estados já definidos; pesquisa textual normalizada, ordenação e limites atuais.
 
-Ao confirmar recebimento, persistir status, número e tipo do caso, dados de entrada, responsável, etapa inicial, itens de material produzidos na Recepção, conferência e histórico. Ao vincular IHQ, persistir o vínculo à solicitação e ao caso existente, sem criar caso principal nem implementar fluxo técnico de IHQ. Impressão física continua no navegador; a API apenas registra o evento de impressão existente. Não adicionar operações de macroscopia, processamento, IHQ técnico, microscopia/laudo ou arquivo.
+Ao confirmar recebimento, persistir status, número e tipo do caso, dados de entrada, responsável, etapa inicial, itens de material produzidos na Recepção, conferência e histórico. A associação entre solicitação IHQ e caso será automática; o gatilho e o mecanismo ainda não estão definidos e não há operação manual nesta mudança. Impressão física continua no navegador e não gera evento de histórico ou auditoria. Não adicionar operações de macroscopia, processamento, IHQ técnico, microscopia/laudo ou arquivo.
 
 ### 4. Modelos e persistência
 
@@ -73,31 +72,30 @@ Reutilizar auth_handler.decode_token, a identidade normalizada e exigir_permissa
 
 Aplicar casos:consultar às leituras já cobertas pelo catálogo, recepcao:receber ao recebimento principal, recepcao:registrar_nao_conformidade ao registro de não conformidade, recepcao:acionar_plantao ao acionamento de plantão, casos:cancelar ao cancelamento e auditoria:consultar à consulta da auditoria. Não transformar a permissão de consulta em permissão de mutação.
 
-Vincular IHQ, registrar impressão e alterar a situação de devoluções permanecem negados enquanto não houver permissão correspondente confirmada e concedida no catálogo. A consulta de devoluções usa devolucoes:consultar, concedida ao perfil Recepcionista SAP após validação SAP/HC. devolucoes:alterar_situacao já existe, mas não está associada a perfil; a existência do identificador não autoriza nenhum usuário.
+Não há vínculo IHQ iniciado por usuário: a associação será automática, com mecanismo a definir pelo HC. A impressão não exige endpoint nem permissão própria; o acesso ao caso continua protegido por casos:consultar. A consulta e a atualização de situação das devoluções usam, respectivamente, devolucoes:consultar e devolucoes:alterar_situacao, concedidas a Recepcionista SAP e Coordenação/Administrador conforme validação SAP/HC.
 
 Todas as rotas AP, inclusive GET, são privadas. Sem token válido, responder 401; com identidade autenticada sem a permissão exigida, responder 403 sem retornar dados restritos nem produzir efeitos. Mais de um perfil continua resolvido pela união explícita já definida no RBAC central.
 
 ### 7. Auditoria e autoria
 
-Registrar cada mutação funcional por src/helpers/audit_helper.py e AuditLog, incluindo confirmação, vínculo IHQ quando habilitado, cancelamento, evento de impressão, plantão, não conformidade e alteração de situação. Usar identidade autenticada como usuario; categoria NEGOCIO_CLINICO; ação e recurso estáveis; estados anterior e novo relevantes; IP de origem obtido no servidor. Nunca confiar em IP ou autor do payload. Não copiar dados clínicos completos para o log quando bastarem os campos alterados.
+Registrar cada mutação funcional por src/helpers/audit_helper.py e AuditLog, incluindo confirmação, cancelamento, plantão, não conformidade e alteração de situação. Usar identidade autenticada como usuario; categoria NEGOCIO_CLINICO; ação e recurso estáveis; estados anterior e novo relevantes; IP de origem obtido no servidor. Nunca confiar em IP ou autor do payload. Não registrar evento de impressão nem copiar dados clínicos completos para o log quando bastarem os campos alterados.
 
 Usar a mesma AsyncSession para mutação, histórico e auditoria e não executar commit antes de registrar auditoria, pois o helper existente realiza o commit. Falha ao gravar a auditoria deve fazer rollback da operação associada. Para consultas de auditoria, exigir auditoria:consultar e não permitir alteração/exclusão de registros pela API desta mudança.
 
 ### 8. Transição do frontend
 
-Criar serviços HTTP sob os contratos atuais e fazer a seleção de frontend/src/services/ap/index.ts usar o backend como origem normal. Manter os mocks de frontend somente para testes ou desenvolvimento isolado explicitamente selecionado; não permitir que uma falha HTTP silenciosamente volte a executar mutações em memória. Manter as telas, componentes, stores e navegação Vue. A impressão continua sendo acionada pelo navegador depois do retorno da API que registra o evento.
+Criar serviços HTTP sob os contratos atuais e fazer a seleção de frontend/src/services/ap/index.ts usar o backend como origem normal. Manter os mocks de frontend somente para testes ou desenvolvimento isolado explicitamente selecionado; não permitir que uma falha HTTP silenciosamente volte a executar mutações em memória. Manter as telas, componentes, stores e navegação Vue. A pré-visualização e a impressão física são executadas no navegador, sem chamada de registro ao backend.
 
-Usar o estado de identidade/permissões já exposto pela mudança de perfis para ocultar ações sem permissão, e tratar 401/403 sem exibir sucesso falso. Em qualquer caso, o servidor continua sendo a barreira efetiva.
+Usar o estado de identidade/permissões já exposto pela mudança de perfis para ocultar ações sem permissão, e tratar 401/403 sem exibir sucesso falso. A pré-visualização e a impressão física são executadas pelo navegador, sem chamada de registro ao backend. Em qualquer caso, o servidor continua sendo a barreira efetiva para operações de domínio.
 
 ## Risks / Trade-offs
 
-- A matriz SAP/HC disponível é preliminar e não define todas as operações de impressão, vinculação IHQ e alteração de situação de devoluções. Essas operações ficam indisponíveis até decisão formal; não se deve resolver a lacuna por inferência. A leitura de devoluções pelo perfil Recepcionista SAP foi validada.
+- O gatilho e o mecanismo da associação automática IHQ ainda serão definidos pelo HC e ficam fora desta mudança. A consulta e a alteração de situação de devoluções foram validadas para Recepcionista SAP e Coordenação/Administrador.
 - O escopo adiciona persistência para um domínio antes mantido em memória. Migrações e concorrência do identificador interno precisam ser verificadas antes de substituir os mocks como origem oficial.
 - Os dados de solicitações são fictícios durante o desenvolvimento. A operação em produção depende de futura implementação institucional do provedor; esta mudança não constitui integração com o AGHU.
 - O contrato do AuditLog existente faz commit da sessão. A implementação deve preservar a atomicidade sem introduzir commits intermediários.
 
 ## Open Questions
 
-- SAP/HC deve ratificar quem pode vincular solicitações IHQ, registrar impressões e alterar a situação de devoluções, e se as permissões atuais podem cobrir essas operações ou se o catálogo deve ganhar novos identificadores.
-- SAP/HC deve confirmar se dados de solicitações devolvidas/recebidas permanecem consultáveis por todos os perfis que hoje possuem casos:consultar.
+- SAP/HC ainda deve confirmar quais perfis podem consultar, pelo código da solicitação, dados de solicitações já recebidas ou devolvidas. Isso é separado da lista de devoluções, validada para Recepcionista SAP e Coordenação/Administrador.
 - A fixture adotada reproduz o seed completo que já existia em frontend/src/mocks/ap/seed.ts, preservando os dados de demonstração visíveis antes da migração dos serviços para HTTP.

@@ -39,7 +39,8 @@ PERMISSOES_POR_PERFIL: dict[Perfil, frozenset[Permissao]] = {
     Perfil.RECEPCIONISTA: frozenset({Permissao.CASOS_CONSULTAR, Permissao.RECEPCAO_RECEBER,
                                     Permissao.RECEPCAO_REGISTRAR_NAO_CONFORMIDADE,
                                     Permissao.RECEPCAO_ACIONAR_PLANTAO,
-                                    Permissao.DEVOLUCOES_CONSULTAR}),
+                                    Permissao.DEVOLUCOES_CONSULTAR,
+                                    Permissao.DEVOLUCOES_ALTERAR_SITUACAO}),
     Perfil.PROFISSIONAL_MACROSCOPIA: frozenset({Permissao.CASOS_CONSULTAR,
                                                 Permissao.RECEPCAO_REGISTRAR_NAO_CONFORMIDADE,
                                                 Permissao.RECEPCAO_ACIONAR_PLANTAO}),
@@ -62,6 +63,8 @@ PERMISSOES_POR_PERFIL: dict[Perfil, frozenset[Permissao]] = {
     Perfil.COORDENACAO_ADMINISTRADOR: frozenset({Permissao.CASOS_CONSULTAR,
                                                   Permissao.RECEPCAO_ACIONAR_PLANTAO,
                                                   Permissao.CASOS_CANCELAR,
+                                                  Permissao.DEVOLUCOES_CONSULTAR,
+                                                  Permissao.DEVOLUCOES_ALTERAR_SITUACAO,
                                                   Permissao.SEGURANCA_GERENCIAR,
                                                   Permissao.AUDITORIA_CONSULTAR}),
 }
