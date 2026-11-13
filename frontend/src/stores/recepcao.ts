@@ -23,6 +23,8 @@ export interface MensagemLeitura {
   casoNumero?: string;
   /** Lembrete adicional exibido abaixo da mensagem. */
   dica?: string;
+  /** Estilo do alerta (padrão: danger). */
+  variante?: 'danger' | 'info';
 }
 
 const conferenciaVazia = (): ItensConferencia => ({
@@ -49,6 +51,8 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
   const carregandoPendentes = ref(false);
   const aghuIndisponivel = ref(false);
   const contagemPendentes = ref(0);
+  /** Filtra a lista de pendentes pelas amostras de um código do AGHU (leitura sem a amostra). */
+  const filtroCodigoAghu = ref<string | null>(null);
   /** Incrementado a cada reinício, para a tela reagir mesmo quando já está no passo 1. */
   const reinicios = ref(0);
 
@@ -80,6 +84,7 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
 
   /** Abre a conferência de uma solicitação pendente. */
   function iniciarConferencia(sol: SolicitacaoAghu): void {
+    filtroCodigoAghu.value = null;
     solicitacao.value = sol;
     conferencia.value = conferenciaVazia();
     resultado.value = null;
@@ -104,6 +109,11 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
           texto: `A solicitação ${leitura.solicitacao.codigoSolicitacao} foi devolvida em ${formatarData(leitura.devolvidaEm)} por não conformidade: ${TIPOS_NAO_CONFORMIDADE[leitura.tipoNaoConformidade]}.`,
           dica: 'Aguarde a nova amostra com uma nova solicitação do AGHU.',
         };
+      case 'MULTIPLAS_AMOSTRAS':
+        return {
+          texto: `Esta solicitação tem ${leitura.solicitacoes.length} amostras. Selecione a amostra na lista de pendentes ou leia o código completo (ex.: ${leitura.solicitacoes[0].codigoSolicitacao}).`,
+          variante: 'info',
+        };
       case 'NAO_ENCONTRADA':
         return {
           texto: `Nenhuma solicitação encontrada para ${codigo}. Confira a etiqueta ou digite o número.`,
@@ -124,6 +134,7 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
     lendo.value = true;
     try {
       const leitura = await aghuService.lerSolicitacao(codigo);
+      filtroCodigoAghu.value = leitura.tipo === 'MULTIPLAS_AMOSTRAS' ? leitura.codigoSolicitacaoAghu : null;
       if (leitura.tipo === 'PENDENTE') iniciarConferencia(leitura.solicitacao);
       else mensagemLeitura.value = mensagemPara(leitura, codigo);
       return leitura;
@@ -184,6 +195,7 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
   /** Volta ao passo 1 descartando o recebimento em andamento. */
   function reiniciar(): void {
     passo.value = 0;
+    filtroCodigoAghu.value = null;
     solicitacao.value = null;
     conferencia.value = conferenciaVazia();
     resultado.value = null;
@@ -203,6 +215,7 @@ export const useRecepcaoStore = defineStore('recepcao', () => {
     carregandoPendentes,
     aghuIndisponivel,
     contagemPendentes,
+    filtroCodigoAghu,
     reinicios,
     atualizarContagem,
     carregarPendentes,

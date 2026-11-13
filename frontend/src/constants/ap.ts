@@ -113,6 +113,14 @@ export const ORIGENS: Record<OrigemAtendimento, string> = {
   EXTERNO: 'Externo (E)',
 };
 
+/** Texto exibido quando um dado não veio do AGHU. */
+export const NAO_INFORMADO = 'Não informado';
+
+/** Rótulo da origem do atendimento, tolerante a origem nula ou desconhecida. */
+export function rotuloOrigem(origem: OrigemAtendimento | null | undefined): string {
+  return (origem && ORIGENS[origem]) || 'Não informada';
+}
+
 /** Catálogo padronizado de tipos de não conformidade. */
 export const TIPOS_NAO_CONFORMIDADE: Record<TipoNaoConformidadeCodigo, string> = {
   SEM_ETIQUETA_AGHU: 'Sem etiqueta do AGHU',

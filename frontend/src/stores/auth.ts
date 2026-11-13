@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import api from '../services/api';
+import { carregarSolicitacoesDoBackend } from '../services/ap/http/cargaSolicitacoes';
 
 interface User {
   username: string;
@@ -81,6 +82,8 @@ export const useAuthStore = defineStore('auth', () => {
     });
     setToken(data.access_token);
     await fetchUser(); // Fetch user info immediately after login
+    // Modo híbrido: carrega as solicitações AGHU do backend antes de a recepção listar pendentes
+    if (accessToken.value) await carregarSolicitacoesDoBackend();
   }
 
   async function logout(router?: any) {
@@ -115,6 +118,8 @@ export const useAuthStore = defineStore('auth', () => {
       })();
     }
     await initialization;
+    // Página recarregada já autenticada: (re)carrega as solicitações AGHU do backend
+    if (accessToken.value) await carregarSolicitacoesDoBackend();
   }
 
   return {

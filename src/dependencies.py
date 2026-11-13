@@ -1,7 +1,11 @@
 import os
+from functools import lru_cache
 from typing import Callable
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from .providers.interfaces.solicitacao_provider_interface import SolicitacaoProviderInterface
+from .providers.implementations.solicitacao_csv_provider import SolicitacaoCsvProvider
 
 from .providers.interfaces.paciente_provider_interface import PacienteProviderInterface
 from .providers.implementations.paciente_postgres_provider import PacientePostgresProvider
@@ -37,5 +41,30 @@ def get_paciente_provider(strategy: str) -> Callable[..., PacienteProviderInterf
         return _get_paciente_postgres_provider
     elif strategy.upper() == "CSV":
         return _get_paciente_csv_provider
+    else:
+        raise ValueError(f"Estratégia de provedor desconhecida: {strategy}")
+
+
+# --- Solicitações AGHU ---------------------------------------------------------
+
+@lru_cache(maxsize=1)
+def _carregar_solicitacao_csv_provider(csv_path: str) -> SolicitacaoCsvProvider:
+    """Cria (uma única vez por caminho) o provedor CSV, mantendo o arquivo em memória."""
+    return SolicitacaoCsvProvider(csv_path=csv_path)
+
+
+def _get_solicitacao_csv_provider() -> SolicitacaoProviderInterface:
+    """Dependência FastAPI que devolve o provedor CSV de solicitações (singleton)."""
+    csv_path = os.getenv("SOLICITACAO_CSV_PATH", "data/privado/solicitacoes.csv")
+    try:
+        return _carregar_solicitacao_csv_provider(csv_path)
+    except RuntimeError as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e))
+
+
+def get_solicitacao_provider(strategy: str) -> Callable[..., SolicitacaoProviderInterface]:
+    """Fábrica: retorna a função de dependência do provedor de solicitações para a estratégia."""
+    if strategy.upper() == "CSV":
+        return _get_solicitacao_csv_provider
     else:
         raise ValueError(f"Estratégia de provedor desconhecida: {strategy}")

@@ -134,7 +134,7 @@ import { ArrowUturnLeftIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/o
 import Modal from '../Modal.vue';
 import Button from '../Button.vue';
 import Alert from '../Alert.vue';
-import { ETAPAS, ORIGENS, SETOR_RECEPCAO, TIPOS_NAO_CONFORMIDADE, UNIDADES_ORIGEM } from '../../constants/ap';
+import { ETAPAS, NAO_INFORMADO, SETOR_RECEPCAO, TIPOS_NAO_CONFORMIDADE, UNIDADES_ORIGEM, rotuloOrigem } from '../../constants/ap';
 import { formatarDataHora } from '../../helpers/formato';
 import { useResponsavel } from '../../composables/useResponsavel';
 import { mensagemDeErro } from '../../services/ap';
@@ -185,8 +185,8 @@ const cartoesSolicitacao = computed(() => {
   return [
     { rotulo: 'Solicitação AGHU', valor: s.codigoSolicitacao },
     { rotulo: 'Exame', valor: s.nomeExame },
-    { rotulo: 'Origem', valor: `${s.unidade} · ${ORIGENS[s.origem]}` },
-    { rotulo: 'Médico / especialidade', valor: `${s.nomeSolicitante} · ${s.especialidade}` },
+    { rotulo: 'Origem', valor: `${s.unidade} · ${rotuloOrigem(s.origem)}` },
+    { rotulo: 'Médico / especialidade', valor: `${s.nomeSolicitante || NAO_INFORMADO} · ${s.especialidade}` },
   ];
 });
 
