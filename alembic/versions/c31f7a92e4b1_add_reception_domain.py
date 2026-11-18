@@ -44,7 +44,9 @@ def upgrade() -> None:
 
     op.create_table(
         "ap_solicitacoes",
+        sa.Column("id", sa.String(length=80), nullable=False),
         sa.Column("codigo_solicitacao", sa.String(length=60), nullable=False),
+        sa.Column("tipo_exame", sa.String(length=12), nullable=False),
         sa.Column("situacao_recepcao", sa.String(length=40), nullable=False),
         sa.Column("data_solicitacao", sa.String(length=40), nullable=False),
         sa.Column("caso_numero", sa.String(length=40), nullable=True),
@@ -52,24 +54,25 @@ def upgrade() -> None:
         sa.Column("ihq_caso_numero", sa.String(length=40), nullable=True),
         sa.Column("devolucao_id", sa.Integer(), nullable=True),
         sa.Column("payload", sa.Text(), nullable=False),
-        sa.PrimaryKeyConstraint("codigo_solicitacao"),
+        sa.PrimaryKeyConstraint("id"),
     )
+    op.create_index("ix_ap_solicitacoes_codigo_solicitacao", "ap_solicitacoes", ["codigo_solicitacao"])
     op.create_index("ix_ap_solicitacoes_situacao_recepcao", "ap_solicitacoes", ["situacao_recepcao"])
     op.create_index("ix_ap_solicitacoes_data_solicitacao", "ap_solicitacoes", ["data_solicitacao"])
 
     op.create_table(
         "ap_casos",
         sa.Column("numero_interno", sa.String(length=40), nullable=False),
-        sa.Column("solicitacao_codigo", sa.String(length=60), nullable=False),
+        sa.Column("solicitacao_id", sa.String(length=80), nullable=False),
         sa.Column("tipo_exame", sa.String(length=12), nullable=False),
         sa.Column("status", sa.String(length=40), nullable=False),
         sa.Column("data_entrada", sa.String(length=40), nullable=False),
         sa.Column("payload", sa.Text(), nullable=False),
-        sa.ForeignKeyConstraint(["solicitacao_codigo"], ["ap_solicitacoes.codigo_solicitacao"]),
+        sa.ForeignKeyConstraint(["solicitacao_id"], ["ap_solicitacoes.id"]),
         sa.PrimaryKeyConstraint("numero_interno"),
-        sa.UniqueConstraint("solicitacao_codigo", name="uq_ap_caso_solicitacao"),
+        sa.UniqueConstraint("solicitacao_id", name="uq_ap_caso_solicitacao_exame"),
     )
-    op.create_index("ix_ap_casos_solicitacao_codigo", "ap_casos", ["solicitacao_codigo"])
+    op.create_index("ix_ap_casos_solicitacao_id", "ap_casos", ["solicitacao_id"])
     op.create_index("ix_ap_casos_tipo_exame", "ap_casos", ["tipo_exame"])
     op.create_index("ix_ap_casos_status", "ap_casos", ["status"])
     op.create_index("ix_ap_casos_data_entrada", "ap_casos", ["data_entrada"])
@@ -77,15 +80,17 @@ def upgrade() -> None:
     op.create_table(
         "ap_conferencias_recebimento",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("solicitacao_id", sa.String(length=80), nullable=False),
         sa.Column("solicitacao_codigo", sa.String(length=60), nullable=False),
         sa.Column("caso_numero", sa.String(length=40), nullable=True),
         sa.Column("resultado", sa.String(length=20), nullable=False),
         sa.Column("conferido_em", sa.String(length=40), nullable=False),
         sa.Column("payload", sa.Text(), nullable=False),
-        sa.ForeignKeyConstraint(["solicitacao_codigo"], ["ap_solicitacoes.codigo_solicitacao"]),
+        sa.ForeignKeyConstraint(["solicitacao_id"], ["ap_solicitacoes.id"]),
         sa.ForeignKeyConstraint(["caso_numero"], ["ap_casos.numero_interno"]),
         sa.PrimaryKeyConstraint("id"),
     )
+    op.create_index("ix_ap_conferencias_recebimento_solicitacao_id", "ap_conferencias_recebimento", ["solicitacao_id"])
     op.create_index("ix_ap_conferencias_recebimento_solicitacao_codigo", "ap_conferencias_recebimento", ["solicitacao_codigo"])
     op.create_index("ix_ap_conferencias_recebimento_caso_numero", "ap_conferencias_recebimento", ["caso_numero"])
     op.create_index("ix_ap_conferencias_recebimento_resultado", "ap_conferencias_recebimento", ["resultado"])
@@ -106,12 +111,12 @@ def upgrade() -> None:
         "ap_exames_ihq",
         sa.Column("codigo_interno", sa.String(length=40), nullable=False),
         sa.Column("caso_numero", sa.String(length=40), nullable=False),
-        sa.Column("solicitacao_codigo", sa.String(length=60), nullable=False),
+        sa.Column("solicitacao_id", sa.String(length=80), nullable=False),
         sa.Column("payload", sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(["caso_numero"], ["ap_casos.numero_interno"]),
-        sa.ForeignKeyConstraint(["solicitacao_codigo"], ["ap_solicitacoes.codigo_solicitacao"]),
         sa.PrimaryKeyConstraint("codigo_interno"),
-        sa.UniqueConstraint("solicitacao_codigo"),
+        sa.ForeignKeyConstraint(["solicitacao_id"], ["ap_solicitacoes.id"]),
+        sa.UniqueConstraint("solicitacao_id"),
     )
     op.create_index("ix_ap_exames_ihq_caso_numero", "ap_exames_ihq", ["caso_numero"])
 
@@ -123,7 +128,6 @@ def upgrade() -> None:
         sa.Column("status", sa.String(length=30), nullable=False),
         sa.Column("payload", sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(["caso_numero"], ["ap_casos.numero_interno"]),
-        sa.ForeignKeyConstraint(["solicitacao_codigo"], ["ap_solicitacoes.codigo_solicitacao"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index("ix_ap_nao_conformidades_caso_numero", "ap_nao_conformidades", ["caso_numero"])
@@ -141,7 +145,6 @@ def upgrade() -> None:
         sa.Column("payload", sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(["nao_conformidade_id"], ["ap_nao_conformidades.id"]),
         sa.ForeignKeyConstraint(["caso_numero"], ["ap_casos.numero_interno"]),
-        sa.ForeignKeyConstraint(["solicitacao_codigo"], ["ap_solicitacoes.codigo_solicitacao"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index("ix_ap_devolucoes_nao_conformidade_id", "ap_devolucoes", ["nao_conformidade_id"])
@@ -185,12 +188,14 @@ def downgrade() -> None:
     op.drop_index("ix_ap_conferencias_recebimento_resultado", table_name="ap_conferencias_recebimento")
     op.drop_index("ix_ap_conferencias_recebimento_caso_numero", table_name="ap_conferencias_recebimento")
     op.drop_index("ix_ap_conferencias_recebimento_solicitacao_codigo", table_name="ap_conferencias_recebimento")
+    op.drop_index("ix_ap_conferencias_recebimento_solicitacao_id", table_name="ap_conferencias_recebimento")
     op.drop_table("ap_conferencias_recebimento")
     op.drop_index("ix_ap_casos_data_entrada", table_name="ap_casos")
     op.drop_index("ix_ap_casos_status", table_name="ap_casos")
     op.drop_index("ix_ap_casos_tipo_exame", table_name="ap_casos")
-    op.drop_index("ix_ap_casos_solicitacao_codigo", table_name="ap_casos")
+    op.drop_index("ix_ap_casos_solicitacao_id", table_name="ap_casos")
     op.drop_table("ap_casos")
     op.drop_index("ix_ap_solicitacoes_data_solicitacao", table_name="ap_solicitacoes")
     op.drop_index("ix_ap_solicitacoes_situacao_recepcao", table_name="ap_solicitacoes")
+    op.drop_index("ix_ap_solicitacoes_codigo_solicitacao", table_name="ap_solicitacoes")
     op.drop_table("ap_solicitacoes")

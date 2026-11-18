@@ -26,35 +26,22 @@ def token(client, username: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {resposta.json()['access_token']}"}
 
 
-def conferencia(completa: bool = True) -> dict[str, bool]:
-    """Monta os quatro itens exigidos pela conferência existente."""
+def entrada(solicitacao_id: str = "7712301:HP", tipo: str = "HP") -> dict:
+    """Monta payload válido para receber um grupo fictício de exame."""
     return {
-        "identificacaoConfere": completa,
-        "materialConfere": completa,
-        "quantidadeConfere": completa,
-        "recipienteAdequado": completa,
-    }
-
-
-def entrada(solicitacao: str = "7712301", tipo: str = "HP") -> dict:
-    """Monta payload válido para receber uma solicitação fictícia."""
-    return {
-        "solicitacaoCodigo": solicitacao,
-        "conferencia": conferencia(),
+        "solicitacaoId": solicitacao_id,
         "tipoExame": tipo,
-        "quantidade": 1,
         "urgente": tipo == "CO",
-        "motivoUrgencia": "Cirurgia em andamento" if tipo == "CO" else None,
         "procedimento": "Biópsia endoscópica",
     }
 
 
-def receber(client, solicitacao: str = "7712301", tipo: str = "HP") -> dict:
+def receber(client, solicitacao_id: str = "7712301:HP", tipo: str = "HP") -> dict:
     """Cria caso usando identidade que possui a permissão de recebimento."""
     resposta = client.post(
         "/api/ap/recebimentos",
         headers=token(client, "recepcionista"),
-        json=entrada(solicitacao, tipo),
+        json=entrada(solicitacao_id, tipo),
     )
     assert resposta.status_code == 201, resposta.text
     return resposta.json()
@@ -116,6 +103,8 @@ def test_recebimento_persiste_autoria_auditoria_e_impede_repeticao(client):
     caso = resposta.json()
     assert caso["responsavelEntrada"] == {"login": "recepcionista", "nome": "Recepcionista SAP"}
     assert caso["conferencia"]["resultado"] == "ACEITA"
+    assert caso["conferencia"]["solicitacaoId"] == "7712301:HP"
+    assert caso["conferencia"]["amostras"] == ["1"]
     assert len(caso["materiais"]) == 1
     assert caso["historico"][0]["usuario"]["login"] == "recepcionista"
 
@@ -124,7 +113,9 @@ def test_recebimento_persiste_autoria_auditoria_e_impede_repeticao(client):
     assert detalhe.status_code == 200
     assert detalhe.json()["numeroInterno"] == caso["numeroInterno"]
     assert detalhe.json()["solicitacao"]["situacaoRecepcao"] == "RECEBIDA"
-    assert client.get("/api/ap/solicitacoes/7712301", headers=headers).json()["tipo"] == "RECEBIDA"
+    leitura_parcial = client.get("/api/ap/solicitacoes/7712301", headers=headers).json()
+    assert leitura_parcial["tipo"] == "PENDENTE"
+    assert [item["id"] for item in leitura_parcial["exames"]] == ["7712301:CG"]
 
     duplicada = client.post("/api/ap/recebimentos", headers=headers, json=entrada())
     assert duplicada.status_code == 409
@@ -140,10 +131,9 @@ def test_recebimento_persiste_autoria_auditoria_e_impede_repeticao(client):
     assert evento["ipOrigem"] == "testclient"
 
 
-def test_validacao_incompleta_retorna_detail_e_nao_persiste(client):
+def test_tipo_divergente_retorna_detail_e_nao_persiste(client):
     headers = token(client, "recepcionista")
-    payload = entrada()
-    payload["conferencia"] = conferencia(completa=False)
+    payload = entrada(tipo="CG")
     resposta = client.post("/api/ap/recebimentos", headers=headers, json=payload)
 
     assert resposta.status_code == 422
@@ -155,10 +145,10 @@ def test_validacao_incompleta_retorna_detail_e_nao_persiste(client):
 def test_nao_conformidade_cria_devolucao_e_atualiza_solicitacao_atomicamente(client):
     headers = token(client, "recepcionista")
     payload = {
-        "contexto": {"tipo": "SOLICITACAO", "solicitacaoCodigo": "7712301", "conferencia": conferencia(False)},
-        "tipo": "IDENTIFICACAO_DIVERGENTE",
-        "descricao": "Identificação fictícia divergente na etiqueta.",
+        "contexto": {"tipo": "SOLICITACAO", "solicitacaoIds": ["7712301:HP", "7712301:CG"]},
+        "tipo": "IDENTIFICACAO_ILEGIVEL",
         "novaAmostraSolicitada": True,
+        "observacao": "Identificação fictícia ilegível nas etiquetas.",
         "responsavel": {"login": "falso", "nome": "Usuário falso"},
     }
     resposta = client.post("/api/ap/nao-conformidades", headers=headers, json=payload)
@@ -169,7 +159,9 @@ def test_nao_conformidade_cria_devolucao_e_atualiza_solicitacao_atomicamente(cli
     assert devolucao["naoConformidade"]["registradoPor"]["login"] == "recepcionista"
     leitura = client.get("/api/ap/solicitacoes/7712301", headers=headers).json()
     assert leitura["tipo"] == "DEVOLVIDA"
-    assert leitura["tipoNaoConformidade"] == "IDENTIFICACAO_DIVERGENTE"
+    assert leitura["tipoNaoConformidade"] == "IDENTIFICACAO_ILEGIVEL"
+    grupos = client.get("/api/ap/solicitacoes/7712301/exames", headers=headers).json()
+    assert {item["situacaoRecepcao"] for item in grupos} == {"DEVOLVIDA"}
 
     auditoria = client.get("/api/ap/auditoria", headers=token(client, "recepcao-coordenacao")).json()
     evento = next(item for item in auditoria if item["acao"] == "NAO_CONFORMIDADE_DEVOLUCAO")
@@ -182,8 +174,8 @@ def test_nao_conformidade_em_caso_muda_status_e_registra_historico(client):
     caso = receber(client)
     resposta = client.post("/api/ap/nao-conformidades", headers=headers, json={
         "contexto": {"tipo": "CASO", "casoNumero": caso["numeroInterno"]},
-        "tipo": "MATERIAL_INADEQUADO",
-        "descricao": "Material fictício inadequado.",
+        "tipo": "EXAME_NAO_CORRESPONDE_MATERIAL",
+        "observacao": "Material fictício incompatível.",
         "novaAmostraSolicitada": False,
     })
 
@@ -218,7 +210,7 @@ def test_cancelamento_exige_permissao_admin_e_motivo(client):
 
 def test_plantao_e_limitado_a_congelacao_e_so_uma_vez(client):
     headers = token(client, "recepcionista")
-    caso = receber(client, "7712340", "CO")
+    caso = receber(client, "7712340:CO", "CO")
     chamada = client.post("/api/ap/casos/acionamentos-plantao", headers=headers, json={
         "numeroInterno": caso["numeroInterno"],
         "responsavel": {"login": "falso", "nome": "Falso"},
@@ -232,22 +224,29 @@ def test_plantao_e_limitado_a_congelacao_e_so_uma_vez(client):
     assert repetida.status_code == 409
 
 
-def test_associacao_ihq_impressao_e_devolucao_seguem_politica_validada(client):
-    entrada_ihq = {"solicitacaoCodigo": "7712356", "conferencia": conferencia(), "casoOrigemNumero": "HP-0001/26"}
-    impressao = {"numeroInterno": "HP-0001/26", "tipo": "ETIQUETAS"}
-    for username in [*PERFIS_MOCK, "sem-perfil"]:
-        headers = token(client, username)
-        assert client.post("/api/ap/recebimentos/ihq", headers=headers, json=entrada_ihq).status_code == 501
-        # O caminho coincide com a rota GET /casos/{numero:path}; como não há POST
-        # para registrar impressão, o FastAPI responde 405 (método não permitido).
-        assert client.post("/api/ap/casos/impressoes", headers=headers, json=impressao).status_code == 405
-        status_consulta = client.get("/api/ap/devolucoes", headers=headers).status_code
-        assert status_consulta == (200 if username in {"recepcionista", "admin"} else 403)
-        status_atualizacao = client.patch("/api/ap/devolucoes/1/situacao", headers=headers, json={
-            "situacao": "NOVA_AMOSTRA_RECEBIDA",
-        }).status_code
-        assert status_atualizacao == (404 if username in {"recepcionista", "admin"} else 403)
+def test_ihq_manual_preserva_permissoes_e_impressao_nao_tem_endpoint(client):
+    headers = token(client, "recepcionista")
+    caso = receber(client)
+    entrada_ihq = {
+        "solicitacaoId": "7712356:IHQ",
+        "casoOrigemNumero": caso["numeroInterno"],
+        "divergenciaConfirmada": True,
+    }
+    ihq = client.post("/api/ap/recebimentos/ihq", headers=headers, json=entrada_ihq)
+    assert ihq.status_code == 201, ihq.text
+    assert ihq.json()["ihq"]["solicitacaoAghuCodigo"] == "7712356"
 
+    impressao = client.post("/api/ap/casos/impressoes", headers=headers, json={
+        "numeroInterno": caso["numeroInterno"], "tipo": "ETIQUETAS", "amostras": ["1"],
+    })
+    assert impressao.status_code == 405
+    assert all(
+        evento["evento"] not in {"ETIQUETAS_IMPRESSAS", "FICHA_IMPRESSA"}
+        for evento in ihq.json()["caso"]["historico"]
+    )
+
+    for username in [nome for nome in PERFIS_MOCK if nome != "recepcionista"]:
+        assert client.post("/api/ap/recebimentos/ihq", headers=token(client, username), json=entrada_ihq).status_code == 403
     assert client.post("/api/ap/recebimentos/ihq", json=entrada_ihq).status_code == 401
     assert client.get("/api/ap/devolucoes").status_code == 401
 
@@ -268,7 +267,7 @@ def test_indisponibilidade_mock_afeta_listagem_leitura_mas_nao_contagem(client, 
 
 def test_recebimento_concorrente_nao_gera_numero_interno_duplicado(client):
     headers = token(client, "recepcionista")
-    payloads = [entrada("7712301"), entrada("7712318")]
+    payloads = [entrada("7712301:HP"), entrada("7712301:HP")]
 
     def enviar(payload):
         return client.post("/api/ap/recebimentos", headers=headers, json=payload)
@@ -278,7 +277,7 @@ def test_recebimento_concorrente_nao_gera_numero_interno_duplicado(client):
 
     assert sorted(resposta.status_code for resposta in respostas) == [201, 409]
     assert len(client.get("/api/ap/casos", headers=headers).json()) == 1
-    assert client.get("/api/ap/solicitacoes/pendentes/contagem", headers=headers).json() == 4
+    assert client.get("/api/ap/solicitacoes/pendentes/contagem", headers=headers).json() == 5
 
 
 def test_seed_de_solicitacoes_e_idempotente_e_preserva_estado_local(tmp_path):
@@ -300,14 +299,15 @@ def test_seed_de_solicitacoes_e_idempotente_e_preserva_estado_local(tmp_path):
                 fixture = solicitacoes_ficticias()
                 await provider.seed_solicitacoes(fixture)
                 await provider.seed_solicitacoes(fixture)
-                assert await provider.contar_solicitacoes_pendentes() == len(fixture)
+                assert await provider.contar_solicitacoes_pendentes() == 5
 
-                solicitacao = await provider.buscar_solicitacao(fixture[0]["codigoSolicitacao"])
+                solicitacao = await provider.buscar_solicitacao(fixture[0]["id"])
                 solicitacao["situacaoRecepcao"] = "RECEBIDA"
                 await provider.salvar_solicitacao(solicitacao)
                 await provider.seed_solicitacoes(fixture)
-                persistida = await provider.buscar_solicitacao(fixture[0]["codigoSolicitacao"])
+                persistida = await provider.buscar_solicitacao(fixture[0]["id"])
                 assert persistida["situacaoRecepcao"] == "RECEBIDA"
+                assert await provider.listar_exames_da_solicitacao("7712301")
         finally:
             await engine.dispose()
 
@@ -337,7 +337,7 @@ def test_seed_demo_reaproveita_carga_ap_existente_e_migra_placeholders(tmp_path)
                 assert len(await provider.listar_casos()) == len(estado["casos"]) == 19
                 assert await provider.contar_solicitacoes_pendentes() == 6
                 assert len(await provider.listar_devolucoes()) == 3
-                solicitacao = await provider.buscar_solicitacao("7712301")
+                solicitacao = await provider.buscar_solicitacao("7712301:HP")
                 assert not solicitacao["nomePaciente"].startswith("PACIENTE FICTÍCIO")
 
                 await provider.seed_demo_state(estado)

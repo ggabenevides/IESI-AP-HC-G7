@@ -2,20 +2,26 @@
 
 ## Estado atual
 
-Autenticação identifica a pessoa; autorização aplica os perfis e permissões locais definidos em `src/auth/authorization.py`. O frontend recebe a identidade e as permissões por `GET /api/users/me`. Tokens JWT preservam a identidade normalizada, não os grupos do provedor como fonte de privilégios.
+A autenticação usa um adapter de identidade. Neste ambiente, o adapter disponível é `MockIdentityProvider`, restrito a `development`, `test` e `testing`. Use as identidades fictícias da tela de login com a senha `demo`; `admin/admin` é compatibilidade de desenvolvimento. Não use dados nem credenciais reais.
 
-O Adapter ativo nesta etapa é `MockIdentityProvider`. Selecione uma identidade fictícia na tela de login e use a senha `demo`; `admin/admin` permanece como compatibilidade de desenvolvimento para o usuário Coordenação/Administrador. A identidade `sem-perfil` valida o comportamento de negação padrão. Não use dados ou credenciais reais.
+A autorização vem do cadastro local SQLite (`usuario`, `perfil` e `usuario_perfil`). O login só emite token se a identidade autenticada também estiver cadastrada e ativa localmente. As permissões são calculadas no backend a partir dos perfis ativos; cada dependência `exigir_permissao(...)` consulta novamente o cadastro antes de autorizar uma operação. O conteúdo de grupos ou perfis enviado pelo cliente ou pelo provedor não concede permissões.
 
-`AUTH_PROVIDER=mock` só é permitido em `ENV=development`, `test` ou `testing`. Em produção, a aplicação falha ao iniciar com o provedor mock. Não há integração institucional nesta versão. A equipe de TI do HC deverá implementar `IdentityProvider`, definir como validar a identidade institucional e mapear um identificador estável; protocolo, claims, fluxo de sessão e gestão de perfis ainda serão decisões institucionais.
+Ao iniciar com o adapter mock, identidades fictícias são cadastradas uma vez para desenvolvimento. Alterações locais de status e perfis existentes não são sobrescritas pela carga inicial. A identidade `sem-perfil` pode autenticar e consultar a própria identidade, mas não recebe acesso a operações protegidas.
 
-## Perfis e permissões
+`src/auth/authorization.py` define os nove códigos de perfil, o catálogo de permissões e a união explícita para múltiplos perfis. A migration `e24bc68129ad_add_local_user_profiles.py` cria as tabelas do cadastro. Execute `alembic upgrade head` para aplicar as migrations em uma instalação persistente.
 
-`src/auth/authorization.py` contém os nove identificadores de perfil, o catálogo de permissões e a união explícita para usuários com múltiplos perfis. Dependências FastAPI usam `exigir_permissao(...)`; identidade autenticada sem concessão recebe HTTP 403. Ausência de token recebe HTTP 401. Grupos vindos de provedores externos não autorizam ações.
+## Integração institucional
 
-As concessões de operações atuais derivam dos atores associados aos casos de uso em `docs/especificacao/03-casos-uso.md`. Permissões sem ator/operação claramente associado ficam negadas. Alterar a situação da devolução e gerir usuários não está concedido a perfil algum nesta implementação. As permissões de trabalho do Citotécnico em etapas futuras permanecem pendentes de validação SAP/HC; neste catálogo o perfil só tem consulta, conforme os casos de consulta comuns.
+Não há adapter institucional AD/LDAP, SSO ou OIDC nesta versão. `AUTH_PROVIDER=mock` é proibido em produção, e o startup falha se um provedor institucional ainda não implementado for selecionado. A configuração e o protocolo institucionais precisam ser definidos pela TI do HC antes de produção.
 
-## Limite importante da Recepção
+## Proteção das operações
 
-Os serviços de Recepção ainda estão implementados como mocks em memória no navegador. Guards e ações ocultas no Vue melhoram a interface, mas não são uma barreira de segurança. Até que cada operação de domínio seja transferida para um endpoint FastAPI protegido, esse estado local não deve ser tratado como dado persistente nem como fluxo pronto para produção. O backend desta etapa protege os endpoints de dados que já existem; ele não cria nem simula endpoints de negócio da Recepção.
+As rotas FastAPI verificam as permissões no backend; guards e menus Vue apenas refletem as permissões retornadas por `GET /api/users/me`. Uma chamada direta sem autorização recebe HTTP 403, e uma chamada sem token válido recebe HTTP 401. Os grupos externos não são usados como fonte de privilégios.
 
-O mock de usuários não é uma ferramenta de provisionamento. A tela antiga de gestão de usuários permanece indisponível; atribuições institucionais dependem de governança aprovada pelo HC.
+## Recepção
+
+A Recepção usa a API FastAPI/SQLite como fonte principal por `frontend/src/services/ap/http.ts`. O mock de navegador só é selecionado explicitamente em desenvolvimento para testes isolados; não há fallback silencioso da API para o mock. Recebimentos, vínculos IHQ e não conformidades são persistidos pelo backend com autoria, auditoria e permissões correspondentes. Etiquetas e fichas são pré-visualizadas e impressas no navegador, sem chamada de API, histórico ou `AuditLog`.
+
+## Provisionamento
+
+A interface de administração de usuários/perfis ainda não está disponível. Até que ela seja implementada e aprovada pelo HC, novos usuários e alterações de perfis precisam ser provisionados por um processo administrativo controlado no banco local.

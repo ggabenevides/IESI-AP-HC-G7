@@ -7,7 +7,7 @@ Define a API FastAPI e o estado persistente do servidor para as operações já 
 
 ### Requirement: API de domínio para as operações atuais
 
-O backend SHALL expor operações protegidas para listar, contar e localizar solicitações; listar, obter e buscar casos; confirmar recebimento; cancelar caso; registrar acionamento de plantão e não conformidade; listar devoluções; atualizar situação de devolução; e consultar auditoria. A associação de solicitações IHQ SHALL ocorrer automaticamente por mecanismo futuro ainda a definir, sem ação manual de usuário nesta mudança. A API SHALL preservar os resultados e tipos consumidos pelos contratos de serviço atuais e SHALL NOT criar fluxo de negócio novo.
+O backend SHALL expor operações protegidas para listar, contar e localizar solicitações e grupos de exames; listar, obter e buscar casos; confirmar recebimento por grupo; manter o vínculo manual de IHQ a um caso elegível como contingência quando o AGHU não fornecer o vínculo; registrar acionamento de plantão e não conformidade; listar devoluções; atualizar sua situação; e consultar auditoria. Quando o AGHU já fornecer o vínculo, esse é o fluxo ideal. Solicitações são identificadas por `<codigoSolicitacao>:<tipoExame>`. A API SHALL cumprir os contratos de `frontend/src/types/ap.ts` e `src/schemas/reception.py`.
 
 #### Scenario: Contratos existentes atendidos pela API
 
@@ -15,11 +15,10 @@ O backend SHALL expor operações protegidas para listar, contar e localizar sol
 - **THEN** a implementação HTTP retorna o mesmo formato de domínio esperado pelo contrato
 - **AND** a interface, navegação e componentes Vue permanecem no frontend
 
-#### Scenario: Impressão física
+#### Scenario: Impressão física local
 
-- **WHEN** o usuário solicita impressão de etiquetas ou ficha de trabalho
-- **THEN** o navegador continua gerando a saída física
-- **AND** a operação não chama o backend nem cria evento de histórico ou auditoria
+- **WHEN** o usuário imprime etiquetas ou ficha de trabalho
+- **THEN** o navegador gera a saída física sem chamada de API, registro em histórico ou `AuditLog`
 
 ### Requirement: Regras de negócio e estado persistido
 
@@ -27,9 +26,9 @@ O servidor SHALL validar e executar as regras já presentes em docs/especificaca
 
 #### Scenario: Recebimento válido
 
-- **WHEN** uma solicitação está aguardando recebimento e a requisição apresenta conferência completa, quantidade válida, procedimento e justificativa de urgência quando necessária
-- **THEN** o servidor persiste caso, número interno único, materiais iniciais, conferência, estado da solicitação e histórico
-- **AND** uma segunda tentativa concorrente ou posterior para receber a mesma solicitação não cria outro caso
+- **WHEN** um grupo `<codigoSolicitacao>:<tipoExame>` está aguardando recebimento e a requisição contém os dados obrigatórios do tipo
+- **THEN** o servidor persiste caso ou vínculo IHQ, materiais do grupo, conferência, estado e histórico
+- **AND** os demais grupos da solicitação permanecem independentes e podem continuar pendentes
 
 #### Scenario: Validação ou conflito de estado
 
@@ -62,6 +61,8 @@ O backend SHALL fornecer solicitações fictícias por um provedor de desenvolvi
 
 Toda rota de domínio SHALL exigir identidade autenticada e permissão explícita do catálogo add-sector-access-profiles. A autorização SHALL ser aplicada também a chamadas HTTP diretas, SHALL negar por padrão permissões ausentes e SHALL NOT confiar em controles visuais do frontend. Consultar SHALL NOT implicar permissão para mutar.
 
+O login SHALL exigir também um usuário local cadastrado e ativo em `usuario`; as permissões SHALL vir das associações ativas em `usuario_perfil` e `perfil`, nunca de claims do cliente.
+
 #### Scenario: Consulta com permissão
 
 - **WHEN** uma identidade autenticada possui casos:consultar e solicita uma leitura de solicitação ou caso coberta por essa permissão
@@ -85,12 +86,11 @@ Toda rota de domínio SHALL exigir identidade autenticada e permissão explícit
 - **WHEN** uma identidade autenticada sem devolucoes:consultar lista as devoluções
 - **THEN** o servidor responde 403 e não retorna dados
 
-#### Scenario: Associação IHQ automática ainda não definida
+#### Scenario: Vínculo manual IHQ de contingência autorizado
 
-- **WHEN** uma pessoa tenta vincular manualmente uma solicitação IHQ a um caso
-- **THEN** o backend responde 501 e não altera registros
-- **AND** não existe permissão de usuário para um vínculo manual
-- **AND** o mecanismo automático fica fora desta mudança até definição do HC
+- **WHEN** o AGHU não forneceu o vínculo e uma identidade com `recepcao:receber` vincula manualmente um grupo IHQ a um caso elegível, confirmando uma divergência de prontuário quando houver
+- **THEN** o backend persiste o vínculo, a conferência e o histórico
+- **AND** não cria um caso principal para a IHQ
 
 #### Scenario: Atualização de situação permitida
 

@@ -1,11 +1,14 @@
 # sample-labels Specification
 
-## REMOVED Requirements
+## ADDED Requirements
 
-### Requirement: Registro da impressão
-Cada impressão SHALL registrar um evento no histórico do caso ("Etiquetas impressas" ou "Ficha de trabalho impressa"), com o usuário e a data e hora.
+### Requirement: Impressão local
+A pré-visualização, impressão e reimpressão SHALL ocorrer apenas no navegador usando `window.print()`, sem chamada de API, registro no histórico do caso ou `AuditLog`.
 
-#### Scenario: Reimpressão
-
+#### Scenario: Reimpressão local
 - **WHEN** o usuário imprime a ficha de trabalho pela segunda vez
-- **THEN** o histórico passa a ter dois eventos "Ficha de trabalho impressa"
+- **THEN** o navegador imprime a ficha novamente sem criar registro no backend
+
+#### Scenario: Impressão parcial local de etiquetas
+- **WHEN** o usuário imprime só as etiquetas das amostras 2 e 4
+- **THEN** o navegador imprime apenas essas etiquetas sem criar registro no backend

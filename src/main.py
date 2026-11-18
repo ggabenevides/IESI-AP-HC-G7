@@ -13,6 +13,8 @@ from .resources.database import DatabaseManager, Base
 from .config import settings
 from .providers.fixtures.reception_requests import carregar_estado_demo, solicitacoes_ficticias
 from .providers.implementations.reception_sqlite_provider import ReceptionSqliteProvider
+from .auth.auth import identidade_mock_disponivel
+from .auth.user_registry import seed_mock_authorization
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,10 +35,15 @@ async def lifespan(app: FastAPI):
     app.state.app_db = DatabaseManager(app_dsn)
     print(f"App SQLite connection pool initialized ({app_dsn}).")
 
-    # Create tables for App DB (if they don't exist) - for development only, Alembic handles this in production
-    async with app.state.app_db.engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("App SQLite tables checked/created.")
+    # A criação automática é restrita a desenvolvimento/testes; produção usa Alembic.
+    if settings.ENVIRONMENT in ("development", "test", "testing"):
+        async with app.state.app_db.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("App SQLite tables checked/created.")
+
+    if identidade_mock_disponivel():
+        async with app.state.app_db.async_session_maker() as session:
+            await seed_mock_authorization(session)
 
     if settings.AP_REQUEST_PROVIDER == "mock":
         async with app.state.app_db.async_session_maker() as session:

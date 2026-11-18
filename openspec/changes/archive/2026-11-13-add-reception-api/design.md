@@ -26,9 +26,9 @@ Os caminhos propostos são:
 |---|---|---|
 | listarPendentes, contarPendentes, lerSolicitacao | GET /api/ap/solicitacoes/pendentes, GET /api/ap/solicitacoes/pendentes/contagem, GET /api/ap/solicitacoes/{codigo} | casos:consultar |
 | listar, obter, buscar | GET /api/ap/casos, GET /api/ap/casos/{numeroInterno}, GET /api/ap/casos/busca?termo=&limite= | casos:consultar |
-| buscarElegiveisIhq | GET /api/ap/casos/elegiveis-ihq?termo= | consulta auxiliar mantida sem operação de vínculo manual; associação IHQ será automática em mecanismo futuro a definir |
+| buscarElegiveisIhq | GET /api/ap/casos/elegiveis-ihq?termo= | busca auxiliar para o vínculo manual de contingência da IHQ |
 | confirmarEntrada | POST /api/ap/recebimentos | recepcao:receber |
-| vincularIhq | sem operação manual nesta mudança | a associação de solicitação IHQ ao caso será automática; mecanismo e gatilho ainda serão definidos pelo HC |
+| vincularIhq | POST /api/ap/recebimentos/ihq | recepcao:receber; vínculo manual de contingência quando o AGHU não o fornecer |
 | cancelar | POST /api/ap/casos/cancelamento com numeroInterno e motivo no corpo | casos:cancelar |
 | registrarAcionamentoPlantao | POST /api/ap/casos/acionamentos-plantao com numeroInterno no corpo | recepcao:acionar_plantao |
 | registrar | POST /api/ap/nao-conformidades | recepcao:registrar_nao_conformidade |
@@ -48,9 +48,9 @@ ServiceError continua recebendo status e detail; a implementação Axios deve co
 
 ### 3. Regras e limites funcionais
 
-O Controller deve reproduzir as regras existentes: solicitação única e aguardando recebimento; conferência completa; quantidade inteira positiva; procedimento obrigatório; justificativa quando urgente; número interno único por tipo/ano; vínculo IHQ a caso existente elegível com confirmação de prontuário divergente; cancelamento de caso ativo com motivo; acionamento de plantão somente uma vez e apenas para congelação; registro de não conformidade nos contextos existentes; atualização de situação de devolução conforme os estados já definidos; pesquisa textual normalizada, ordenação e limites atuais.
+O Controller deve aplicar os contratos conciliados: recebimento de grupos pela chave composta; procedimento obrigatório e urgência sem justificativa textual; número interno único por tipo/ano; vínculo manual IHQ a caso existente elegível como contingência, com confirmação de prontuário divergente; cancelamento de caso ativo com motivo; acionamento de plantão somente uma vez e apenas para congelação; registro de não conformidade nos contextos existentes; atualização de situação de devolução conforme os estados já definidos; pesquisa textual normalizada, ordenação e limites atuais.
 
-Ao confirmar recebimento, persistir status, número e tipo do caso, dados de entrada, responsável, etapa inicial, itens de material produzidos na Recepção, conferência e histórico. A associação entre solicitação IHQ e caso será automática; o gatilho e o mecanismo ainda não estão definidos e não há operação manual nesta mudança. Impressão física continua no navegador e não gera evento de histórico ou auditoria. Não adicionar operações de macroscopia, processamento, IHQ técnico, microscopia/laudo ou arquivo.
+Ao confirmar recebimento, persistir status, número e tipo do caso, dados de entrada, responsável, etapa inicial, itens de material produzidos na Recepção, conferência e histórico. O endpoint de contingência recebe um grupo IHQ e o associa ao caso elegível informado; o fluxo ideal é a solicitação já chegar vinculada pelo AGHU. Impressão física permanece local no navegador e não chama API nem gera evento de histórico ou auditoria. Não adicionar operações de macroscopia, processamento, IHQ técnico, microscopia/laudo ou arquivo.
 
 ### 4. Modelos e persistência
 
@@ -72,7 +72,7 @@ Reutilizar auth_handler.decode_token, a identidade normalizada e exigir_permissa
 
 Aplicar casos:consultar às leituras já cobertas pelo catálogo, recepcao:receber ao recebimento principal, recepcao:registrar_nao_conformidade ao registro de não conformidade, recepcao:acionar_plantao ao acionamento de plantão, casos:cancelar ao cancelamento e auditoria:consultar à consulta da auditoria. Não transformar a permissão de consulta em permissão de mutação.
 
-Não há vínculo IHQ iniciado por usuário: a associação será automática, com mecanismo a definir pelo HC. A impressão não exige endpoint nem permissão própria; o acesso ao caso continua protegido por casos:consultar. A consulta e a atualização de situação das devoluções usam, respectivamente, devolucoes:consultar e devolucoes:alterar_situacao, concedidas a Recepcionista SAP e Coordenação/Administrador conforme validação SAP/HC.
+O vínculo manual IHQ é uma contingência autorizada pela permissão recepcao:receber; quando disponível, prevalece o vínculo recebido do AGHU. A impressão não exige endpoint nem permissão própria; o acesso aos dados do caso continua protegido por casos:consultar. A consulta e a atualização de situação das devoluções usam, respectivamente, devolucoes:consultar e devolucoes:alterar_situacao, concedidas a Recepcionista SAP e Coordenação/Administrador conforme validação SAP/HC.
 
 Todas as rotas AP, inclusive GET, são privadas. Sem token válido, responder 401; com identidade autenticada sem a permissão exigida, responder 403 sem retornar dados restritos nem produzir efeitos. Mais de um perfil continua resolvido pela união explícita já definida no RBAC central.
 
@@ -90,7 +90,7 @@ Usar o estado de identidade/permissões já exposto pela mudança de perfis para
 
 ## Risks / Trade-offs
 
-- O gatilho e o mecanismo da associação automática IHQ ainda serão definidos pelo HC e ficam fora desta mudança. A consulta e a alteração de situação de devoluções foram validadas para Recepcionista SAP e Coordenação/Administrador.
+- A operação manual de vínculo IHQ é uma contingência enquanto o AGHU não fornecer a associação; o vínculo originado pelo AGHU é o fluxo ideal. A consulta e a alteração de situação de devoluções foram validadas para Recepcionista SAP e Coordenação/Administrador.
 - O escopo adiciona persistência para um domínio antes mantido em memória. Migrações e concorrência do identificador interno precisam ser verificadas antes de substituir os mocks como origem oficial.
 - Os dados de solicitações são fictícios durante o desenvolvimento. A operação em produção depende de futura implementação institucional do provedor; esta mudança não constitui integração com o AGHU.
 - O contrato do AuditLog existente faz commit da sessão. A implementação deve preservar a atomicidade sem introduzir commits intermediários.

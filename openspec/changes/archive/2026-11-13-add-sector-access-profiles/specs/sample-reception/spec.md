@@ -32,12 +32,11 @@ A impressão de etiquetas e ficha SHALL ocorrer no navegador, sem endpoint, even
 - **THEN** o navegador abre a impressão física
 - **AND** nenhum evento de impressão é enviado ou persistido pelo backend
 
-### Requirement: Associação IHQ automática sem ação manual
+### Requirement: Vínculo manual IHQ como contingência
 
-A associação entre solicitação IHQ e caso SHALL ocorrer automaticamente quando o mecanismo for definido pelo HC. Esta mudança SHALL NOT oferecer uma ação manual de vínculo nem criar permissões para ela.
+Quando o vínculo da solicitação IHQ não vier do AGHU, a Recepção SHALL poder associar manualmente o grupo IHQ a um caso principal elegível usando `recepcao:receber`. Quando o AGHU fornecer a associação, esse é o fluxo ideal.
 
-#### Scenario: Mecanismo automático ainda não implementado
+#### Scenario: Vínculo ausente no AGHU
 
-- **WHEN** o usuário recebe uma solicitação IHQ na Recepção antes da definição do mecanismo automático
-- **THEN** a interface informa que a associação automática ainda não está disponível
-- **AND** nenhuma mutação manual de vínculo é executada
+- **WHEN** o usuário recebe uma solicitação IHQ sem caso de origem associado
+- **THEN** a interface permite buscar e selecionar um caso elegível e confirma o vínculo mediante permissão

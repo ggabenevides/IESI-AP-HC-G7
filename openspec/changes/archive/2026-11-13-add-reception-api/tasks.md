@@ -4,7 +4,7 @@
 
 - [x] 1.1 Mapear cada método de frontend/src/services/ap/types.ts para endpoint, payload, resposta e regra já existente nas specs e nos casos de uso.
 - [x] 1.2 Reutilizar o catálogo e as dependências de add-sector-access-profiles; não adicionar usuários, sessões ou permissões locais à API.
-- [x] 1.3 Não oferecer vínculo manual de IHQ, documentar associação automática futura com mecanismo a definir e remover o registro de impressão; conceder atualização da devolução aos perfis validados.
+- [x] 1.3 Manter `POST /api/ap/recebimentos/ihq` como vínculo manual de contingência autorizado; tratar o vínculo já fornecido pelo AGHU como fluxo ideal e manter a impressão local sem endpoint ou log; conceder atualização da devolução aos perfis validados.
 - [x] 1.4 Conceder consulta e atualização de devoluções a Recepcionista SAP e Coordenação/Administrador após validação SAP/HC; manter permissões distintas.
 
 ## 2. Persistência e provedores
@@ -36,7 +36,7 @@
 ## 5. Testes e critérios de aceite
 
 - [x] 5.1 Reexecutar testes de todos os endpoints com token ausente, identidades mockadas de cada um dos nove perfis, identidade sem perfil e identidade com múltiplos perfis; verificar permissões pelo catálogo central.
-- [x] 5.2 Verificar que esta mudança não oferece associação manual de IHQ, que a impressão não gera registro no backend, que a atualização de devolução é restrita aos perfis validados e que não há permissões presumidas para Citotécnico.
+- [x] 5.2 Verificar que o vínculo manual de contingência IHQ exige permissão, que a impressão não gera registro no backend, que a atualização de devolução é restrita aos perfis validados e que não há permissões presumidas para Citotécnico.
 - [x] 5.3 Reexecutar testes de chamadas diretas à API, payload com autor forjado, validações, conflitos de estado, indisponibilidade do provider e erros {"detail": "..."}.
 - [x] 5.4 Revalidar persistência entre sessões, seed idempotente, unicidade concorrente e rollback quando auditoria falha.
 - [x] 5.5 Verificar auditoria da atualização de situação quanto a identidade, categoria, recurso, estados anterior/novo e IP, sem dados clínicos desnecessários.

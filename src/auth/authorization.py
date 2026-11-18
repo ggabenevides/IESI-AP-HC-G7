@@ -5,8 +5,13 @@ from enum import StrEnum
 from typing import Callable
 
 from fastapi import Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from .auth import auth_handler
+from ..models.usuario_perfil import Perfil as PerfilModel
+from ..models.usuario_perfil import Usuario, UsuarioPerfil
+from ..resources.database import get_app_db_session
 
 
 class Perfil(StrEnum):
@@ -81,13 +86,53 @@ def resolver_permissoes(perfis: list[str]) -> list[str]:
     return sorted(permissao.value for permissao in permissoes)
 
 
+async def listar_perfis_locais(login: str, db: AsyncSession) -> list[str]:
+    """Carrega apenas perfis ativos de um usuário previamente habilitado no banco local."""
+    login_normalizado = login.strip().lower()
+    resultado_usuario = await db.execute(
+        select(Usuario).where(Usuario.login_institucional == login_normalizado)
+    )
+    usuario = resultado_usuario.scalar_one_or_none()
+    if usuario is None or not usuario.ativo:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuário não cadastrado ou inativo para este sistema",
+        )
+
+    resultado_perfis = await db.execute(
+        select(PerfilModel.codigo)
+        .join(UsuarioPerfil, UsuarioPerfil.perfil_id == PerfilModel.id)
+        .where(UsuarioPerfil.usuario_id == usuario.id, PerfilModel.ativo.is_(True))
+        .order_by(PerfilModel.codigo)
+    )
+    return list(resultado_perfis.scalars().all())
+
+
+async def identidade_com_permissoes_locais(
+    identidade: dict, db: AsyncSession
+) -> dict:
+    """Combina atributos autenticados pelo provedor com perfis persistidos localmente."""
+    login = identidade.get("username") or identidade.get("sub")
+    if not isinstance(login, str) or not login.strip():
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Identidade inválida")
+    perfis = await listar_perfis_locais(login, db)
+    identidade_local = dict(identidade)
+    identidade_local["profiles"] = perfis
+    identidade_local["permissions"] = resolver_permissoes(perfis)
+    return identidade_local
+
+
 def exigir_permissao(permissao: Permissao) -> Callable[..., dict]:
     """Cria dependência que exige uma permissão explícita na identidade autenticada."""
-    async def verificar(usuario: dict = Depends(auth_handler.decode_token)) -> dict:
-        if permissao.value not in usuario.get("permissions", []):
+    async def verificar(
+        usuario: dict = Depends(auth_handler.decode_token),
+        db: AsyncSession = Depends(get_app_db_session),
+    ) -> dict:
+        identidade = await identidade_com_permissoes_locais(usuario, db)
+        if permissao.value not in identidade["permissions"]:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                                 detail="Usuário sem permissão para esta operação")
-        return usuario
+        return identidade
     return verificar
 
 

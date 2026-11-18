@@ -1,8 +1,8 @@
 /**
  * Ponto único de seleção das implementações dos serviços do Sistema AP.
  *
- * Hoje todas são mock. Para integrar com o backend, crie implementações HTTP (usando
- * `services/api.ts`) que respeitem as interfaces de `./types` e troque as atribuições abaixo.
+ * A API HTTP é a fonte principal. O mock só é selecionado explicitamente em desenvolvimento
+ * (`VITE_AP_SERVICE_MODE=mock`) e implementa os mesmos contratos de `./types`.
  */
 import { db, definirAghuDisponivel, reiniciarDb } from '../../mocks/ap/db';
 import { aghuServiceMock } from './mock/aghuServiceMock';

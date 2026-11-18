@@ -8,7 +8,7 @@ Define a API FastAPI e o estado persistente do servidor para as operações já 
 
 ### Requirement: API de domínio para as operações atuais
 
-O backend SHALL expor operações protegidas para listar, contar e localizar solicitações; listar, obter e buscar casos; confirmar recebimento; cancelar caso; registrar acionamento de plantão e não conformidade; listar devoluções; atualizar situação de devolução; e consultar auditoria. A associação de solicitações IHQ SHALL ocorrer automaticamente por mecanismo futuro ainda a definir, sem ação manual de usuário nesta mudança. A API SHALL preservar os resultados e tipos consumidos pelos contratos de serviço atuais e SHALL NOT criar fluxo de negócio novo.
+O backend SHALL expor operações protegidas para listar, contar e localizar solicitações; listar, obter e buscar casos; confirmar recebimento; vincular manualmente um grupo IHQ a um caso elegível como contingência; cancelar caso; registrar acionamento de plantão e não conformidade; listar devoluções; atualizar situação de devolução; e consultar auditoria. Quando o vínculo já vier do AGHU, esse é o fluxo ideal. A API SHALL preservar os resultados e tipos consumidos pelos contratos de serviço atuais.
 
 #### Scenario: Contratos existentes atendidos pela API
 
@@ -86,12 +86,11 @@ Toda rota de domínio SHALL exigir identidade autenticada e permissão explícit
 - **WHEN** uma identidade autenticada sem devolucoes:consultar lista as devoluções
 - **THEN** o servidor responde 403 e não retorna dados
 
-#### Scenario: Associação IHQ automática ainda não definida
+#### Scenario: Vínculo manual IHQ de contingência
 
-- **WHEN** uma pessoa tenta vincular manualmente uma solicitação IHQ a um caso
-- **THEN** o backend responde 501 e não altera registros
-- **AND** não existe permissão de usuário para um vínculo manual
-- **AND** o mecanismo automático fica fora desta mudança até definição do HC
+- **WHEN** uma pessoa da Recepção precisa vincular um grupo IHQ cujo vínculo não veio do AGHU
+- **THEN** o backend permite a operação pelo endpoint de contingência, após verificar `recepcao:receber` e a elegibilidade do caso
+- **AND** registra o vínculo e a conferência sem criar um novo caso principal
 
 #### Scenario: Atualização de situação permitida
 

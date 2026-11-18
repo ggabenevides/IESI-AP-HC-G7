@@ -48,6 +48,8 @@ export const aghuServiceHttp: AghuService = {
   listarPendentes: () => requisicao(() => api.get('/api/ap/solicitacoes/pendentes')),
   contarPendentes: () => requisicao(() => api.get('/api/ap/solicitacoes/pendentes/contagem')),
   lerSolicitacao: (codigo) => requisicao(() => api.get(`/api/ap/solicitacoes/${encodeURIComponent(codigo)}`)),
+  listarExamesDaSolicitacao: (codigo) =>
+    requisicao(() => api.get(`/api/ap/solicitacoes/${encodeURIComponent(codigo)}/exames`)),
 };
 
 export const casoServiceHttp: CasoService = {
@@ -85,4 +87,13 @@ export const auditoriaServiceHttp: AuditoriaService = {
   listar: () => requisicao(() => api.get('/api/ap/auditoria')),
 };
 
-export type { AuditLog, CasoAp, CasoElegivelIhq, DevolucaoDetalhada, ExameIhq, LeituraSolicitacao, ResultadoBuscaCasos, SolicitacaoAghu };
+export type {
+  AuditLog,
+  CasoAp,
+  CasoElegivelIhq,
+  DevolucaoDetalhada,
+  ExameIhq,
+  LeituraSolicitacao,
+  ResultadoBuscaCasos,
+  SolicitacaoAghu,
+};
