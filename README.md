@@ -5,6 +5,19 @@
 
 ---
 
+## 🌐 Demonstração (deploy de testes)
+
+**Link:** https://debian-prodesk-recife.tail6cbf0b.ts.net
+
+**Como acessar:**
+
+1. Abra o link no navegador: **Safari, Chrome, Edge ou Firefox**.
+2. Na janela do navegador, informe o **usuário e a senha de acesso** enviados pela equipe por mensagem privada.
+3. Na tela do sistema, entre com o **login do sistema** fornecido juntamente à senha de acesso.
+4. Não digite dados reais de pacientes.
+
+---
+
 ## 🏛️ Visão Geral
 
 O **Framework-SETISD-HC-UFPE** é a base arquitetural monolítica limpa, desacoplada e padronizada para a criação de novas aplicações web corporativas no HC-UFPE. 
