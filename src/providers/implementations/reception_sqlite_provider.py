@@ -51,10 +51,14 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         """Restaura idempotentemente a carga AP que já existia no mock do frontend."""
         for solicitacao in estado["solicitacoes"]:
             codigo = str(solicitacao["codigoSolicitacao"]).strip().upper()
-            registro = await self.session.get(ApSolicitacao, codigo)
+            tipo = str(solicitacao["tipoExameSugerido"]).strip().upper()
+            grupo_id = str(solicitacao.get("id") or f"{codigo}:{tipo}").strip().upper()
+            registro = await self.session.get(ApSolicitacao, grupo_id)
             if registro is None:
                 self.session.add(ApSolicitacao(
+                    id=grupo_id,
                     codigo_solicitacao=codigo,
+                    tipo_exame=tipo,
                     situacao_recepcao=solicitacao["situacaoRecepcao"],
                     data_solicitacao=solicitacao["dataSolicitacao"],
                     caso_numero=solicitacao.get("casoNumero"),
@@ -64,6 +68,8 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
                     payload=_dump(solicitacao),
                 ))
             elif await self._pode_substituir_placeholder(registro):
+                registro.codigo_solicitacao = codigo
+                registro.tipo_exame = tipo
                 registro.situacao_recepcao = solicitacao["situacaoRecepcao"]
                 registro.data_solicitacao = solicitacao["dataSolicitacao"]
                 registro.caso_numero = solicitacao.get("casoNumero")
@@ -86,7 +92,7 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
                     self.session.add(ApExameIhq(
                         codigo_interno=codigo_ihq,
                         caso_numero=numero,
-                        solicitacao_codigo=ihq["solicitacaoAghuCodigo"],
+                        solicitacao_id=ihq.get("solicitacaoId") or f"{ihq['solicitacaoAghuCodigo']}:IHQ",
                         payload=_dump(ihq),
                     ))
             for evento in caso.get("historico", []):
@@ -114,7 +120,7 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         if not nome.startswith("PACIENTE FICT"):
             return False
         caso = await self.session.execute(
-            select(ApCaso.numero_interno).where(ApCaso.solicitacao_codigo == registro.codigo_solicitacao)
+            select(ApCaso.numero_interno).where(ApCaso.solicitacao_id == registro.id)
         )
         if caso.first() is not None:
             return False
@@ -129,7 +135,9 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         """Inclui apenas solicitações que ainda não existem, sem resetar seus estados."""
         valores = [
             {
+                "id": str(payload.get("id") or f"{payload['codigoSolicitacao']}:{payload['tipoExameSugerido']}").strip().upper(),
                 "codigo_solicitacao": str(payload["codigoSolicitacao"]).strip().upper(),
+                "tipo_exame": str(payload["tipoExameSugerido"]).strip().upper(),
                 "situacao_recepcao": payload["situacaoRecepcao"],
                 "data_solicitacao": payload["dataSolicitacao"],
                 "payload": _dump(payload),
@@ -138,15 +146,24 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         ]
         if valores:
             comando = sqlite_insert(ApSolicitacao).values(valores).on_conflict_do_nothing(
-                index_elements=[ApSolicitacao.codigo_solicitacao]
+                index_elements=[ApSolicitacao.id]
             )
             await self.session.execute(comando)
         await self.session.commit()
 
     async def buscar_solicitacao(self, codigo: str) -> dict[str, Any] | None:
-        """Busca solicitação sem depender da origem configurada."""
+        """Busca um grupo pelo identificador composto, sem depender da origem."""
         registro = await self.session.get(ApSolicitacao, codigo.strip().upper())
         return self._solicitacao_payload(registro) if registro else None
+
+    async def listar_exames_da_solicitacao(self, codigo: str) -> list[dict[str, Any]]:
+        """Lista todos os grupos de uma solicitação AGHU."""
+        resultado = await self.session.execute(
+            select(ApSolicitacao)
+            .where(ApSolicitacao.codigo_solicitacao == codigo.strip().upper())
+            .order_by(ApSolicitacao.tipo_exame.asc())
+        )
+        return [self._solicitacao_payload(row) for row in resultado.scalars().all()]
 
     async def listar_solicitacoes_pendentes(self) -> list[dict[str, Any]]:
         """Lista solicitações pendentes ordenadas pela data de solicitação."""
@@ -158,9 +175,9 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         return [self._solicitacao_payload(row) for row in resultado.scalars().all()]
 
     async def contar_solicitacoes_pendentes(self) -> int:
-        """Conta solicitações locais aguardando recebimento."""
+        """Conta códigos AGHU distintos que ainda têm grupo pendente."""
         resultado = await self.session.execute(
-            select(func.count()).select_from(ApSolicitacao).where(
+            select(func.count(func.distinct(ApSolicitacao.codigo_solicitacao))).where(
                 ApSolicitacao.situacao_recepcao == "AGUARDANDO_RECEBIMENTO"
             )
         )
@@ -168,11 +185,20 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
 
     async def salvar_solicitacao(self, payload: dict[str, Any]) -> None:
         """Atualiza os campos de estado local após recebimento ou devolução."""
-        codigo = str(payload["codigoSolicitacao"]).strip().upper()
-        registro = await self.session.get(ApSolicitacao, codigo)
+        grupo_id = str(payload.get("id") or f"{payload['codigoSolicitacao']}:{payload['tipoExameSugerido']}").strip().upper()
+        registro = await self.session.get(ApSolicitacao, grupo_id)
         if registro is None:
-            registro = ApSolicitacao(codigo_solicitacao=codigo, payload="{}", data_solicitacao="")
+            registro = ApSolicitacao(
+                id=grupo_id,
+                codigo_solicitacao=str(payload["codigoSolicitacao"]).strip().upper(),
+                tipo_exame=str(payload["tipoExameSugerido"]).strip().upper(),
+                payload="{}",
+                data_solicitacao="",
+                situacao_recepcao=payload["situacaoRecepcao"],
+            )
             self.session.add(registro)
+        registro.codigo_solicitacao = str(payload["codigoSolicitacao"]).strip().upper()
+        registro.tipo_exame = str(payload["tipoExameSugerido"]).strip().upper()
         registro.situacao_recepcao = payload["situacaoRecepcao"]
         registro.data_solicitacao = payload["dataSolicitacao"]
         registro.caso_numero = payload.get("casoNumero")
@@ -198,9 +224,9 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         solicitacao = payload["solicitacao"]
         registro = await self.session.get(ApCaso, numero)
         if registro is None:
-            registro = ApCaso(numero_interno=numero, solicitacao_codigo=solicitacao["codigoSolicitacao"])
+            registro = ApCaso(numero_interno=numero, solicitacao_id=solicitacao["id"])
             self.session.add(registro)
-        registro.solicitacao_codigo = solicitacao["codigoSolicitacao"]
+        registro.solicitacao_id = solicitacao["id"]
         registro.tipo_exame = payload["tipoExame"]
         registro.status = payload["status"]
         registro.data_entrada = payload["dataEntradaSap"]
@@ -211,6 +237,7 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         """Persiste uma conferência e retorna o identificador gerado."""
         registro = ApConferenciaRecebimento(
             id=payload.get("id"),
+            solicitacao_id=payload["solicitacaoId"],
             solicitacao_codigo=payload["solicitacaoCodigo"],
             caso_numero=payload.get("casoNumero"),
             resultado=payload["resultado"],
@@ -220,6 +247,16 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
         self.session.add(registro)
         await self.session.flush()
         return {**payload, "id": registro.id}
+
+    async def adicionar_ihq(self, caso_numero: str, solicitacao_id: str, exame: dict[str, Any]) -> None:
+        """Persiste vínculo IHQ em sua tabela de domínio."""
+        self.session.add(ApExameIhq(
+            codigo_interno=exame["codigoInternoIhq"],
+            caso_numero=caso_numero,
+            solicitacao_id=solicitacao_id,
+            payload=_dump(exame),
+        ))
+        await self.session.flush()
 
     async def adicionar_materiais(self, caso_numero: str, materiais: list[dict[str, Any]]) -> None:
         """Persiste árvore dos itens da Recepção sem criar registros de etapas futuras."""
@@ -347,7 +384,9 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
     def _solicitacao_payload(self, registro: ApSolicitacao) -> dict[str, Any]:
         """Monta solicitação com os campos locais de estado como fonte oficial."""
         payload = _load(registro.payload)
+        payload["id"] = registro.id
         payload["codigoSolicitacao"] = registro.codigo_solicitacao
+        payload["tipoExameSugerido"] = registro.tipo_exame
         payload["situacaoRecepcao"] = registro.situacao_recepcao
         payload["dataSolicitacao"] = registro.data_solicitacao
         payload["casoNumero"] = registro.caso_numero
@@ -359,7 +398,7 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
     async def _caso_payload(self, registro: ApCaso) -> dict[str, Any]:
         """Carrega relações persistidas e mantém o shape CasoAp usado pelo Vue."""
         payload = _load(registro.payload)
-        solicitacao = await self.session.get(ApSolicitacao, registro.solicitacao_codigo)
+        solicitacao = await self.session.get(ApSolicitacao, registro.solicitacao_id)
         payload["solicitacao"] = self._solicitacao_payload(solicitacao) if solicitacao else {}
 
         conf_result = await self.session.execute(
@@ -435,4 +474,3 @@ class ReceptionSqliteProvider(ReceptionProviderInterface):
             historico.append(evento_payload)
         payload["historico"] = historico
         return payload
-

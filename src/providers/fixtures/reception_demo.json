@@ -1,580 +1,791 @@
 {
   "solicitacoes": [
     {
+      "id": "7710214:HP",
       "codigoSolicitacao": "7710214",
       "prontuario": "2301145",
       "nomePaciente": "ODETE MARQUES VALADARES",
       "dataNascimento": "1957-04-18",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Gastroenterologia",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-09-15T12:00:00.000Z",
+      "dataSolicitacao": "2026-09-15",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA GÁSTRICA – ANTRO",
       "informacoesClinicas": "Dispepsia persistente. Endoscopia com área de enantema em antro. Pesquisa de H. pylori.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA GÁSTRICA – ANTRO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0001/26"
     },
     {
+      "id": "7710388:HP",
       "codigoSolicitacao": "7710388",
       "prontuario": "2287430",
       "nomePaciente": "GERSON TAVORA LINHARES",
       "dataNascimento": "1969-11-02",
-      "sexo": "Masculino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central",
       "especialidade": "Cirurgia Geral",
-      "nomeSolicitante": "Dr. Tomás Barreira",
-      "dataSolicitacao": "2026-10-03T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-03",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "VESÍCULA BILIAR",
       "informacoesClinicas": "Colelitíase sintomática. Colecistectomia videolaparoscópica eletiva.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "VESÍCULA BILIAR",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0002/26"
     },
     {
+      "id": "7710457:HP",
       "codigoSolicitacao": "7710457",
       "prontuario": "2315528",
       "nomePaciente": "IRACEMA BRAGANÇA FONTES",
       "dataNascimento": "1972-06-25",
-      "sexo": "Feminino",
       "origem": "INTERNACAO",
       "unidade": "Enfermaria de Cirurgia",
       "especialidade": "Ginecologia",
-      "nomeSolicitante": "Dra. Íris Fontoura",
-      "dataSolicitacao": "2026-10-13T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-13",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "ÚTERO E ANEXOS",
       "informacoesClinicas": "Miomatose uterina com sangramento uterino anormal. Histerectomia total.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "ÚTERO E ANEXOS",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0003/26"
     },
     {
+      "id": "7710593:HP",
       "codigoSolicitacao": "7710593",
       "prontuario": "2199803",
       "nomePaciente": "WILSON ALCÂNTARA REIS",
       "dataNascimento": "1951-01-30",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Urologia",
       "especialidade": "Urologia",
-      "nomeSolicitante": "Dr. Natan Seabra",
-      "dataSolicitacao": "2026-10-27T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-27",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
       "informacoesClinicas": "PSA elevado em controle. Toque retal com nódulo em lobo direito.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        },
+        {
+          "numeroAmostra": "2",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0004/26"
     },
     {
+      "id": "7710642:HP",
       "codigoSolicitacao": "7710642",
       "prontuario": "2340017",
       "nomePaciente": "NEIDE CAMPELO SARMENTO",
       "dataNascimento": "1963-09-12",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Gastroenterologia",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-10-23T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-23",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA DE CÓLON – SIGMOIDE",
       "informacoesClinicas": "Alteração do hábito intestinal. Colonoscopia com lesão vegetante em sigmoide.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA DE CÓLON – SIGMOIDE",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0005/26"
     },
     {
+      "id": "7710731:HP",
       "codigoSolicitacao": "7710731",
       "prontuario": "2352291",
       "nomePaciente": "TELMA FIGUEIRA LOBO",
       "dataNascimento": "1978-03-07",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Mastologia",
       "especialidade": "Mastologia",
-      "nomeSolicitante": "Dra. Olga Bittencourt",
-      "dataSolicitacao": "2026-10-26T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-26",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "NÓDULO DE MAMA ESQUERDA – CORE BIOPSY",
       "informacoesClinicas": "Nódulo palpável em quadrante superior externo da mama esquerda, BI-RADS 4.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "NÓDULO DE MAMA ESQUERDA – CORE BIOPSY",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0006/26"
     },
     {
+      "id": "7710866:HP",
       "codigoSolicitacao": "7710866",
       "prontuario": "2276654",
       "nomePaciente": "EDNALDO PIMENTA CASTRO",
       "dataNascimento": "1984-12-19",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Cabeça e Pescoço",
       "especialidade": "Cirurgia de Cabeça e Pescoço",
-      "nomeSolicitante": "Dr. Vicente Lacerda",
-      "dataSolicitacao": "2026-10-31T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-31",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "LINFONODO CERVICAL",
       "informacoesClinicas": "Linfonodomegalia cervical persistente há 3 meses, sem febre.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "LINFONODO CERVICAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0007/26"
     },
     {
+      "id": "7711024:HP",
       "codigoSolicitacao": "7711024",
       "prontuario": "2368140",
       "nomePaciente": "ZULEIDE MOTA GUSMÃO",
       "dataNascimento": "1995-08-21",
-      "sexo": "Feminino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central",
       "especialidade": "Cirurgia Geral",
-      "nomeSolicitante": "Dr. Tomás Barreira",
-      "dataSolicitacao": "2026-11-07T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-07",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "APÊNDICE CECAL",
       "informacoesClinicas": "Quadro de abdome agudo. Apendicectomia de urgência.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "APÊNDICE CECAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0008/26"
     },
     {
+      "id": "7711267:HP",
       "codigoSolicitacao": "7711267",
       "prontuario": "2241976",
       "nomePaciente": "VALTER CORDEIRO BASTOS",
       "dataNascimento": "1960-05-14",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Gastroenterologia",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-11-11T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-11",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA GÁSTRICA – CORPO",
       "informacoesClinicas": "Emagrecimento e lesão ulcerada em corpo gástrico à endoscopia.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA GÁSTRICA – CORPO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0009/26"
     },
     {
+      "id": "7711390:HP",
       "codigoSolicitacao": "7711390",
       "prontuario": "2374405",
       "nomePaciente": "MIRTES ALENCAR PAIXÃO",
       "dataNascimento": "1968-02-09",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Dermatologia",
       "especialidade": "Dermatologia",
-      "nomeSolicitante": "Dra. Yasmin Rabelo",
-      "dataSolicitacao": "2026-11-12T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-12",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "LESÃO DE PELE – DORSO",
       "informacoesClinicas": "Lesão pigmentada assimétrica em dorso, 0,8 cm. Exérese com margem.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "LESÃO DE PELE – DORSO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0010/26"
     },
     {
+      "id": "7711455:HP",
       "codigoSolicitacao": "7711455",
       "prontuario": "2229518",
       "nomePaciente": "JURANDIR VILELA SOBRAL",
       "dataNascimento": "1956-10-03",
-      "sexo": "Masculino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central",
       "especialidade": "Cirurgia Geral",
-      "nomeSolicitante": "Dr. Tomás Barreira",
-      "dataSolicitacao": "2026-11-04T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-04",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "SEGMENTO DE INTESTINO DELGADO",
       "informacoesClinicas": "Obstrução intestinal. Enterectomia segmentar.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "SEGMENTO DE INTESTINO DELGADO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "HP-0011/26"
     },
     {
+      "id": "7710912:CG",
       "codigoSolicitacao": "7710912",
       "prontuario": "2318862",
       "nomePaciente": "CLEONICE AMARAL TEIXEIRA",
       "dataNascimento": "1949-07-28",
-      "sexo": "Feminino",
       "origem": "INTERNACAO",
       "unidade": "Enfermaria de Pneumologia",
       "especialidade": "Clínica Médica",
-      "nomeSolicitante": "Dra. Lívia Cardim",
-      "dataSolicitacao": "2026-11-03T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-03",
       "siglaExame": "CITO",
       "nomeExame": "Citologia geral (líquidos e PAAF)",
       "tipoExameSugerido": "CG",
-      "descricaoMaterial": "LÍQUIDO PLEURAL",
       "informacoesClinicas": "Derrame pleural à direita de etiologia a esclarecer.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CITO",
+          "nomeExame": "Citologia geral (líquidos e PAAF)",
+          "descricaoMaterial": "LÍQUIDO PLEURAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CG-0001/26"
     },
     {
+      "id": "7711302:CG",
       "codigoSolicitacao": "7711302",
       "prontuario": "2381037",
       "nomePaciente": "ADEMIR PORTELA RIBAS",
       "dataNascimento": "1966-04-11",
-      "sexo": "Masculino",
       "origem": "INTERNACAO",
       "unidade": "Enfermaria de Clínica Médica",
       "especialidade": "Clínica Médica",
-      "nomeSolicitante": "Dra. Lívia Cardim",
-      "dataSolicitacao": "2026-11-12T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-12",
       "siglaExame": "CITO",
       "nomeExame": "Citologia geral (líquidos e PAAF)",
       "tipoExameSugerido": "CG",
-      "descricaoMaterial": "LÍQUIDO ASCÍTICO",
       "informacoesClinicas": "Ascite volumosa de início recente. Paracentese diagnóstica.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CITO",
+          "nomeExame": "Citologia geral (líquidos e PAAF)",
+          "descricaoMaterial": "LÍQUIDO ASCÍTICO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CG-0002/26"
     },
     {
+      "id": "7711088:CG",
       "codigoSolicitacao": "7711088",
       "prontuario": "2290715",
       "nomePaciente": "SOCORRO MACHADO LEAL",
       "dataNascimento": "1975-12-01",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Cabeça e Pescoço",
       "especialidade": "Cirurgia de Cabeça e Pescoço",
-      "nomeSolicitante": "Dr. Vicente Lacerda",
-      "dataSolicitacao": "2026-11-05T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-05",
       "siglaExame": "CITO",
       "nomeExame": "Citologia geral (líquidos e PAAF)",
       "tipoExameSugerido": "CG",
-      "descricaoMaterial": "PAAF DE TIREOIDE",
       "informacoesClinicas": "Nódulo tireoidiano TI-RADS 4 em lobo esquerdo.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CITO",
+          "nomeExame": "Citologia geral (líquidos e PAAF)",
+          "descricaoMaterial": "PAAF DE TIREOIDE",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CG-0003/26"
     },
     {
+      "id": "7710805:CCV",
       "codigoSolicitacao": "7710805",
       "prontuario": "2333409",
       "nomePaciente": "ROSIMERE TOLEDO BRITO",
       "dataNascimento": "1988-06-16",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Ginecologia",
       "especialidade": "Ginecologia",
-      "nomeSolicitante": "Dra. Íris Fontoura",
-      "dataSolicitacao": "2026-10-29T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-29",
       "siglaExame": "CCV",
       "nomeExame": "Citologia oncótica cérvico-vaginal",
       "tipoExameSugerido": "CCV",
-      "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
       "informacoesClinicas": "Rastreamento de rotina. Última coleta há 3 anos.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CCV",
+          "nomeExame": "Citologia oncótica cérvico-vaginal",
+          "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CCV-0001/26"
     },
     {
+      "id": "7711199:CCV",
       "codigoSolicitacao": "7711199",
       "prontuario": "2386652",
       "nomePaciente": "MARINALVA COUTO RANGEL",
       "dataNascimento": "1991-01-23",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Ginecologia",
       "especialidade": "Ginecologia",
-      "nomeSolicitante": "Dra. Íris Fontoura",
-      "dataSolicitacao": "2026-11-10T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-10",
       "siglaExame": "CCV",
       "nomeExame": "Citologia oncótica cérvico-vaginal",
       "tipoExameSugerido": "CCV",
-      "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
       "informacoesClinicas": "Controle após tratamento de lesão de baixo grau.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CCV",
+          "nomeExame": "Citologia oncótica cérvico-vaginal",
+          "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CCV-0002/26"
     },
     {
+      "id": "7710301:CCV",
       "codigoSolicitacao": "7710301",
       "prontuario": "2254381",
       "nomePaciente": "DORALICE PIRES SALGADO",
       "dataNascimento": "1980-09-30",
-      "sexo": "Feminino",
       "origem": "EXTERNO",
       "unidade": "Paciente externo – UBS Vila Esperança (fictícia)",
       "especialidade": "Ginecologia",
-      "nomeSolicitante": "Dra. Íris Fontoura",
-      "dataSolicitacao": "2026-09-23T12:00:00.000Z",
+      "dataSolicitacao": "2026-09-23",
       "siglaExame": "CCV",
       "nomeExame": "Citologia oncótica cérvico-vaginal",
       "tipoExameSugerido": "CCV",
-      "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
       "informacoesClinicas": "Rastreamento de rotina.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CCV",
+          "nomeExame": "Citologia oncótica cérvico-vaginal",
+          "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CCV-0003/26"
     },
     {
+      "id": "7711501:CO",
       "codigoSolicitacao": "7711501",
       "prontuario": "2362278",
       "nomePaciente": "GLÓRIA PASSOS TRINDADE",
       "dataNascimento": "1970-03-15",
-      "sexo": "Feminino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central – Sala 3",
       "especialidade": "Cirurgia de Cabeça e Pescoço",
-      "nomeSolicitante": "Dr. Vicente Lacerda",
-      "dataSolicitacao": "2026-11-13T10:48:00.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "CONG",
       "nomeExame": "Exame anatomopatológico por congelação",
       "tipoExameSugerido": "CO",
-      "descricaoMaterial": "NÓDULO DE TIREOIDE – PEÇA INTRAOPERATÓRIA",
       "informacoesClinicas": "Tireoidectomia parcial. Avaliar malignidade para decisão de totalização.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CONG",
+          "nomeExame": "Exame anatomopatológico por congelação",
+          "descricaoMaterial": "NÓDULO DE TIREOIDE – PEÇA INTRAOPERATÓRIA",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CO-0001/26"
     },
     {
+      "id": "7711143:CO",
       "codigoSolicitacao": "7711143",
       "prontuario": "2347793",
       "nomePaciente": "LEONARDO AQUINO BARRETO",
       "dataNascimento": "1958-08-08",
-      "sexo": "Masculino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central – Sala 1",
       "especialidade": "Cirurgia Torácica",
-      "nomeSolicitante": "Dr. Heitor Galvão",
-      "dataSolicitacao": "2026-11-09T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-09",
       "siglaExame": "CONG",
       "nomeExame": "Exame anatomopatológico por congelação",
       "tipoExameSugerido": "CO",
-      "descricaoMaterial": "NÓDULO PULMONAR – CONGELAÇÃO",
       "informacoesClinicas": "Nódulo pulmonar periférico de 1,9 cm. Ressecção em cunha.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CONG",
+          "nomeExame": "Exame anatomopatológico por congelação",
+          "descricaoMaterial": "NÓDULO PULMONAR – CONGELAÇÃO",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "casoNumero": "CO-0002/26"
     },
     {
+      "id": "7710980:IHQ",
       "codigoSolicitacao": "7710980",
       "prontuario": "2340017",
       "nomePaciente": "NEIDE CAMPELO SARMENTO",
       "dataNascimento": "1963-09-12",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Serviço de Anatomia Patológica",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-10-29T12:00:00.000Z",
+      "dataSolicitacao": "2026-10-29",
       "siglaExame": "IHQ",
       "nomeExame": "Imuno-histoquímica",
       "tipoExameSugerido": "IHQ",
-      "descricaoMaterial": "BLOCO A – HP-0005/26",
       "informacoesClinicas": "Painel imuno-histoquímico solicitado pela microscopia.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "IHQ",
+          "nomeExame": "Imuno-histoquímica",
+          "descricaoMaterial": "BLOCO A – HP-0005/26",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "ihqCodigo": "IH-0001/26",
       "ihqCasoNumero": "HP-0005/26"
     },
     {
+      "id": "7711010:IHQ",
       "codigoSolicitacao": "7711010",
       "prontuario": "2352291",
       "nomePaciente": "TELMA FIGUEIRA LOBO",
       "dataNascimento": "1978-03-07",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Serviço de Anatomia Patológica",
       "especialidade": "Mastologia",
-      "nomeSolicitante": "Dra. Olga Bittencourt",
-      "dataSolicitacao": "2026-11-01T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-01",
       "siglaExame": "IHQ",
       "nomeExame": "Imuno-histoquímica",
       "tipoExameSugerido": "IHQ",
-      "descricaoMaterial": "BLOCO A – HP-0006/26",
       "informacoesClinicas": "Painel imuno-histoquímico solicitado pela microscopia.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "IHQ",
+          "nomeExame": "Imuno-histoquímica",
+          "descricaoMaterial": "BLOCO A – HP-0006/26",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "ihqCodigo": "IH-0002/26",
       "ihqCasoNumero": "HP-0006/26"
     },
     {
+      "id": "7711236:IHQ",
       "codigoSolicitacao": "7711236",
       "prontuario": "2276654",
       "nomePaciente": "EDNALDO PIMENTA CASTRO",
       "dataNascimento": "1984-12-19",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Serviço de Anatomia Patológica",
       "especialidade": "Cirurgia de Cabeça e Pescoço",
-      "nomeSolicitante": "Dr. Vicente Lacerda",
-      "dataSolicitacao": "2026-11-08T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-08",
       "siglaExame": "IHQ",
       "nomeExame": "Imuno-histoquímica",
       "tipoExameSugerido": "IHQ",
-      "descricaoMaterial": "BLOCO B – HP-0007/26",
       "informacoesClinicas": "Painel imuno-histoquímico solicitado pela microscopia.",
-      "statusAghuDescricao": "Recebido",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "IHQ",
+          "nomeExame": "Imuno-histoquímica",
+          "descricaoMaterial": "BLOCO B – HP-0007/26",
+          "codStatusItem": "LI",
+          "statusItemDescricao": "LIBERADO"
+        }
+      ],
       "situacaoRecepcao": "RECEBIDA",
       "ihqCodigo": "IH-0003/26",
       "ihqCasoNumero": "HP-0007/26"
     },
     {
+      "id": "7712045:HP",
       "codigoSolicitacao": "7712045",
       "prontuario": "2389476",
       "nomePaciente": "GILVAN ESTEVES PRADO",
       "dataNascimento": "1977-07-02",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Dermatologia",
       "especialidade": "Dermatologia",
-      "nomeSolicitante": "Dra. Yasmin Rabelo",
-      "dataSolicitacao": "2026-11-08T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-08",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA DE PELE – ANTEBRAÇO",
       "informacoesClinicas": "Lesão eritematodescamativa em antebraço direito há 6 meses.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA DE PELE – ANTEBRAÇO",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "DEVOLVIDA",
       "devolucaoId": 2
     },
     {
+      "id": "7712301:HP",
       "codigoSolicitacao": "7712301",
       "prontuario": "2390114",
       "nomePaciente": "AURÉLIO MATOS REBOUÇAS",
       "dataNascimento": "1962-11-27",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Ambulatório de Gastroenterologia",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-11-13T07:12:00.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "AP",
       "nomeExame": "Exame anatomopatológico",
       "tipoExameSugerido": "HP",
-      "descricaoMaterial": "BIÓPSIA DE ESÔFAGO DISTAL",
       "informacoesClinicas": "Pirose crônica. Endoscopia com mucosa de aspecto colunar em esôfago distal.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "AP",
+          "nomeExame": "Exame anatomopatológico",
+          "descricaoMaterial": "BIÓPSIA DE ESÔFAGO DISTAL",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     },
     {
+      "id": "7712318:CG",
       "codigoSolicitacao": "7712318",
       "prontuario": "2391560",
       "nomePaciente": "ERIVALDO SANTANA MENDONÇA",
       "dataNascimento": "1954-02-04",
-      "sexo": "Masculino",
       "origem": "INTERNACAO",
       "unidade": "Enfermaria de Cirurgia",
       "especialidade": "Cirurgia Geral",
-      "nomeSolicitante": "Dr. Tomás Barreira",
-      "dataSolicitacao": "2026-11-13T08:24:00.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "CITO",
       "nomeExame": "Citologia geral (líquidos e PAAF)",
       "tipoExameSugerido": "CG",
-      "descricaoMaterial": "LÍQUIDO PERITONEAL",
       "informacoesClinicas": "Ascite em paciente com massa pélvica em investigação.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CITO",
+          "nomeExame": "Citologia geral (líquidos e PAAF)",
+          "descricaoMaterial": "LÍQUIDO PERITONEAL",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     },
     {
+      "id": "7712325:CCV",
       "codigoSolicitacao": "7712325",
       "prontuario": "2392007",
       "nomePaciente": "JANDIRA NOVAES COELHO",
       "dataNascimento": "1983-05-19",
-      "sexo": "Feminino",
       "origem": "EXTERNO",
       "unidade": "Paciente externo – UBS Jardim das Acácias (fictícia)",
       "especialidade": "Ginecologia",
-      "nomeSolicitante": "Dra. Íris Fontoura",
-      "dataSolicitacao": "2026-11-12T12:00:00.000Z",
+      "dataSolicitacao": "2026-11-12",
       "siglaExame": "CCV",
       "nomeExame": "Citologia oncótica cérvico-vaginal",
       "tipoExameSugerido": "CCV",
-      "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
       "informacoesClinicas": "Rastreamento de rotina encaminhado pela rede municipal.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CCV",
+          "nomeExame": "Citologia oncótica cérvico-vaginal",
+          "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     },
     {
+      "id": "7712340:CO",
       "codigoSolicitacao": "7712340",
       "prontuario": "2392843",
       "nomePaciente": "OSVALDO FERRAZ LIMEIRA",
       "dataNascimento": "1965-10-10",
-      "sexo": "Masculino",
       "origem": "BLOCO_CIRURGICO",
       "unidade": "Bloco Cirúrgico Central – Sala 5",
       "especialidade": "Cirurgia Geral",
-      "nomeSolicitante": "Dr. Tomás Barreira",
-      "dataSolicitacao": "2026-11-13T11:31:12.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "CONG",
       "nomeExame": "Exame anatomopatológico por congelação",
       "tipoExameSugerido": "CO",
-      "descricaoMaterial": "NÓDULO HEPÁTICO – PEÇA INTRAOPERATÓRIA",
       "informacoesClinicas": "Hepatectomia em andamento. Avaliar margem e natureza da lesão.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "CONG",
+          "nomeExame": "Exame anatomopatológico por congelação",
+          "descricaoMaterial": "NÓDULO HEPÁTICO – PEÇA INTRAOPERATÓRIA",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     },
     {
+      "id": "7712356:IHQ",
       "codigoSolicitacao": "7712356",
       "prontuario": "2340017",
       "nomePaciente": "NEIDE CAMPELO SARMENTO",
       "dataNascimento": "1963-09-12",
-      "sexo": "Feminino",
       "origem": "AMBULATORIO",
       "unidade": "Serviço de Anatomia Patológica",
       "especialidade": "Gastroenterologia",
-      "nomeSolicitante": "Dr. Caio Montenegro",
-      "dataSolicitacao": "2026-11-13T09:36:00.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "IHQ",
       "nomeExame": "Imuno-histoquímica",
       "tipoExameSugerido": "IHQ",
-      "descricaoMaterial": "BLOCO A – HP-0005/26 (AMPLIAÇÃO DE PAINEL)",
       "informacoesClinicas": "Ampliação do painel imuno-histoquímico solicitada pela microscopia.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "IHQ",
+          "nomeExame": "Imuno-histoquímica",
+          "descricaoMaterial": "BLOCO A – HP-0005/26 (AMPLIAÇÃO DE PAINEL)",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     },
     {
+      "id": "7712372:IHQ",
       "codigoSolicitacao": "7712372",
       "prontuario": "2276645",
       "nomePaciente": "EDNALDO PIMENTA CASTRO",
       "dataNascimento": "1984-12-19",
-      "sexo": "Masculino",
       "origem": "AMBULATORIO",
       "unidade": "Serviço de Anatomia Patológica",
       "especialidade": "Cirurgia de Cabeça e Pescoço",
-      "nomeSolicitante": "Dr. Vicente Lacerda",
-      "dataSolicitacao": "2026-11-13T10:48:00.000Z",
+      "dataSolicitacao": "2026-11-13",
       "siglaExame": "IHQ",
       "nomeExame": "Imuno-histoquímica",
       "tipoExameSugerido": "IHQ",
-      "descricaoMaterial": "BLOCO B – LINFONODO CERVICAL (PAINEL COMPLEMENTAR)",
       "informacoesClinicas": "Painel complementar para linfoma solicitado pela microscopia.",
-      "statusAghuDescricao": "Solicitado",
+      "amostras": [
+        {
+          "numeroAmostra": "1",
+          "siglaExame": "IHQ",
+          "nomeExame": "Imuno-histoquímica",
+          "descricaoMaterial": "BLOCO B – LINFONODO CERVICAL (PAINEL COMPLEMENTAR)",
+          "codStatusItem": "AC",
+          "statusItemDescricao": "A COLETAR"
+        }
+      ],
       "situacaoRecepcao": "AGUARDANDO_RECEBIMENTO"
     }
   ],
@@ -583,22 +794,29 @@
       "numeroInterno": "HP-0001/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710214:HP",
         "codigoSolicitacao": "7710214",
         "prontuario": "2301145",
         "nomePaciente": "ODETE MARQUES VALADARES",
         "dataNascimento": "1957-04-18",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Gastroenterologia",
         "especialidade": "Gastroenterologia",
-        "nomeSolicitante": "Dr. Caio Montenegro",
-        "dataSolicitacao": "2026-09-15T12:00:00.000Z",
+        "dataSolicitacao": "2026-09-15",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "BIÓPSIA GÁSTRICA – ANTRO",
         "informacoesClinicas": "Dispepsia persistente. Endoscopia com área de enantema em antro. Pesquisa de H. pylori.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "BIÓPSIA GÁSTRICA – ANTRO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0001/26"
       },
@@ -1000,22 +1218,29 @@
       "numeroInterno": "HP-0002/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710388:HP",
         "codigoSolicitacao": "7710388",
         "prontuario": "2287430",
         "nomePaciente": "GERSON TAVORA LINHARES",
         "dataNascimento": "1969-11-02",
-        "sexo": "Masculino",
         "origem": "BLOCO_CIRURGICO",
         "unidade": "Bloco Cirúrgico Central",
         "especialidade": "Cirurgia Geral",
-        "nomeSolicitante": "Dr. Tomás Barreira",
-        "dataSolicitacao": "2026-10-03T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-03",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "VESÍCULA BILIAR",
         "informacoesClinicas": "Colelitíase sintomática. Colecistectomia videolaparoscópica eletiva.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "VESÍCULA BILIAR",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0002/26"
       },
@@ -1405,22 +1630,29 @@
       "numeroInterno": "HP-0003/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710457:HP",
         "codigoSolicitacao": "7710457",
         "prontuario": "2315528",
         "nomePaciente": "IRACEMA BRAGANÇA FONTES",
         "dataNascimento": "1972-06-25",
-        "sexo": "Feminino",
         "origem": "INTERNACAO",
         "unidade": "Enfermaria de Cirurgia",
         "especialidade": "Ginecologia",
-        "nomeSolicitante": "Dra. Íris Fontoura",
-        "dataSolicitacao": "2026-10-13T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-13",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "ÚTERO E ANEXOS",
         "informacoesClinicas": "Miomatose uterina com sangramento uterino anormal. Histerectomia total.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "ÚTERO E ANEXOS",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0003/26"
       },
@@ -1848,22 +2080,37 @@
       "numeroInterno": "HP-0004/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710593:HP",
         "codigoSolicitacao": "7710593",
         "prontuario": "2199803",
         "nomePaciente": "WILSON ALCÂNTARA REIS",
         "dataNascimento": "1951-01-30",
-        "sexo": "Masculino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Urologia",
         "especialidade": "Urologia",
-        "nomeSolicitante": "Dr. Natan Seabra",
-        "dataSolicitacao": "2026-10-27T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-27",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
         "informacoesClinicas": "PSA elevado em controle. Toque retal com nódulo em lobo direito.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          },
+          {
+            "numeroAmostra": "2",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "BIÓPSIA DE PRÓSTATA – 12 FRAGMENTOS",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0004/26"
       },
@@ -1876,7 +2123,6 @@
         "nome": "Joana Valença"
       },
       "urgente": true,
-      "motivoUrgencia": "Programação de cirurgia oncológica",
       "procedimento": "Biópsia por agulha grossa",
       "quantidade": 2,
       "etapas": [
@@ -2277,22 +2523,29 @@
       "numeroInterno": "HP-0005/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710642:HP",
         "codigoSolicitacao": "7710642",
         "prontuario": "2340017",
         "nomePaciente": "NEIDE CAMPELO SARMENTO",
         "dataNascimento": "1963-09-12",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Gastroenterologia",
         "especialidade": "Gastroenterologia",
-        "nomeSolicitante": "Dr. Caio Montenegro",
-        "dataSolicitacao": "2026-10-23T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-23",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "BIÓPSIA DE CÓLON – SIGMOIDE",
         "informacoesClinicas": "Alteração do hábito intestinal. Colonoscopia com lesão vegetante em sigmoide.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "BIÓPSIA DE CÓLON – SIGMOIDE",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0005/26"
       },
@@ -2525,7 +2778,8 @@
           "registradaPor": {
             "login": "joana.valenca",
             "nome": "Joana Valença"
-          }
+          },
+          "solicitacaoId": "7710980:IHQ"
         }
       ],
       "naoConformidades": [],
@@ -2638,22 +2892,29 @@
       "numeroInterno": "HP-0006/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710731:HP",
         "codigoSolicitacao": "7710731",
         "prontuario": "2352291",
         "nomePaciente": "TELMA FIGUEIRA LOBO",
         "dataNascimento": "1978-03-07",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Mastologia",
         "especialidade": "Mastologia",
-        "nomeSolicitante": "Dra. Olga Bittencourt",
-        "dataSolicitacao": "2026-10-26T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-26",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "NÓDULO DE MAMA ESQUERDA – CORE BIOPSY",
         "informacoesClinicas": "Nódulo palpável em quadrante superior externo da mama esquerda, BI-RADS 4.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "NÓDULO DE MAMA ESQUERDA – CORE BIOPSY",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0006/26"
       },
@@ -2869,7 +3130,8 @@
           "registradaPor": {
             "login": "joana.valenca",
             "nome": "Joana Valença"
-          }
+          },
+          "solicitacaoId": "7711010:IHQ"
         }
       ],
       "naoConformidades": [],
@@ -2972,22 +3234,29 @@
       "numeroInterno": "HP-0007/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7710866:HP",
         "codigoSolicitacao": "7710866",
         "prontuario": "2276654",
         "nomePaciente": "EDNALDO PIMENTA CASTRO",
         "dataNascimento": "1984-12-19",
-        "sexo": "Masculino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Cabeça e Pescoço",
         "especialidade": "Cirurgia de Cabeça e Pescoço",
-        "nomeSolicitante": "Dr. Vicente Lacerda",
-        "dataSolicitacao": "2026-10-31T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-31",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "LINFONODO CERVICAL",
         "informacoesClinicas": "Linfonodomegalia cervical persistente há 3 meses, sem febre.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "LINFONODO CERVICAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0007/26"
       },
@@ -3204,7 +3473,8 @@
           "registradaPor": {
             "login": "joana.valenca",
             "nome": "Joana Valença"
-          }
+          },
+          "solicitacaoId": "7711236:IHQ"
         }
       ],
       "naoConformidades": [],
@@ -3295,22 +3565,29 @@
       "numeroInterno": "HP-0008/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7711024:HP",
         "codigoSolicitacao": "7711024",
         "prontuario": "2368140",
         "nomePaciente": "ZULEIDE MOTA GUSMÃO",
         "dataNascimento": "1995-08-21",
-        "sexo": "Feminino",
         "origem": "BLOCO_CIRURGICO",
         "unidade": "Bloco Cirúrgico Central",
         "especialidade": "Cirurgia Geral",
-        "nomeSolicitante": "Dr. Tomás Barreira",
-        "dataSolicitacao": "2026-11-07T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-07",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "APÊNDICE CECAL",
         "informacoesClinicas": "Quadro de abdome agudo. Apendicectomia de urgência.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "APÊNDICE CECAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0008/26"
       },
@@ -3485,22 +3762,29 @@
       "numeroInterno": "HP-0009/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7711267:HP",
         "codigoSolicitacao": "7711267",
         "prontuario": "2241976",
         "nomePaciente": "VALTER CORDEIRO BASTOS",
         "dataNascimento": "1960-05-14",
-        "sexo": "Masculino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Gastroenterologia",
         "especialidade": "Gastroenterologia",
-        "nomeSolicitante": "Dr. Caio Montenegro",
-        "dataSolicitacao": "2026-11-11T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-11",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "BIÓPSIA GÁSTRICA – CORPO",
         "informacoesClinicas": "Emagrecimento e lesão ulcerada em corpo gástrico à endoscopia.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "BIÓPSIA GÁSTRICA – CORPO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0009/26"
       },
@@ -3513,7 +3797,6 @@
         "nome": "Joana Valença"
       },
       "urgente": true,
-      "motivoUrgencia": "Suspeita de neoplasia gástrica com indicação cirúrgica",
       "procedimento": "Biópsia endoscópica",
       "quantidade": 1,
       "etapas": [
@@ -3604,22 +3887,29 @@
       "numeroInterno": "HP-0010/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7711390:HP",
         "codigoSolicitacao": "7711390",
         "prontuario": "2374405",
         "nomePaciente": "MIRTES ALENCAR PAIXÃO",
         "dataNascimento": "1968-02-09",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Dermatologia",
         "especialidade": "Dermatologia",
-        "nomeSolicitante": "Dra. Yasmin Rabelo",
-        "dataSolicitacao": "2026-11-12T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-12",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "LESÃO DE PELE – DORSO",
         "informacoesClinicas": "Lesão pigmentada assimétrica em dorso, 0,8 cm. Exérese com margem.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "LESÃO DE PELE – DORSO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0010/26"
       },
@@ -3694,22 +3984,29 @@
       "numeroInterno": "HP-0011/26",
       "tipoExame": "HP",
       "solicitacao": {
+        "id": "7711455:HP",
         "codigoSolicitacao": "7711455",
         "prontuario": "2229518",
         "nomePaciente": "JURANDIR VILELA SOBRAL",
         "dataNascimento": "1956-10-03",
-        "sexo": "Masculino",
         "origem": "BLOCO_CIRURGICO",
         "unidade": "Bloco Cirúrgico Central",
         "especialidade": "Cirurgia Geral",
-        "nomeSolicitante": "Dr. Tomás Barreira",
-        "dataSolicitacao": "2026-11-04T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-04",
         "siglaExame": "AP",
         "nomeExame": "Exame anatomopatológico",
         "tipoExameSugerido": "HP",
-        "descricaoMaterial": "SEGMENTO DE INTESTINO DELGADO",
         "informacoesClinicas": "Obstrução intestinal. Enterectomia segmentar.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "AP",
+            "nomeExame": "Exame anatomopatológico",
+            "descricaoMaterial": "SEGMENTO DE INTESTINO DELGADO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "HP-0011/26"
       },
@@ -3824,22 +4121,29 @@
       "numeroInterno": "CG-0001/26",
       "tipoExame": "CG",
       "solicitacao": {
+        "id": "7710912:CG",
         "codigoSolicitacao": "7710912",
         "prontuario": "2318862",
         "nomePaciente": "CLEONICE AMARAL TEIXEIRA",
         "dataNascimento": "1949-07-28",
-        "sexo": "Feminino",
         "origem": "INTERNACAO",
         "unidade": "Enfermaria de Pneumologia",
         "especialidade": "Clínica Médica",
-        "nomeSolicitante": "Dra. Lívia Cardim",
-        "dataSolicitacao": "2026-11-03T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-03",
         "siglaExame": "CITO",
         "nomeExame": "Citologia geral (líquidos e PAAF)",
         "tipoExameSugerido": "CG",
-        "descricaoMaterial": "LÍQUIDO PLEURAL",
         "informacoesClinicas": "Derrame pleural à direita de etiologia a esclarecer.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CITO",
+            "nomeExame": "Citologia geral (líquidos e PAAF)",
+            "descricaoMaterial": "LÍQUIDO PLEURAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CG-0001/26"
       },
@@ -4026,22 +4330,29 @@
       "numeroInterno": "CG-0002/26",
       "tipoExame": "CG",
       "solicitacao": {
+        "id": "7711302:CG",
         "codigoSolicitacao": "7711302",
         "prontuario": "2381037",
         "nomePaciente": "ADEMIR PORTELA RIBAS",
         "dataNascimento": "1966-04-11",
-        "sexo": "Masculino",
         "origem": "INTERNACAO",
         "unidade": "Enfermaria de Clínica Médica",
         "especialidade": "Clínica Médica",
-        "nomeSolicitante": "Dra. Lívia Cardim",
-        "dataSolicitacao": "2026-11-12T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-12",
         "siglaExame": "CITO",
         "nomeExame": "Citologia geral (líquidos e PAAF)",
         "tipoExameSugerido": "CG",
-        "descricaoMaterial": "LÍQUIDO ASCÍTICO",
         "informacoesClinicas": "Ascite volumosa de início recente. Paracentese diagnóstica.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CITO",
+            "nomeExame": "Citologia geral (líquidos e PAAF)",
+            "descricaoMaterial": "LÍQUIDO ASCÍTICO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CG-0002/26"
       },
@@ -4054,7 +4365,6 @@
         "nome": "Joana Valença"
       },
       "urgente": true,
-      "motivoUrgencia": "Paciente internado aguardando definição terapêutica",
       "procedimento": "Coleta de líquido cavitário",
       "quantidade": 1,
       "etapas": [
@@ -4145,22 +4455,29 @@
       "numeroInterno": "CG-0003/26",
       "tipoExame": "CG",
       "solicitacao": {
+        "id": "7711088:CG",
         "codigoSolicitacao": "7711088",
         "prontuario": "2290715",
         "nomePaciente": "SOCORRO MACHADO LEAL",
         "dataNascimento": "1975-12-01",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Cabeça e Pescoço",
         "especialidade": "Cirurgia de Cabeça e Pescoço",
-        "nomeSolicitante": "Dr. Vicente Lacerda",
-        "dataSolicitacao": "2026-11-05T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-05",
         "siglaExame": "CITO",
         "nomeExame": "Citologia geral (líquidos e PAAF)",
         "tipoExameSugerido": "CG",
-        "descricaoMaterial": "PAAF DE TIREOIDE",
         "informacoesClinicas": "Nódulo tireoidiano TI-RADS 4 em lobo esquerdo.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CITO",
+            "nomeExame": "Citologia geral (líquidos e PAAF)",
+            "descricaoMaterial": "PAAF DE TIREOIDE",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CG-0003/26"
       },
@@ -4271,22 +4588,29 @@
       "numeroInterno": "CCV-0001/26",
       "tipoExame": "CCV",
       "solicitacao": {
+        "id": "7710805:CCV",
         "codigoSolicitacao": "7710805",
         "prontuario": "2333409",
         "nomePaciente": "ROSIMERE TOLEDO BRITO",
         "dataNascimento": "1988-06-16",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Ginecologia",
         "especialidade": "Ginecologia",
-        "nomeSolicitante": "Dra. Íris Fontoura",
-        "dataSolicitacao": "2026-10-29T12:00:00.000Z",
+        "dataSolicitacao": "2026-10-29",
         "siglaExame": "CCV",
         "nomeExame": "Citologia oncótica cérvico-vaginal",
         "tipoExameSugerido": "CCV",
-        "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
         "informacoesClinicas": "Rastreamento de rotina. Última coleta há 3 anos.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CCV",
+            "nomeExame": "Citologia oncótica cérvico-vaginal",
+            "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CCV-0001/26"
       },
@@ -4561,22 +4885,29 @@
       "numeroInterno": "CCV-0002/26",
       "tipoExame": "CCV",
       "solicitacao": {
+        "id": "7711199:CCV",
         "codigoSolicitacao": "7711199",
         "prontuario": "2386652",
         "nomePaciente": "MARINALVA COUTO RANGEL",
         "dataNascimento": "1991-01-23",
-        "sexo": "Feminino",
         "origem": "AMBULATORIO",
         "unidade": "Ambulatório de Ginecologia",
         "especialidade": "Ginecologia",
-        "nomeSolicitante": "Dra. Íris Fontoura",
-        "dataSolicitacao": "2026-11-10T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-10",
         "siglaExame": "CCV",
         "nomeExame": "Citologia oncótica cérvico-vaginal",
         "tipoExameSugerido": "CCV",
-        "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
         "informacoesClinicas": "Controle após tratamento de lesão de baixo grau.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CCV",
+            "nomeExame": "Citologia oncótica cérvico-vaginal",
+            "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CCV-0002/26"
       },
@@ -4667,22 +4998,29 @@
       "numeroInterno": "CCV-0003/26",
       "tipoExame": "CCV",
       "solicitacao": {
+        "id": "7710301:CCV",
         "codigoSolicitacao": "7710301",
         "prontuario": "2254381",
         "nomePaciente": "DORALICE PIRES SALGADO",
         "dataNascimento": "1980-09-30",
-        "sexo": "Feminino",
         "origem": "EXTERNO",
         "unidade": "Paciente externo – UBS Vila Esperança (fictícia)",
         "especialidade": "Ginecologia",
-        "nomeSolicitante": "Dra. Íris Fontoura",
-        "dataSolicitacao": "2026-09-23T12:00:00.000Z",
+        "dataSolicitacao": "2026-09-23",
         "siglaExame": "CCV",
         "nomeExame": "Citologia oncótica cérvico-vaginal",
         "tipoExameSugerido": "CCV",
-        "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
         "informacoesClinicas": "Rastreamento de rotina.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CCV",
+            "nomeExame": "Citologia oncótica cérvico-vaginal",
+            "descricaoMaterial": "ESFREGAÇO CÉRVICO-VAGINAL",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CCV-0003/26"
       },
@@ -5053,22 +5391,29 @@
       "numeroInterno": "CO-0001/26",
       "tipoExame": "CO",
       "solicitacao": {
+        "id": "7711501:CO",
         "codigoSolicitacao": "7711501",
         "prontuario": "2362278",
         "nomePaciente": "GLÓRIA PASSOS TRINDADE",
         "dataNascimento": "1970-03-15",
-        "sexo": "Feminino",
         "origem": "BLOCO_CIRURGICO",
         "unidade": "Bloco Cirúrgico Central – Sala 3",
         "especialidade": "Cirurgia de Cabeça e Pescoço",
-        "nomeSolicitante": "Dr. Vicente Lacerda",
-        "dataSolicitacao": "2026-11-13T10:48:00.000Z",
+        "dataSolicitacao": "2026-11-13",
         "siglaExame": "CONG",
         "nomeExame": "Exame anatomopatológico por congelação",
         "tipoExameSugerido": "CO",
-        "descricaoMaterial": "NÓDULO DE TIREOIDE – PEÇA INTRAOPERATÓRIA",
         "informacoesClinicas": "Tireoidectomia parcial. Avaliar malignidade para decisão de totalização.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CONG",
+            "nomeExame": "Exame anatomopatológico por congelação",
+            "descricaoMaterial": "NÓDULO DE TIREOIDE – PEÇA INTRAOPERATÓRIA",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CO-0001/26"
       },
@@ -5081,7 +5426,6 @@
         "nome": "Joana Valença"
       },
       "urgente": true,
-      "motivoUrgencia": "Cirurgia em andamento — diagnóstico intraoperatório",
       "procedimento": "Biópsia intraoperatória",
       "quantidade": 1,
       "etapas": [
@@ -5172,22 +5516,29 @@
       "numeroInterno": "CO-0002/26",
       "tipoExame": "CO",
       "solicitacao": {
+        "id": "7711143:CO",
         "codigoSolicitacao": "7711143",
         "prontuario": "2347793",
         "nomePaciente": "LEONARDO AQUINO BARRETO",
         "dataNascimento": "1958-08-08",
-        "sexo": "Masculino",
         "origem": "BLOCO_CIRURGICO",
         "unidade": "Bloco Cirúrgico Central – Sala 1",
         "especialidade": "Cirurgia Torácica",
-        "nomeSolicitante": "Dr. Heitor Galvão",
-        "dataSolicitacao": "2026-11-09T12:00:00.000Z",
+        "dataSolicitacao": "2026-11-09",
         "siglaExame": "CONG",
         "nomeExame": "Exame anatomopatológico por congelação",
         "tipoExameSugerido": "CO",
-        "descricaoMaterial": "NÓDULO PULMONAR – CONGELAÇÃO",
         "informacoesClinicas": "Nódulo pulmonar periférico de 1,9 cm. Ressecção em cunha.",
-        "statusAghuDescricao": "Recebido",
+        "amostras": [
+          {
+            "numeroAmostra": "1",
+            "siglaExame": "CONG",
+            "nomeExame": "Exame anatomopatológico por congelação",
+            "descricaoMaterial": "NÓDULO PULMONAR – CONGELAÇÃO",
+            "codStatusItem": "LI",
+            "statusItemDescricao": "LIBERADO"
+          }
+        ],
         "situacaoRecepcao": "RECEBIDA",
         "casoNumero": "CO-0002/26"
       },
@@ -5371,299 +5722,300 @@
       "solicitacaoCodigo": "7710214",
       "casoNumero": "HP-0001/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-09-16T12:00:00.000Z"
+      "conferidoEm": "2026-09-16T12:00:00.000Z",
+      "solicitacaoId": "7710214:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 2,
       "solicitacaoCodigo": "7710388",
       "casoNumero": "HP-0002/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-03T12:00:00.000Z"
+      "conferidoEm": "2026-10-03T12:00:00.000Z",
+      "solicitacaoId": "7710388:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 3,
       "solicitacaoCodigo": "7710457",
       "casoNumero": "HP-0003/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-14T12:00:00.000Z"
+      "conferidoEm": "2026-10-14T12:00:00.000Z",
+      "solicitacaoId": "7710457:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 4,
       "solicitacaoCodigo": "7710593",
       "casoNumero": "HP-0004/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-28T12:00:00.000Z"
+      "conferidoEm": "2026-10-28T12:00:00.000Z",
+      "solicitacaoId": "7710593:HP",
+      "amostras": [
+        "1",
+        "2"
+      ]
     },
     {
       "id": 5,
       "solicitacaoCodigo": "7710642",
       "casoNumero": "HP-0005/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-24T12:00:00.000Z"
+      "conferidoEm": "2026-10-24T12:00:00.000Z",
+      "solicitacaoId": "7710642:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 6,
       "solicitacaoCodigo": "7710731",
       "casoNumero": "HP-0006/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-26T12:00:00.000Z"
+      "conferidoEm": "2026-10-26T12:00:00.000Z",
+      "solicitacaoId": "7710731:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 7,
       "solicitacaoCodigo": "7710866",
       "casoNumero": "HP-0007/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-01T12:00:00.000Z"
+      "conferidoEm": "2026-11-01T12:00:00.000Z",
+      "solicitacaoId": "7710866:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 8,
       "solicitacaoCodigo": "7711024",
       "casoNumero": "HP-0008/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-07T12:00:00.000Z"
+      "conferidoEm": "2026-11-07T12:00:00.000Z",
+      "solicitacaoId": "7711024:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 9,
       "solicitacaoCodigo": "7711267",
       "casoNumero": "HP-0009/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-11T12:00:00.000Z"
+      "conferidoEm": "2026-11-11T12:00:00.000Z",
+      "solicitacaoId": "7711267:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 10,
       "solicitacaoCodigo": "7711390",
       "casoNumero": "HP-0010/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-13T04:48:00.000Z"
+      "conferidoEm": "2026-11-13T04:48:00.000Z",
+      "solicitacaoId": "7711390:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 11,
       "solicitacaoCodigo": "7711455",
       "casoNumero": "HP-0011/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-04T12:00:00.000Z"
+      "conferidoEm": "2026-11-04T12:00:00.000Z",
+      "solicitacaoId": "7711455:HP",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 12,
       "solicitacaoCodigo": "7710912",
       "casoNumero": "CG-0001/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-03T12:00:00.000Z"
+      "conferidoEm": "2026-11-03T12:00:00.000Z",
+      "solicitacaoId": "7710912:CG",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 13,
       "solicitacaoCodigo": "7711302",
       "casoNumero": "CG-0002/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-12T12:00:00.000Z"
+      "conferidoEm": "2026-11-12T12:00:00.000Z",
+      "solicitacaoId": "7711302:CG",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 14,
       "solicitacaoCodigo": "7711088",
       "casoNumero": "CG-0003/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-06T12:00:00.000Z"
+      "conferidoEm": "2026-11-06T12:00:00.000Z",
+      "solicitacaoId": "7711088:CG",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 15,
       "solicitacaoCodigo": "7710805",
       "casoNumero": "CCV-0001/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-10-30T12:00:00.000Z"
+      "conferidoEm": "2026-10-30T12:00:00.000Z",
+      "solicitacaoId": "7710805:CCV",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 16,
       "solicitacaoCodigo": "7711199",
       "casoNumero": "CCV-0002/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-10T12:00:00.000Z"
+      "conferidoEm": "2026-11-10T12:00:00.000Z",
+      "solicitacaoId": "7711199:CCV",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 17,
       "solicitacaoCodigo": "7710301",
       "casoNumero": "CCV-0003/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-09-24T12:00:00.000Z"
+      "conferidoEm": "2026-09-24T12:00:00.000Z",
+      "solicitacaoId": "7710301:CCV",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 18,
       "solicitacaoCodigo": "7711501",
       "casoNumero": "CO-0001/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-13T11:25:00.000Z"
+      "conferidoEm": "2026-11-13T11:25:00.000Z",
+      "solicitacaoId": "7711501:CO",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 19,
       "solicitacaoCodigo": "7711143",
       "casoNumero": "CO-0002/26",
       "resultado": "ACEITA",
-      "identificacaoConfere": true,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "joana.valenca",
         "nome": "Joana Valença"
       },
-      "conferidoEm": "2026-11-09T12:00:00.000Z"
+      "conferidoEm": "2026-11-09T12:00:00.000Z",
+      "solicitacaoId": "7711143:CO",
+      "amostras": [
+        "1"
+      ]
     },
     {
       "id": 20,
       "solicitacaoCodigo": "7712045",
       "resultado": "REJEITADA",
-      "identificacaoConfere": false,
-      "materialConfere": true,
-      "quantidadeConfere": true,
-      "recipienteAdequado": true,
       "conferidoPor": {
         "login": "italo.brennand",
         "nome": "Ítalo Brennand"
       },
-      "conferidoEm": "2026-11-09T12:00:00.000Z"
+      "conferidoEm": "2026-11-09T12:00:00.000Z",
+      "solicitacaoId": "7712045:HP",
+      "amostras": [
+        "1"
+      ]
     }
   ],
   "naoConformidades": [
@@ -5671,7 +6023,7 @@
       "id": 1,
       "casoNumero": "HP-0011/26",
       "solicitacaoCodigo": "7711455",
-      "tipo": "FIXACAO_INADEQUADA",
+      "tipo": "ACONDICIONAMENTO_INADEQUADO",
       "descricao": "Peça recebida sem formol no recipiente, com sinais de ressecamento.",
       "setor": "Macroscopia",
       "etapa": "Macroscopia",
@@ -5682,12 +6034,15 @@
         "nome": "Elisa Matarazzo"
       },
       "registradoEm": "2026-11-05T08:00:00.000Z",
-      "status": "ABERTA"
+      "status": "ABERTA",
+      "solicitacaoIds": [
+        "7711455:HP"
+      ]
     },
     {
       "id": 2,
       "solicitacaoCodigo": "7712045",
-      "tipo": "IDENTIFICACAO_DIVERGENTE",
+      "tipo": "IDENTIFICACAO_ILEGIVEL",
       "descricao": "Nome no frasco diverge do nome na requisição (sobrenome trocado).",
       "setor": "Recepção",
       "etapa": "Recepção (conferência)",
@@ -5698,11 +6053,14 @@
         "nome": "Ítalo Brennand"
       },
       "registradoEm": "2026-11-09T12:00:00.000Z",
-      "status": "ABERTA"
+      "status": "ABERTA",
+      "solicitacaoIds": [
+        "7712045:HP"
+      ]
     },
     {
       "id": 3,
-      "tipo": "SEM_ETIQUETA_AGHU",
+      "tipo": "SEM_SOLICITACAO_OU_ETIQUETA",
       "descricao": "Frasco com fragmento de colo uterino sem etiqueta do AGHU, apenas identificação manuscrita.",
       "setor": "Recepção",
       "etapa": "Recepção (leitura)",
@@ -5729,7 +6087,10 @@
       },
       "novaAmostraSolicitada": true,
       "situacao": "AGUARDANDO_NOVA_AMOSTRA",
-      "devolvidaEm": "2026-11-05T08:00:00.000Z"
+      "devolvidaEm": "2026-11-05T08:00:00.000Z",
+      "solicitacaoIds": [
+        "7711455:HP"
+      ]
     },
     {
       "id": 2,
@@ -5742,7 +6103,10 @@
       },
       "novaAmostraSolicitada": true,
       "situacao": "AGUARDANDO_NOVA_AMOSTRA",
-      "devolvidaEm": "2026-11-09T12:00:00.000Z"
+      "devolvidaEm": "2026-11-09T12:00:00.000Z",
+      "solicitacaoIds": [
+        "7712045:HP"
+      ]
     },
     {
       "id": 3,

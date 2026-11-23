@@ -17,21 +17,18 @@ class PayloadRecepcao(BaseModel):
     model_config = ConfigDict(alias_generator=_camel_case, populate_by_name=True, extra="ignore")
 
 
-class ItensConferenciaInput(PayloadRecepcao):
-    identificacao_confere: bool
-    material_confere: bool
-    quantidade_confere: bool
-    recipiente_adequado: bool
-
-
 class ConfirmarEntradaInput(PayloadRecepcao):
-    solicitacao_codigo: str = Field(min_length=1)
-    conferencia: ItensConferenciaInput
+    solicitacao_id: str = Field(min_length=1)
     tipo_exame: Literal["HP", "CG", "CCV", "CO"]
-    quantidade: int = Field(ge=1)
     urgente: bool
-    motivo_urgencia: str | None = None
     procedimento: str = Field(min_length=1)
+    observacoes: str | None = None
+
+
+class VincularIhqInput(PayloadRecepcao):
+    solicitacao_id: str = Field(min_length=1)
+    caso_origem_numero: str = Field(min_length=1)
+    divergencia_confirmada: bool = False
     observacoes: str | None = None
 
 
@@ -50,8 +47,7 @@ class ContextoSemEtiqueta(PayloadRecepcao):
 
 class ContextoSolicitacao(PayloadRecepcao):
     tipo: Literal["SOLICITACAO"]
-    solicitacao_codigo: str = Field(min_length=1)
-    conferencia: ItensConferenciaInput
+    solicitacao_ids: list[str] = Field(min_length=1)
 
 
 class ContextoCaso(PayloadRecepcao):
@@ -68,20 +64,26 @@ ContextoNaoConformidade = Annotated[
 class RegistrarNaoConformidadeInput(PayloadRecepcao):
     contexto: ContextoNaoConformidade
     tipo: Literal[
-        "SEM_ETIQUETA_AGHU",
-        "IDENTIFICACAO_DIVERGENTE",
-        "QUANTIDADE_DIVERGENTE",
-        "MATERIAL_INADEQUADO",
-        "RECIPIENTE_DANIFICADO",
-        "FIXACAO_INADEQUADA",
-        "REQUISICAO_INCOMPLETA",
-        "OUTRO",
+        "SEM_SOLICITACAO_OU_ETIQUETA",
+        "EXAME_NAO_CORRESPONDE_MATERIAL",
+        "FALTA_DESCRICAO_FRASCO",
+        "IDENTIFICACAO_ILEGIVEL",
+        "NUMERACAO_FRASCOS_DIVERGENTE",
+        "QUANTIDADE_FRASCOS_DIVERGENTE",
+        "LATERALIDADE_DIVERGENTE",
+        "FALTA_CARIMBO_ASSINATURA",
+        "ACONDICIONAMENTO_INADEQUADO",
+        "SOLICITACOES_DUPLICADAS",
+        "PECAS_NAO_DESCRITAS",
+        "SISCAN_INCORRETO",
+        "SEM_AGENDAMENTO_CMCE",
+        "OUTROS",
     ]
-    descricao: str
+    descricao: str | None = None
+    observacao: str | None = None
     unidade_origem: str | None = None
     nova_amostra_solicitada: bool
 
 
 class AtualizarSituacaoDevolucaoInput(PayloadRecepcao):
     situacao: Literal["AGUARDANDO_NOVA_AMOSTRA", "NOVA_AMOSTRA_RECEBIDA", "ENCERRADA"]
-

@@ -17,7 +17,8 @@ logger = logging.getLogger("config")
 
 class Settings:
     # 1. Configurações do Servidor
-    ENV: str = os.getenv("ENV", "development").lower()
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", os.getenv("ENV", "development")).lower()
+    ENV: str = ENVIRONMENT  # compatibilidade com configurações existentes
     AUTH_PROVIDER: str = os.getenv("AUTH_PROVIDER", "mock").lower()
     AP_REQUEST_PROVIDER: str = os.getenv("AP_REQUEST_PROVIDER", "mock").lower()
     AP_REQUEST_FIXTURE: str = os.getenv("AP_REQUEST_FIXTURE", "demo").strip().lower()

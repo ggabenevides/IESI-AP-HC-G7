@@ -13,7 +13,11 @@ class ReceptionProviderInterface(ABC):
 
     @abstractmethod
     async def buscar_solicitacao(self, codigo: str) -> dict[str, Any] | None:
-        """Retorna solicitação pelo código normalizado."""
+        """Retorna grupo de exame pela chave composta normalizada."""
+
+    @abstractmethod
+    async def listar_exames_da_solicitacao(self, codigo: str) -> list[dict[str, Any]]:
+        """Retorna todos os grupos de exame de um código AGHU."""
 
     @abstractmethod
     async def listar_solicitacoes_pendentes(self) -> list[dict[str, Any]]:
@@ -48,6 +52,10 @@ class ReceptionProviderInterface(ABC):
         """Persiste os materiais gerados na Recepção."""
 
     @abstractmethod
+    async def adicionar_ihq(self, caso_numero: str, solicitacao_id: str, exame: dict[str, Any]) -> None:
+        """Persiste o vínculo de IHQ recebido para o caso de origem."""
+
+    @abstractmethod
     async def adicionar_historico(self, caso_numero: str, evento: dict[str, Any]) -> dict[str, Any]:
         """Acrescenta evento imutável ao histórico e retorna seu identificador."""
 
@@ -66,4 +74,3 @@ class ReceptionProviderInterface(ABC):
     @abstractmethod
     async def atualizar_situacao_devolucao(self, devolucao_id: int, situacao: str) -> dict[str, Any] | None:
         """Atualiza situação e retorna os estados anterior/atual sem confirmar a transação."""
-

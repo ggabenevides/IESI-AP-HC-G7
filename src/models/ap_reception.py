@@ -7,11 +7,13 @@ from ..resources.database import Base
 
 
 class ApSolicitacao(Base):
-    """Representação local de solicitação AGHU usada pelo provider configurado."""
+    """Grupo de exames AGHU controlado localmente, identificado por código e tipo."""
 
     __tablename__ = "ap_solicitacoes"
 
-    codigo_solicitacao: Mapped[str] = mapped_column(String(60), primary_key=True)
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    codigo_solicitacao: Mapped[str] = mapped_column(String(60), nullable=False, index=True)
+    tipo_exame: Mapped[str] = mapped_column(String(12), nullable=False)
     situacao_recepcao: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
     data_solicitacao: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
     caso_numero: Mapped[str | None] = mapped_column(String(40), nullable=True)
@@ -25,11 +27,11 @@ class ApCaso(Base):
     """Agregado de caso AP; relações da Recepção ficam em tabelas próprias."""
 
     __tablename__ = "ap_casos"
-    __table_args__ = (UniqueConstraint("solicitacao_codigo", name="uq_ap_caso_solicitacao"),)
+    __table_args__ = (UniqueConstraint("solicitacao_id", name="uq_ap_caso_solicitacao_exame"),)
 
     numero_interno: Mapped[str] = mapped_column(String(40), primary_key=True)
-    solicitacao_codigo: Mapped[str] = mapped_column(
-        ForeignKey("ap_solicitacoes.codigo_solicitacao"), nullable=False, index=True
+    solicitacao_id: Mapped[str] = mapped_column(
+        ForeignKey("ap_solicitacoes.id"), nullable=False, index=True
     )
     tipo_exame: Mapped[str] = mapped_column(String(12), nullable=False, index=True)
     status: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
@@ -43,9 +45,10 @@ class ApConferenciaRecebimento(Base):
     __tablename__ = "ap_conferencias_recebimento"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    solicitacao_codigo: Mapped[str] = mapped_column(
-        ForeignKey("ap_solicitacoes.codigo_solicitacao"), nullable=False, index=True
+    solicitacao_id: Mapped[str] = mapped_column(
+        ForeignKey("ap_solicitacoes.id"), nullable=False, index=True
     )
+    solicitacao_codigo: Mapped[str] = mapped_column(String(60), nullable=False, index=True)
     caso_numero: Mapped[str | None] = mapped_column(
         ForeignKey("ap_casos.numero_interno"), nullable=True, index=True
     )
@@ -78,8 +81,8 @@ class ApExameIhq(Base):
     caso_numero: Mapped[str] = mapped_column(
         ForeignKey("ap_casos.numero_interno"), nullable=False, index=True
     )
-    solicitacao_codigo: Mapped[str] = mapped_column(
-        ForeignKey("ap_solicitacoes.codigo_solicitacao"), nullable=False, unique=True
+    solicitacao_id: Mapped[str] = mapped_column(
+        ForeignKey("ap_solicitacoes.id"), nullable=False, unique=True
     )
     payload: Mapped[str] = mapped_column(Text, nullable=False)
 
@@ -93,9 +96,7 @@ class ApNaoConformidade(Base):
     caso_numero: Mapped[str | None] = mapped_column(
         ForeignKey("ap_casos.numero_interno"), nullable=True, index=True
     )
-    solicitacao_codigo: Mapped[str | None] = mapped_column(
-        ForeignKey("ap_solicitacoes.codigo_solicitacao"), nullable=True, index=True
-    )
+    solicitacao_codigo: Mapped[str | None] = mapped_column(String(60), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(30), nullable=False, index=True)
     payload: Mapped[str] = mapped_column(Text, nullable=False)
 
@@ -112,9 +113,7 @@ class ApDevolucao(Base):
     caso_numero: Mapped[str | None] = mapped_column(
         ForeignKey("ap_casos.numero_interno"), nullable=True, index=True
     )
-    solicitacao_codigo: Mapped[str | None] = mapped_column(
-        ForeignKey("ap_solicitacoes.codigo_solicitacao"), nullable=True, index=True
-    )
+    solicitacao_codigo: Mapped[str | None] = mapped_column(String(60), nullable=True, index=True)
     situacao: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
     devolvida_em: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
     payload: Mapped[str] = mapped_column(Text, nullable=False)

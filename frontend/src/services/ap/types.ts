@@ -45,10 +45,15 @@ export function mensagemDeErro(erro: unknown, padrao = 'Não foi possível concl
 export interface AghuService {
   /** Solicitações aguardando recebimento. Lança 503 se o AGHU estiver indisponível. */
   listarPendentes(): Promise<SolicitacaoAghu[]>;
-  /** Quantidade de solicitações aguardando recebimento (para o menu). */
+  /** Quantidade de solicitações do AGHU com tipos de exame aguardando recebimento (menu e fila). */
   contarPendentes(): Promise<number>;
-  /** Lê uma solicitação pelo número para a recepção. Lança 503 se o AGHU estiver indisponível. */
+  /**
+   * Lê o código da solicitação (ou `<código>-<amostra>`) para a recepção.
+   * Lança 503 se o AGHU estiver indisponível.
+   */
   lerSolicitacao(codigo: string): Promise<LeituraSolicitacao>;
+  /** Todos os grupos de tipo de exame (qualquer situação) de uma solicitação do AGHU. */
+  listarExamesDaSolicitacao(codigoSolicitacao: string): Promise<SolicitacaoAghu[]>;
 }
 
 /** Casos de anatomia patológica e ações da recepção sobre eles. */
@@ -62,7 +67,7 @@ export interface CasoService {
   cancelar(numeroInterno: string, motivo: string, usuario: Responsavel): Promise<CasoAp>;
   registrarAcionamentoPlantao(numeroInterno: string, usuario: Responsavel): Promise<CasoAp>;
   /**
-   * Busca casos cadastrados por número interno, prontuário ou nome do paciente
+   * Busca casos cadastrados por número interno, código da solicitação AGHU, prontuário ou nome do paciente
    * (por trecho, sem diferenciar maiúsculas/minúsculas e acentos).
    */
   buscar(termo: string, limite: number): Promise<ResultadoBuscaCasos>;

@@ -16,7 +16,7 @@
 
 ## 3. Recepção e frontend
 
-- [x] 3.1 Migrar as operações disponíveis de Recepção para serviços HTTP e persistência backend; impressão é local ao navegador e a associação IHQ será automática em mecanismo futuro.
+- [x] 3.1 Migrar as operações disponíveis de Recepção para serviços HTTP e persistência backend; impressão é local ao navegador e o vínculo manual IHQ funciona como contingência quando a associação não vier do AGHU.
 - [x] 3.2 Atualizar Pinia para identidade e permissões; adicionar guards de permissão às rotas e ocultar ações/menu indisponíveis.
 - [x] 3.3 Tratar respostas 401/403 em navegação e mutações sem apresentar sucesso falso; preservar interceptadores Axios.
 - [x] 3.4 Confirmar que nenhuma tela, endpoint ou permissão operacional de módulo futuro foi introduzida.

@@ -27,6 +27,7 @@ if config.config_file_name is not None:
 from src.resources.database import Base
 from src.models.audit_log import AuditLog  # noqa: F401
 from src.models.refresh_token import RefreshToken  # noqa: F401
+from src.models.usuario_perfil import Perfil, Usuario, UsuarioPerfil  # noqa: F401
 from src.models.ap_reception import (  # noqa: F401
     ApCaso,
     ApConferenciaRecebimento,

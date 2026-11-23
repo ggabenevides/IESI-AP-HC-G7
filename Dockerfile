@@ -15,7 +15,7 @@ RUN cd frontend && npm run build
 # ============================
 # 2. BACKEND & RUNTIME FINAL
 # ============================
-FROM python:3.12-slim
+FROM python:3.13-slim
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1
@@ -45,4 +45,4 @@ COPY --from=frontend-build /app/src/static/dist ./src/static/dist
 
 EXPOSE 8000
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "alembic upgrade head && exec uvicorn src.main:app --host 0.0.0.0 --port 8000"]

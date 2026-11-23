@@ -21,6 +21,7 @@ from ..schemas.reception import (
     CancelarCasoInput,
     ConfirmarEntradaInput,
     RegistrarNaoConformidadeInput,
+    VincularIhqInput,
 )
 
 
@@ -39,13 +40,6 @@ def _controller(provider: ReceptionProviderInterface, session: AsyncSession) -> 
 def _ip_origem(request: Request) -> str | None:
     """Obtém IP do peer HTTP sem confiar em cabeçalhos enviados pelo cliente."""
     return request.client.host if request.client else None
-
-
-async def _negar_vinculo_ihq_nao_implementado(
-    _usuario: dict[str, Any] = Depends(auth_handler.decode_token),
-) -> None:
-    """Recusa vínculo manual enquanto o mecanismo automático ainda é definido."""
-    raise HTTPException(status_code=501, detail="A associação automática de solicitações IHQ ainda não está implementada.")
 
 
 async def _conflito_integridade(session: AsyncSession, erro: IntegrityError) -> None:
@@ -83,6 +77,17 @@ async def ler_solicitacao(
 ) -> dict[str, Any]:
     """Classifica uma solicitação para a Recepção."""
     return await _controller(provider, session).ler_solicitacao(codigo)
+
+
+@router.get("/solicitacoes/{codigo}/exames")
+async def listar_exames_da_solicitacao(
+    codigo: str,
+    usuario: dict[str, Any] = Depends(exigir_permissao(Permissao.CASOS_CONSULTAR)),
+    provider: ReceptionProviderInterface = Depends(get_reception_provider),
+    session: AsyncSession = Depends(get_app_db_session),
+) -> list[dict[str, Any]]:
+    """Lista os grupos de tipo de exame de uma solicitação AGHU."""
+    return await _controller(provider, session).listar_exames_da_solicitacao(codigo)
 
 
 @router.get("/casos")
@@ -149,9 +154,21 @@ async def confirmar_recebimento(
         await _conflito_integridade(session, erro)
 
 
-@router.post("/recebimentos/ihq", dependencies=[Depends(_negar_vinculo_ihq_nao_implementado)])
-async def vincular_ihq_pendente() -> None:
-    """Vínculo IHQ permanece fechado até a permissão ser validada por SAP/HC."""
+@router.post("/recebimentos/ihq", status_code=status.HTTP_201_CREATED)
+async def vincular_ihq(
+    entrada: VincularIhqInput,
+    request: Request,
+    usuario: dict[str, Any] = Depends(exigir_permissao(Permissao.RECEPCAO_RECEBER)),
+    provider: ReceptionProviderInterface = Depends(get_reception_provider),
+    session: AsyncSession = Depends(get_app_db_session),
+) -> dict[str, Any]:
+    """Recebe IHQ e associa ao caso de origem sob permissão de Recepção."""
+    try:
+        return await _controller(provider, session).vincular_ihq(
+            entrada.model_dump(by_alias=True), usuario, _ip_origem(request)
+        )
+    except IntegrityError as erro:
+        await _conflito_integridade(session, erro)
 
 
 @router.post("/casos/cancelamento")
