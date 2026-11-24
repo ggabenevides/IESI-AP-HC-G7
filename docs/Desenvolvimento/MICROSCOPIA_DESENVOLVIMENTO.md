@@ -5,6 +5,22 @@ Este roteiro organiza o início do desenvolvimento na branch `feat/microscopia`.
 existentes. Antes de implementar, consulte o [contrato SPEC](../especificacao/SPEC.md)
 e os documentos vinculados. Não utilizar dados reais de pacientes no desenvolvimento.
 
+## Escopo desta frente
+
+A dupla também é responsável por Laudo e Painel de Coordenação, mas o trabalho
+desta branch está limitado à **aba de Microscopia** e às suas dependências
+diretas. Laudo e Painel de Coordenação serão tratados separadamente. Recepção,
+Arquivo, Macroscopia, Processamento Técnico, IHQ e gestão de usuários pertencem
+às outras duplas: alinhar contratos e integrações com elas, sem desenvolver ou
+alterar suas funcionalidades nesta frente.
+
+Os perfis de interesse são Médico Residente, Patologista/Preceptor,
+Citotécnico e Coordenação/Administrador. O acesso solicitado para
+Coordenação/Administrador é total no sistema, mas a aplicação atual não concede
+todas as permissões a esse perfil. A regra precisa ser conciliada com a
+especificação e com a dupla de autenticação antes de alterar o RBAC
+compartilhado; não presumir que já esteja implementada.
+
 ## 1. Contexto e limites
 
 O Sistema AP acompanha o caso e suas movimentações; não substitui o AGHU.
@@ -109,11 +125,12 @@ Todos os usuários abaixo usam a senha fictícia de desenvolvimento **`demo`**:
 | `residente` | `MEDICO_RESIDENTE` | Consultar casos como residente. |
 | `patologista` | `PATOLOGISTA_PRECEPTOR` | Consultar casos como patologista/preceptor. |
 | `citotecnico` | `CITOTECNICO` | Consultar casos; ações específicas aguardam validação. |
+| `admin` | `COORDENACAO_ADMINISTRADOR` | Consultar casos; o acesso total solicitado ainda não está implementado. |
 | `sem-perfil` | Nenhum | Verificar que uma identidade sem permissão não acessa os casos. |
 
 Para entrar, inicie backend e frontend conforme a seção 3, abra
 `http://localhost:5173/login`, escolha a identidade fictícia e informe `demo`.
-Os três perfis da tabela recebem inicialmente a permissão `casos:consultar`;
+Os quatro perfis da tabela recebem inicialmente a permissão `casos:consultar`;
 essa permissão permite abrir **Consulta de microscopia** e os detalhes já
 disponíveis. A lista é somente leitura, mas o detalhe mantém as ações existentes
 permitidas para cada perfil. Registro, revisão e aprovação de parecer de
@@ -161,6 +178,9 @@ hipóteses como regras aprovadas:
    incompleto deve permanecer recuperável e não pode avançar o caso.
 3. Qual é a matriz de ações de residente, patologista/preceptor e citotécnico?
    Confirmar a divergência de aprovação citada acima e o papel do citotécnico.
+   A solicitação de acesso total para Coordenação/Administrador deve ser
+   reconciliada com as restrições de aprovação e conclusão por patologista e
+   com as regras de acesso a dados e painéis gerenciais.
 4. Quais complementos e dados são necessários na primeira entrega? Como
    acompanhar a execução e o retorno quando as demais etapas ainda não estão
    disponíveis? Não simular execução nem conclusão de outras equipes.
@@ -220,19 +240,14 @@ alterar o comportamento existente de Recepção.
 - [ ] Testar pedidos distintos, histórico, permissões, retorno e impossibilidade
   de apresentar execução ou resultado inexistente como concluído.
 
-### Etapa 4 — Conclusão, liberação e recursos posteriores
+### Integração posterior com Laudo
 
-- [ ] Após aprovação e completude, permitir conclusão somente pelo perfil
-  autorizado, registrando laudo, responsáveis e data/hora. Encaminhar às etapas
-  posteriores conforme fluxo validado; impedir alteração indevida do concluído.
-- [ ] Registrar separadamente a confirmação da liberação já realizada no AGHU,
-  sem sugerir que o Sistema AP a efetuou.
-- [ ] Planejar máscaras e documento para impressão após validação do conteúdo,
-  das permissões e do fluxo. Alterações na máscara não devem modificar textos
-  já salvos. Correções de registros diagnósticos devem preservar versões e
-  motivo, conforme o modelo e a decisão de reabertura.
-- [ ] Testar conclusão sem aprovação, campos faltantes, perfil indevido,
-  confirmação da liberação e preservação do histórico e versões.
+- [ ] Alinhar com a frente de Laudo o contrato para entrega do parecer revisado,
+  sem implementar conclusão, liberação no AGHU ou impressão nesta branch.
+- [ ] Planejar máscaras para Microscopia após validação do conteúdo e das
+  permissões. Alterações na máscara não devem modificar textos já salvos.
+- [ ] Preservar versões e motivo de correções diagnósticas, conforme o modelo e
+  a decisão sobre correção e reabertura.
 
 ## 6. Critérios transversais e verificação
 
