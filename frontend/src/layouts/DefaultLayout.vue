@@ -150,6 +150,7 @@ import {
   InboxArrowDownIcon,
   MagnifyingGlassIcon,
   ArrowUturnLeftIcon,
+  BeakerIcon,
 } from '@heroicons/vue/24/outline';
 import { PanelRight } from 'lucide-vue-next';
 import ProfileDropdown from '../components/ProfileDropdown.vue';
@@ -205,6 +206,12 @@ const secoes = computed<SecaoMenu[]>(() => [
         requerLogin: true,
         permissao: 'devolucoes:consultar',
       },
+    ],
+  },
+  {
+    titulo: 'Microscopia',
+    itens: [
+      { chave: 'microscopia', rotulo: 'Consulta de microscopia', para: '/microscopia', icone: BeakerIcon, requerLogin: true, permissao: 'casos:consultar' },
     ],
   },
   {

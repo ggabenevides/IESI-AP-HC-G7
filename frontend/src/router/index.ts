@@ -72,6 +72,13 @@ const routes = [
     meta: { requiresAuth: true, requiresPermission: 'casos:consultar', menu: 'consulta' },
   },
   {
+    path: '/microscopia',
+    name: 'Microscopia',
+    component: ConsultaCasos,
+    props: { microscopia: true },
+    meta: { requiresAuth: true, requiresPermission: 'casos:consultar', menu: 'microscopia' },
+  },
+  {
     // O número interno contém barra (ex.: /casos/HP-0003/26).
     path: '/casos/:numero(.*)',
     name: 'Detalhe do caso',

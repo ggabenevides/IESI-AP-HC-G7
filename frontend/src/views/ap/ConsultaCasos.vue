@@ -1,8 +1,17 @@
 <template>
   <div class="space-y-4">
-    <p class="text-sm text-gray-600">Todos os casos, inclusive devolvidos, cancelados e arquivados.</p>
+    <p v-if="microscopia" class="text-sm text-gray-600">
+      Lista somente de leitura dos casos com status em microscopia ou aguardando aprovação.
+      A presença nesta lista não confirma elegibilidade clínica. O detalhe mantém as ações já existentes.
+    </p>
+    <p v-else class="text-sm text-gray-600">Todos os casos, inclusive devolvidos, cancelados e arquivados.</p>
 
-    <Card>
+    <Alert v-if="erroCarga" variant="danger" title="Não foi possível carregar os casos">
+      {{ erroCarga }}
+      <button type="button" class="focus-ring ml-2 font-semibold underline" @click="carregarCasos">Tentar novamente</button>
+    </Alert>
+
+    <Card v-if="!erroCarga">
       <!-- Filtros -->
       <div class="flex flex-wrap items-end gap-3">
         <div class="min-w-64 flex-1">
@@ -82,11 +91,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { ExclamationTriangleIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import Badge from '../../components/Badge.vue';
+import Alert from '../../components/Alert.vue';
 import Card from '../../components/Card.vue';
 import DataTable from '../../components/DataTable.vue';
 import SelectBusca from '../../components/SelectBusca.vue';
@@ -97,6 +107,9 @@ import { resumoMaterial } from '../../helpers/aghu';
 import { formatarDataHora } from '../../helpers/formato';
 import { rotaDoCaso } from '../../helpers/rotas';
 import { filtrosConsultaVazios, useCasosStore, type FiltrosConsulta } from '../../stores/casos';
+import { mensagemDeErro } from '../../services/ap/types';
+
+const props = withDefaults(defineProps<{ microscopia?: boolean }>(), { microscopia: false });
 
 const PERIODOS = [
   { dias: 0, rotulo: 'Qualquer data' },
@@ -106,13 +119,26 @@ const PERIODOS = [
 ];
 
 /** Opções dos filtros (campos de seleção com busca). */
-const opcoesStatus = [{ valor: '', rotulo: 'Todos' }, ...ORDEM_STATUS_CASO.map((s) => ({ valor: s, rotulo: STATUS_CASO[s].rotulo }))];
+const STATUS_MICROSCOPIA = ['EM_MICROSCOPIA', 'AGUARDANDO_APROVACAO'] as const;
+const opcoesStatus = computed(() => [
+  { valor: '', rotulo: 'Todos' },
+  ...(props.microscopia ? STATUS_MICROSCOPIA : ORDEM_STATUS_CASO).map((s) => ({ valor: s, rotulo: STATUS_CASO[s].rotulo })),
+]);
 const opcoesTipo = [{ valor: '', rotulo: 'Todos' }, ...TIPOS_CASO_PRINCIPAL.map((t) => ({ valor: t, rotulo: `${t} · ${TIPOS_EXAME[t].nome}` }))];
 const opcoesPeriodo = PERIODOS.map((p) => ({ valor: p.dias, rotulo: p.rotulo }));
 
 const router = useRouter();
 const casosStore = useCasosStore();
-const { filtros } = storeToRefs(casosStore);
+const { filtros: filtrosGerais } = storeToRefs(casosStore);
+const filtrosMicroscopia = ref<FiltrosConsulta>(filtrosConsultaVazios());
+const filtros = computed({
+  get: () => props.microscopia ? filtrosMicroscopia.value : filtrosGerais.value,
+  set: (valor: FiltrosConsulta) => {
+    if (props.microscopia) filtrosMicroscopia.value = valor;
+    else filtrosGerais.value = valor;
+  },
+});
+const erroCarga = ref('');
 
 const colunas = [
   { text: 'Nº interno', value: 'numeroInterno' },
@@ -131,6 +157,7 @@ const resultado = computed(() => {
   const limite = f.periodoDias > 0 ? Date.now() - f.periodoDias * 86_400_000 : null;
   return casosStore.casos
     .filter((c) => {
+      if (props.microscopia && c.status !== 'EM_MICROSCOPIA' && c.status !== 'AGUARDANDO_APROVACAO') return false;
       if (termo) {
         const alvo = [c.numeroInterno, c.solicitacao.codigoSolicitacao, c.solicitacao.prontuario, c.solicitacao.nomePaciente];
         if (!alvo.some((valor) => valor.toUpperCase().includes(termo))) return false;
@@ -188,7 +215,14 @@ const abrir = (item: { numeroInterno: string }) => {
   router.push(rotaDoCaso(item.numeroInterno));
 };
 
-onMounted(() => {
-  casosStore.carregar();
-});
+async function carregarCasos(): Promise<void> {
+  erroCarga.value = '';
+  try {
+    await casosStore.carregar();
+  } catch (erro: unknown) {
+    erroCarga.value = mensagemDeErro(erro, 'Não foi possível carregar os casos. Tente novamente.');
+  }
+}
+
+onMounted(carregarCasos);
 </script>
