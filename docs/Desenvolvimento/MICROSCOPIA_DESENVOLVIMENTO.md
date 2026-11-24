@@ -16,19 +16,22 @@ alterar suas funcionalidades nesta frente.
 
 Os perfis de interesse são Médico Residente, Patologista/Preceptor,
 Citotécnico e Coordenação/Administrador. O acesso solicitado para
-Coordenação/Administrador é total no sistema, mas a aplicação atual não concede
-todas as permissões a esse perfil. A regra precisa ser conciliada com a
-especificação e com a dupla de autenticação antes de alterar o RBAC
-compartilhado; não presumir que já esteja implementada.
+Coordenação/Administrador é total no sistema, com a exceção de que **somente
+o Médico Patologista/Preceptor pode liberar o laudo**. A aplicação atual não
+concede todas as permissões à Coordenação/Administrador. O alcance das demais
+ações clínicas e o acesso a dados e painéis gerenciais permanecem pendentes de
+validação antes de alterar o RBAC compartilhado.
 
 ## 1. Contexto e limites
 
 O Sistema AP acompanha o caso e suas movimentações; não substitui o AGHU.
 Na rotina descrita, o residente elabora um parecer, o patologista/preceptor
 revisa e decide entre solicitar complementos ou fechar o diagnóstico. A
-liberação oficial do laudo permanece uma ação manual no AGHU; no Sistema AP,
-registra-se apenas a confirmação dessa liberação. Complementos podem devolver
-o caso à macroscopia, ao processamento ou à IHQ, preservando o histórico.
+liberação oficial do laudo permanece uma ação manual no AGHU, realizada somente
+pelo Médico Patologista/Preceptor; no Sistema AP, registra-se apenas a
+confirmação dessa liberação. A confirmação no Sistema AP é uma ação distinta,
+cuja permissão ainda deve ser definida. Complementos podem devolver o caso à
+macroscopia, ao processamento ou à IHQ, preservando o histórico.
 
 **Fontes de referência:**
 
@@ -178,9 +181,10 @@ hipóteses como regras aprovadas:
    incompleto deve permanecer recuperável e não pode avançar o caso.
 3. Qual é a matriz de ações de residente, patologista/preceptor e citotécnico?
    Confirmar a divergência de aprovação citada acima e o papel do citotécnico.
-   A solicitação de acesso total para Coordenação/Administrador deve ser
-   reconciliada com as restrições de aprovação e conclusão por patologista e
-   com as regras de acesso a dados e painéis gerenciais.
+   A liberação do laudo é exclusiva do Patologista/Preceptor; o alcance das
+   demais ações da Coordenação/Administrador deve ser reconciliado com as
+   restrições de aprovação e conclusão e com as regras de acesso a dados e
+   painéis gerenciais.
 4. Quais complementos e dados são necessários na primeira entrega? Como
    acompanhar a execução e o retorno quando as demais etapas ainda não estão
    disponíveis? Não simular execução nem conclusão de outras equipes.
@@ -244,6 +248,8 @@ alterar o comportamento existente de Recepção.
 
 - [ ] Alinhar com a frente de Laudo o contrato para entrega do parecer revisado,
   sem implementar conclusão, liberação no AGHU ou impressão nesta branch.
+  Comunicar a regra de liberação exclusiva pelo Patologista/Preceptor e validar
+  separadamente a permissão para confirmar no Sistema AP a liberação no AGHU.
 - [ ] Planejar máscaras para Microscopia após validação do conteúdo e das
   permissões. Alterações na máscara não devem modificar textos já salvos.
 - [ ] Preservar versões e motivo de correções diagnósticas, conforme o modelo e
