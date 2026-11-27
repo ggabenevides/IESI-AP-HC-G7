@@ -32,6 +32,10 @@ class ReceptionProviderInterface(ABC):
         """Insere ou atualiza os campos locais da solicitação."""
 
     @abstractmethod
+    async def cancelar_solicitacao(self, grupo_id: str, cancelamento: dict[str, Any]) -> dict[str, Any] | None:
+        """Atualiza o grupo pendente de forma condicional para evitar corrida com recebimento."""
+
+    @abstractmethod
     async def listar_casos(self) -> list[dict[str, Any]]:
         """Lista casos com relações necessárias às telas existentes."""
 
@@ -74,3 +78,7 @@ class ReceptionProviderInterface(ABC):
     @abstractmethod
     async def atualizar_situacao_devolucao(self, devolucao_id: int, situacao: str) -> dict[str, Any] | None:
         """Atualiza situação e retorna os estados anterior/atual sem confirmar a transação."""
+
+    @abstractmethod
+    async def associar_ocorrencias_reabertas(self, solicitacao_id: str, caso_numero: str) -> list[dict[str, Any]]:
+        """Associa ao caso as ocorrências de rejeição pré-recepção regularizadas para o grupo."""

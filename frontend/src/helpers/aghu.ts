@@ -38,7 +38,7 @@ export interface SolicitacaoAgrupada {
 }
 
 /** Ordem dos tipos na solicitação: Congelação primeiro, IHQ por último. */
-const ORDEM_TIPO: Record<TipoExame, number> = { CO: 0, HP: 1, CG: 2, CCV: 3, IHQ: 4 };
+const ORDEM_TIPO: Record<TipoExame, number> = { CO: 0, HP: 1, CG: 2, CCV: 3, REVISAO: 4, IHQ: 5 };
 
 /** Ordena os grupos de uma solicitação (CO primeiro, IHQ por último). */
 export function ordenarGrupos(grupos: SolicitacaoAghu[]): SolicitacaoAghu[] {
@@ -84,4 +84,38 @@ export function rotuloQuantidadeSolicitacoes(quantidade: number): string {
 export function rotuloNumerosAmostras(amostras: Pick<AmostraAghu, 'numeroAmostra'>[]): string {
   const numeros = amostras.map((a) => a.numeroAmostra).join(', ');
   return `${amostras.length === 1 ? 'amostra' : 'amostras'} ${numeros}`;
+}
+
+/**
+ * Decompõe leitura de etiqueta em `{ codigoSolicitacao, numeroAmostra }`.
+ * Aceita `<solicitação>:<tipo>`, `<solicitação>-<amostra>` ou 10 dígitos contínuos (`7 + 3`).
+ */
+export function extrairCodigoEamostra(codigoBruto: string): { codigoSolicitacao: string; numeroAmostra: string | null } {
+  const leitura = codigoBruto.trim().toUpperCase();
+  if (leitura.includes(':')) {
+    return { codigoSolicitacao: leitura.split(':', 1)[0], numeroAmostra: null };
+  }
+  const idx = leitura.lastIndexOf('-');
+  if (idx > 0) {
+    const sufixo = leitura.slice(idx + 1);
+    if (/^\d+$/.test(sufixo)) {
+      return { codigoSolicitacao: leitura.slice(0, idx), numeroAmostra: sufixo };
+    }
+  }
+  if (/^\d{10}$/.test(leitura)) {
+    return { codigoSolicitacao: leitura.slice(0, 7), numeroAmostra: leitura.slice(7) };
+  }
+  return { codigoSolicitacao: leitura, numeroAmostra: null };
+}
+
+/** Normaliza número da amostra removendo zeros à esquerda quando puramente numérico. */
+export function normalizarNumeroAmostra(valor: string): string {
+  const limpo = valor.trim().toUpperCase();
+  return /^\d+$/.test(limpo) ? String(Number.parseInt(limpo, 10)) : limpo;
+}
+
+/** Compara dois números de amostra de forma tolerante a zeros à esquerda. */
+export function mesmaAmostra(a: string | null | undefined, b: string | null | undefined): boolean {
+  if (!a || !b) return false;
+  return normalizarNumeroAmostra(a) === normalizarNumeroAmostra(b);
 }

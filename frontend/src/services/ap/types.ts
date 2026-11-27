@@ -54,6 +54,8 @@ export interface AghuService {
   lerSolicitacao(codigo: string): Promise<LeituraSolicitacao>;
   /** Todos os grupos de tipo de exame (qualquer situação) de uma solicitação do AGHU. */
   listarExamesDaSolicitacao(codigoSolicitacao: string): Promise<SolicitacaoAghu[]>;
+  /** Cancela um grupo pendente com motivo obrigatório. */
+  cancelarExame(solicitacaoId: string, motivo: string): Promise<SolicitacaoAghu>;
 }
 
 /** Casos de anatomia patológica e ações da recepção sobre eles. */
@@ -63,7 +65,7 @@ export interface CasoService {
   buscarElegiveisIhq(termo: string): Promise<CasoElegivelIhq[]>;
   /** Confirma a entrada de um caso principal (HP, CG, CCV, CO). */
   confirmarEntrada(input: ConfirmarEntradaInput, usuario: Responsavel): Promise<CasoAp>;
-  vincularIhq(input: VincularIhqInput, usuario: Responsavel): Promise<{ caso: CasoAp; ihq: ExameIhq }>;
+  vincularIhq(input: VincularIhqInput, usuario: Responsavel): Promise<{ caso: CasoAp; ihq: ExameIhq; solicitacao: SolicitacaoAghu }>;
   cancelar(numeroInterno: string, motivo: string, usuario: Responsavel): Promise<CasoAp>;
   registrarAcionamentoPlantao(numeroInterno: string, usuario: Responsavel): Promise<CasoAp>;
   /**

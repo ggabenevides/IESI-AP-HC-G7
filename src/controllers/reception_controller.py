@@ -44,6 +44,7 @@ TIPOS_NAO_CONFORMIDADE = {
     "OUTROS": "Outros",
 }
 STATUS_INELEGIVEIS_IHQ = {"DEVOLVIDO", "CANCELADO"}
+TIPOS_CASO_ORIGEM = {"HP", "CG", "CCV", "CO"}
 STATUS_CASO_BLOQUEADOS = {
     "DEVOLVIDO": "Devolvido",
     "CANCELADO": "Cancelado",
@@ -66,6 +67,71 @@ def agora_iso() -> str:
 def normalizar_codigo(valor: str) -> str:
     """Normaliza código de solicitação ou caso como nos serviços do frontend."""
     return valor.strip().upper()
+
+
+def _extrair_codigo_e_amostra(codigo: str) -> tuple[str, str | None]:
+    """Decompõe leitura de etiqueta em (codigo_solicitacao, numero_amostra | None).
+
+    Formatos aceitos, nesta ordem de precedência:
+    1. ``<solicitação>:<tipo>``  → amostra = None
+    2. ``<solicitação>-<amostra>``  (sufixo numérico)
+    3. Código contínuo de exatamente 10 dígitos → primeiros 7 = solicitação, últimos 3 = amostra
+    4. Qualquer outro valor → amostra = None
+    """
+    leitura = normalizar_codigo(codigo)
+    if ":" in leitura:
+        return leitura.split(":", 1)[0], None
+    partes = leitura.rsplit("-", 1)
+    if len(partes) == 2 and partes[1].isdigit():
+        return partes[0], partes[1]
+    if leitura.isdigit() and len(leitura) == 10:
+        return leitura[:7], leitura[7:]
+    return leitura, None
+
+
+def _normalizar_numero_amostra(valor: str) -> str:
+    """Remove zeros à esquerda de números puros para comparação tolerante."""
+    return str(int(valor)) if valor.isdigit() else valor.strip().upper()
+
+
+def _resolver_amostra_bipada(
+    numero_amostra: str,
+    exames: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Localiza o grupo de exame dono da amostra bipada.
+
+    Retorna dicionário com:
+    - ``amostraBipada``: número original da amostra
+    - ``grupoSelecionadoId``: ID do grupo pendente correspondente (ou None)
+    - ``examesFiltrados``: lista com o grupo pendente (ou vazia)
+    - ``amostraBipadaSituacao``: metadados quando a amostra foi encontrada em grupo
+      já recebido/devolvido (ou None)
+    """
+    normalizado = _normalizar_numero_amostra(numero_amostra)
+    resultado: dict[str, Any] = {
+        "amostraBipada": numero_amostra,
+        "grupoSelecionadoId": None,
+        "examesFiltrados": [],
+        "amostraBipadaSituacao": None,
+    }
+    for exame in exames:
+        for amostra in exame.get("amostras", []):
+            if _normalizar_numero_amostra(amostra["numeroAmostra"]) == normalizado:
+                if exame["situacaoRecepcao"] == "AGUARDANDO_RECEBIMENTO":
+                    resultado["grupoSelecionadoId"] = exame["id"]
+                    resultado["examesFiltrados"] = [exame]
+                else:
+                    resultado["amostraBipadaSituacao"] = {
+                        "grupoId": exame["id"],
+                        "tipoExame": exame.get("tipoExameSugerido"),
+                        "situacaoRecepcao": exame["situacaoRecepcao"],
+                        "casoNumero": exame.get("casoNumero"),
+                        "ihqCodigo": exame.get("ihqCodigo"),
+                        "devolucaoId": exame.get("devolucaoId"),
+                        "cancelamento": exame.get("cancelamento"),
+                    }
+                return resultado
+    return resultado
 
 
 def normalizar_texto(valor: str) -> str:
@@ -139,6 +205,39 @@ class ReceptionController:
         self.provider = provider
         self.session = session
 
+    async def cancelar_exame_solicitacao(
+        self, grupo_id: str, motivo: str, usuario: dict[str, Any], ip: str | None
+    ) -> dict[str, Any]:
+        """Cancela um grupo pendente e audita a mutação na mesma sessão."""
+        identificador = normalizar_codigo(grupo_id)
+        solicitacao = await self.provider.buscar_solicitacao(identificador)
+        if solicitacao is None:
+            raise HTTPException(status_code=404, detail=f"Exame {identificador} não encontrado.")
+        if solicitacao["situacaoRecepcao"] != "AGUARDANDO_RECEBIMENTO":
+            raise HTTPException(status_code=409, detail=f"O exame {identificador} não está aguardando recebimento.")
+        motivo_limpo = motivo.strip()
+        if not motivo_limpo:
+            raise HTTPException(status_code=400, detail="Informe o motivo do cancelamento.")
+
+        cancelamento = {
+            "motivo": motivo_limpo,
+            "canceladoPor": responsavel_autenticado(usuario),
+            "canceladoEm": agora_iso(),
+        }
+        novo = await self.provider.cancelar_solicitacao(identificador, cancelamento)
+        if novo is None:
+            raise HTTPException(status_code=409, detail=f"O exame {identificador} não está aguardando recebimento.")
+        await _auditar(
+            self.session,
+            usuario,
+            ip,
+            "SOLICITACAO_EXAME_CANCELADA",
+            f"solicitacao_exame:{identificador}",
+            {"situacaoRecepcao": solicitacao["situacaoRecepcao"]},
+            {"situacaoRecepcao": "CANCELADA", "cancelamento": cancelamento},
+        )
+        return novo
+
     async def listar_pendentes(self) -> list[dict[str, Any]]:
         """Lista solicitações pendentes; consulta AGHU mock pode estar indisponível."""
         self._exigir_fonte_disponivel()
@@ -178,6 +277,20 @@ class ReceptionController:
                     ocorrido_em=agora_iso(),
                 ),
             )
+        if atual["situacao"] == "NOVA_AMOSTRA_RECEBIDA":
+            if atual.get("casoNumero"):
+                estado_anterior = alteracao.get("statusCasoAnterior") or "DEVOLVIDO"
+                estado_atual = alteracao.get("statusCasoAtual") or "RECEBIDO"
+                await self.provider.adicionar_historico(
+                    atual["casoNumero"],
+                    _evento_historico(
+                        responsavel,
+                        "FLUXO_REABERTO",
+                        "Fluxo reaberto após regularização",
+                        f"Devolução {devolucao_id} regularizada; caso reaberto de {estado_anterior} para {estado_atual}.",
+                        ocorrido_em=agora_iso(),
+                    ),
+                )
         await _auditar(
             self.session,
             usuario,
@@ -187,10 +300,14 @@ class ReceptionController:
             {
                 "situacao": anterior["situacao"],
                 "statusNaoConformidade": alteracao["statusNaoConformidadeAnterior"],
+                "solicitacoes": alteracao.get("solicitacoesAnteriores", []),
+                "statusCaso": alteracao.get("statusCasoAnterior"),
             },
             {
                 "situacao": atual["situacao"],
                 "statusNaoConformidade": alteracao["statusNaoConformidadeAtual"],
+                "solicitacoes": alteracao.get("solicitacoesAtuais", []),
+                "statusCaso": alteracao.get("statusCasoAtual"),
             },
         )
         return atual
@@ -198,18 +315,22 @@ class ReceptionController:
     async def ler_solicitacao(self, codigo: str) -> dict[str, Any]:
         """Classifica a solicitação inteira a partir do código, amostra ou chave de grupo."""
         self._exigir_fonte_disponivel()
-        leitura = normalizar_codigo(codigo)
-        codigo_solicitacao = leitura.split(":", 1)[0]
-        # Etiquetas podem conter código-amostra; o sufixo só é removido quando numérico.
-        partes = codigo_solicitacao.rsplit("-", 1)
-        if len(partes) == 2 and partes[1].isdigit():
-            codigo_solicitacao = partes[0]
+        codigo_solicitacao, numero_amostra = _extrair_codigo_e_amostra(codigo)
         exames = await self.provider.listar_exames_da_solicitacao(codigo_solicitacao)
         if not exames:
             return {"tipo": "NAO_ENCONTRADA"}
+
+        # Resolver metadados da amostra bipada (se houver).
+        meta_amostra: dict[str, Any] = {}
+        if numero_amostra is not None:
+            meta_amostra = _resolver_amostra_bipada(numero_amostra, exames)
+
         pendentes = [exame for exame in exames if exame["situacaoRecepcao"] == "AGUARDANDO_RECEBIMENTO"]
         if pendentes:
-            return {"tipo": "PENDENTE", "codigoSolicitacao": codigo_solicitacao, "exames": pendentes}
+            resultado: dict[str, Any] = {"tipo": "PENDENTE", "codigoSolicitacao": codigo_solicitacao, "exames": pendentes}
+            if meta_amostra:
+                resultado.update(meta_amostra)
+            return resultado
 
         recebidos = [exame for exame in exames if exame["situacaoRecepcao"] == "RECEBIDA"]
         if recebidos:
@@ -222,7 +343,10 @@ class ReceptionController:
                 }
                 for exame in recebidos
             ]
-            return {"tipo": "RECEBIDA", "solicitacao": recebidos[0], "recebimentos": recebimentos}
+            resultado = {"tipo": "RECEBIDA", "solicitacao": recebidos[0], "recebimentos": recebimentos}
+            if meta_amostra:
+                resultado["amostraBipada"] = meta_amostra.get("amostraBipada")
+            return resultado
 
         solicitacao = exames[0]
         if solicitacao["situacaoRecepcao"] == "DEVOLVIDA":
@@ -231,12 +355,25 @@ class ReceptionController:
                 None,
             )
             tipo = devolucao["naoConformidade"]["tipo"] if devolucao else "OUTROS"
-            return {
+            resultado = {
                 "tipo": "DEVOLVIDA",
                 "solicitacao": solicitacao,
                 "devolvidaEm": devolucao["devolvidaEm"] if devolucao else "",
                 "tipoNaoConformidade": tipo,
             }
+            if meta_amostra:
+                resultado["amostraBipada"] = meta_amostra.get("amostraBipada")
+            return resultado
+        cancelados = [exame for exame in exames if exame["situacaoRecepcao"] == "CANCELADA"]
+        if cancelados and len(cancelados) == len(exames):
+            resultado = {
+                "tipo": "CANCELADA",
+                "solicitacao": solicitacao,
+                "cancelamentos": [exame.get("cancelamento") for exame in cancelados],
+            }
+            if meta_amostra:
+                resultado["amostraBipada"] = meta_amostra.get("amostraBipada")
+            return resultado
         return {"tipo": "NAO_ENCONTRADA"}
 
     async def listar_exames_da_solicitacao(self, codigo: str) -> list[dict[str, Any]]:
@@ -290,15 +427,19 @@ class ReceptionController:
         casos = await self.provider.listar_casos()
         encontrados = [
             caso for caso in casos
-            if alvo in caso["numeroInterno"].upper()
+            if caso["tipoExame"] in TIPOS_CASO_ORIGEM
+            and (
+            alvo in caso["numeroInterno"].upper()
             or alvo in str(caso["solicitacao"].get("prontuario", "")).upper()
             or alvo in str(caso["solicitacao"].get("nomePaciente", "")).upper()
+            )
         ][:8]
         resultado = []
         for caso in encontrados:
             inelegivel = caso["status"] in STATUS_INELEGIVEIS_IHQ
             resultado.append({
                 "numeroInterno": caso["numeroInterno"],
+                "tipoExame": caso["tipoExame"],
                 "nomePaciente": caso["solicitacao"]["nomePaciente"],
                 "prontuario": caso["solicitacao"]["prontuario"],
                 "descricaoMaterial": ", ".join(dict.fromkeys(
@@ -309,7 +450,7 @@ class ReceptionController:
                 "status": caso["status"],
                 "elegivel": not inelegivel,
                 "motivoInelegivel": (
-                    f'O caso {caso["status"].lower()} não pode receber IHQ.' if inelegivel else None
+                    f'O caso {caso["status"].lower()} não pode receber exame derivado.' if inelegivel else None
                 ),
             })
         return resultado
@@ -352,9 +493,36 @@ class ReceptionController:
         if not str(entrada["procedimento"]).strip():
             raise HTTPException(status_code=400, detail="Selecione o procedimento.")
 
+        origem: dict[str, Any] | None = None
+        divergencia_origem = False
+        if tipo == "REVISAO":
+            numero_origem = normalizar_codigo(entrada.get("casoOrigemNumero") or "")
+            if not numero_origem:
+                raise HTTPException(status_code=422, detail="Informe o caso de origem da Revisão.")
+            origem = await self.provider.buscar_caso(numero_origem)
+            if origem is None:
+                raise HTTPException(status_code=404, detail=f"Caso de origem {numero_origem} não encontrado.")
+            if origem["tipoExame"] not in TIPOS_CASO_ORIGEM:
+                raise HTTPException(status_code=422, detail="A Revisão deve ser vinculada a um caso principal elegível.")
+            if origem["status"] in STATUS_INELEGIVEIS_IHQ:
+                raise HTTPException(status_code=422, detail=f"O caso {numero_origem} não pode receber Revisão.")
+            vistos = {numero_origem}
+            ancestral = origem.get("casoOrigemNumero")
+            while ancestral:
+                if ancestral in vistos:
+                    raise HTTPException(status_code=422, detail="A relação de origem contém um ciclo inválido.")
+                vistos.add(ancestral)
+                caso_ancestral = await self.provider.buscar_caso(ancestral)
+                ancestral = caso_ancestral.get("casoOrigemNumero") if caso_ancestral else None
+            divergencia_origem = origem["solicitacao"].get("prontuario") != solicitacao.get("prontuario")
+            if divergencia_origem and not entrada.get("divergenciaConfirmada"):
+                raise HTTPException(status_code=422, detail="Confirme o vínculo apesar do prontuário divergente.")
+        elif entrada.get("casoOrigemNumero") or entrada.get("tipoDerivacao"):
+            raise HTTPException(status_code=422, detail="Somente uma Revisão pode informar caso de origem nesta operação.")
+
         agora = agora_iso()
         numero = await self._proximo_numero(tipo)
-        proxima_etapa = {"HP": "MACROSCOPIA", "CG": "PROCESSAMENTO", "CCV": "PROCESSAMENTO", "CO": "CONGELACAO"}[tipo]
+        proxima_etapa = {"HP": "MACROSCOPIA", "CG": "PROCESSAMENTO", "CCV": "PROCESSAMENTO", "CO": "CONGELACAO", "REVISAO": "MICROSCOPIA"}[tipo]
         responsavel = responsavel_autenticado(usuario)
         quantidade = len(amostras)
         materiais = [
@@ -376,6 +544,8 @@ class ReceptionController:
         caso = {
             "numeroInterno": numero,
             "tipoExame": tipo,
+            "casoOrigemNumero": origem["numeroInterno"] if origem else None,
+            "tipoDerivacao": "REVISAO" if origem else None,
             "solicitacao": solicitacao,
             "status": "RECEBIDO",
             "etapaAtual": proxima_etapa,
@@ -427,6 +597,9 @@ class ReceptionController:
             "quantidade": quantidade,
             "procedimento": entrada["procedimento"],
             "conferencia": conferencia,
+            "casoOrigemNumero": origem["numeroInterno"] if origem else None,
+            "tipoDerivacao": "REVISAO" if origem else None,
+            "divergenciaProntuario": divergencia_origem,
         }
         evento = _evento_historico(
             responsavel, "ENTRADA_CONFIRMADA", "Entrada confirmada",
@@ -434,6 +607,33 @@ class ReceptionController:
             ocorrido_em=agora,
         )
         await self.provider.adicionar_historico(numero, evento)
+        if origem:
+            await self.provider.adicionar_historico(
+                origem["numeroInterno"],
+                _evento_historico(
+                    responsavel, "EXAME_DERIVADO_VINCULADO", f"Revisão {numero} vinculada ao caso",
+                    f"Revisão recebida pela solicitação {solicitacao['codigoSolicitacao']}.", ocorrido_em=agora,
+                ),
+            )
+            await self.provider.adicionar_historico(
+                numero,
+                _evento_historico(
+                    responsavel, "CASO_ORIGEM_VINCULADO", f"Caso de origem {origem['numeroInterno']} vinculado",
+                    "Vínculo de derivação registrado na recepção.", ocorrido_em=agora,
+                ),
+            )
+        ocorrencias = await self.provider.associar_ocorrencias_reabertas(grupo_id, numero)
+        for ocorrencia in ocorrencias:
+            await self.provider.adicionar_historico(
+                numero,
+                _evento_historico(
+                    responsavel,
+                    "FLUXO_REABERTO",
+                    "Histórico de devolução regularizada associado",
+                    f"Devolução {ocorrencia['devolucaoId']} da solicitação {grupo_id} foi associada ao caso após regularização.",
+                    ocorrido_em=agora,
+                ),
+            )
         if entrada["urgente"]:
             await self.provider.adicionar_historico(numero, _evento_historico(
                 responsavel, "URGENCIA_MARCADA", "Marcado como URGENTE", "Urgência informada na conferência.", ocorrido_em=agora
@@ -472,7 +672,26 @@ class ReceptionController:
         if solicitacao["situacaoRecepcao"] != "AGUARDANDO_RECEBIMENTO":
             raise HTTPException(status_code=409, detail=f"O exame {grupo_id} não está aguardando recebimento.")
 
-        numero_caso = normalizar_codigo(entrada["casoOrigemNumero"])
+        grupos_solicitacao = await self.provider.listar_exames_da_solicitacao(solicitacao["codigoSolicitacao"])
+        grupo_hp = next((grupo for grupo in grupos_solicitacao if grupo["tipoExameSugerido"] == "HP"), None)
+        numero_origem_informado = normalizar_codigo(entrada.get("casoOrigemNumero") or "")
+        if grupo_hp:
+            if grupo_hp["situacaoRecepcao"] != "RECEBIDA" or not grupo_hp.get("casoNumero"):
+                raise HTTPException(
+                    status_code=422,
+                    detail="Receba o HP desta solicitaÃ§Ã£o junto ou antes da IHQ.",
+                )
+            numero_caso_hp = normalizar_codigo(grupo_hp["casoNumero"])
+            if numero_origem_informado != numero_caso_hp:
+                raise HTTPException(
+                    status_code=422,
+                    detail="A IHQ deve ser vinculada ao HP da mesma solicitaÃ§Ã£o.",
+                )
+            numero_caso = numero_caso_hp
+        else:
+            numero_caso = numero_origem_informado
+        if not numero_caso:
+            raise HTTPException(status_code=422, detail="Selecione o histopatolÃ³gico associado.")
         caso = await self.provider.buscar_caso(numero_caso)
         if caso is None:
             raise HTTPException(status_code=404, detail=f"Caso {numero_caso} não encontrado.")
@@ -520,6 +739,18 @@ class ReceptionController:
             ocorrido_em=agora,
         )
         await self.provider.adicionar_historico(numero_caso, historico)
+        ocorrencias = await self.provider.associar_ocorrencias_reabertas(grupo_id, numero_caso)
+        for ocorrencia in ocorrencias:
+            await self.provider.adicionar_historico(
+                numero_caso,
+                _evento_historico(
+                    responsavel,
+                    "FLUXO_REABERTO",
+                    "Histórico de devolução regularizada associado",
+                    f"Devolução {ocorrencia['devolucaoId']} da solicitação {grupo_id} foi associada ao caso após regularização.",
+                    ocorrido_em=agora,
+                ),
+            )
         await _auditar(
             self.session,
             usuario,
@@ -535,7 +766,7 @@ class ReceptionController:
             },
         )
         caso_atualizado = await self.provider.buscar_caso(numero_caso)
-        return {"caso": caso_atualizado or caso, "ihq": ihq}
+        return {"caso": caso_atualizado or caso, "ihq": ihq, "solicitacao": solicitacao}
 
     async def cancelar_caso(
         self, numero: str, motivo: str, usuario: dict[str, Any], ip: str | None
@@ -661,6 +892,7 @@ class ReceptionController:
             "registradoPor": responsavel,
             "registradoEm": agora,
             "status": status_nc,
+            "statusCasoAnterior": status_caso_anterior,
         })
         devolucao = await self.provider.adicionar_devolucao({
             "naoConformidadeId": nao_conformidade["id"],
@@ -672,6 +904,8 @@ class ReceptionController:
             "novaAmostraSolicitada": entrada["novaAmostraSolicitada"],
             "situacao": "AGUARDANDO_NOVA_AMOSTRA" if entrada["novaAmostraSolicitada"] else "ENCERRADA",
             "devolvidaEm": agora,
+            "statusCasoAnterior": status_caso_anterior,
+            "rejeicaoNaRecepcao": contexto["tipo"] == "SOLICITACAO",
         })
 
         status_solicitacao_anterior: str | None = None
@@ -737,7 +971,8 @@ class ReceptionController:
         ano = datetime.now(timezone.utc).strftime("%y")
         casos = await self.provider.listar_casos()
         maior = 0
-        padrao = re.compile(rf"^{re.escape(tipo)}-(\d+)/{ano}$")
+        prefixo = "REV" if tipo == "REVISAO" else tipo
+        padrao = re.compile(rf"^{re.escape(prefixo)}-(\d+)/{ano}$")
         for caso in casos:
             correspondencia = padrao.match(caso["numeroInterno"])
             if correspondencia:
@@ -747,7 +982,8 @@ class ReceptionController:
                     correspondencia = padrao.match(ihq.get("codigoInternoIhq", ""))
                     if correspondencia:
                         maior = max(maior, int(correspondencia.group(1)))
-        return f"{tipo}-{maior + 1:04d}/{ano}"
+        prefixo = "REV" if tipo == "REVISAO" else tipo
+        return f"{prefixo}-{maior + 1:04d}/{ano}"
 
     @staticmethod
     def _exigir_fonte_disponivel() -> None:

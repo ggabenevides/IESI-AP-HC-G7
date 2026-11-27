@@ -18,15 +18,19 @@ A tela "Recepção de amostras" SHALL conduzir o recebimento em três passos: "L
 - **THEN** o indicador de passos é exibido com "Ler etiqueta AGHU" concluído e "Conferir" como atual, seguido apenas de "Etiquetas e ficha"
 
 ### Requirement: Leitura da solicitação AGHU
-No passo 1, o usuário SHALL informar o código da solicitação AGHU por leitor ou digitação, confirmando com Enter. O código pode vir só com o número da solicitação ou no formato `<solicitação>-<amostra>`; em ambos os casos, uma solicitação com tipos de exame aguardando recebimento SHALL abrir o passo "Conferir" com todos os tipos pendentes dela.
+No passo 1, o usuário SHALL informar o código da solicitação AGHU por leitor ou digitação, confirmando com Enter. O código pode vir apenas com o número da solicitação, no formato `<solicitação>-<amostra>`, no formato `<solicitação>:<tipo>` ou como código de barras contínuo de 10 dígitos do AGHU (`<7 dígitos da solicitação><3 dígitos da amostra>`); em todos os casos, uma solicitação com tipos de exame aguardando recebimento SHALL abrir o passo "Conferir" com os tipos pendentes dela.
 
 #### Scenario: Solicitação pendente
 - **WHEN** o usuário informa o código de uma solicitação com amostras aguardando recebimento e pressiona Enter
 - **THEN** os dados da solicitação e todas as amostras pendentes são carregados no passo "Conferir"
 
+#### Scenario: Leitura com código de barras de 10 dígitos do AGHU
+- **WHEN** o usuário lê `"7712340001"`
+- **THEN** o sistema extrai a solicitação `"7712340"` e a amostra `"001"` e abre a conferência da solicitação `"7712340"` destacando a amostra bipada
+
 #### Scenario: Leitura com número da amostra
-- **WHEN** o usuário lê "1200001-3"
-- **THEN** o sistema abre a conferência da solicitação 1200001 inteira
+- **WHEN** o usuário lê `"1200001-3"`
+- **THEN** o sistema abre a conferência da solicitação `1200001` destacando a amostra `"3"`
 
 #### Scenario: Campo vazio
 - **WHEN** o usuário pressiona Enter com o campo vazio
@@ -93,11 +97,15 @@ O passo "Conferir" SHALL exibir, sem permitir edição e identificados como vind
 - **THEN** os dados do AGHU aparecem bloqueados para edição, com destaque para as amostras e as informações clínicas, e sem campos de sexo nem de médico solicitante
 
 ### Requirement: Grupos de exame e recebimento parcial
-As amostras SHALL ser agrupadas pela chave `<codigoSolicitacao>:<tipoExame>`. O passo "Conferir" SHALL permitir selecionar grupos inteiros para recebimento, todos selecionados por padrão. Grupos desmarcados permanecem pendentes; amostras de um mesmo grupo não podem ser recebidas parcialmente.
+As amostras SHALL ser agrupadas pela chave `<codigoSolicitacao>:<tipoExame>`. O passo "Conferir" SHALL exibir todos os grupos pendentes da solicitação e permitir selecionar grupos inteiros para recebimento, todos selecionados por padrão quando a leitura não especificar amostra. Quando a leitura identificar uma amostra específica pertencente a um grupo pendente em solicitação com múltiplos grupos, o passo "Conferir" SHALL exibir todos os grupos pendentes por padrão, pré-marcando e destacando apenas o grupo correspondente à amostra bipada e mantendo os demais visíveis e desmarcados para seleção direta. Grupos desmarcados permanecem pendentes; amostras de um mesmo grupo não podem ser recebidas parcialmente.
 
 #### Scenario: Recebimento parcial por tipo
 - **WHEN** uma solicitação possui grupos HP e CO e o usuário seleciona apenas CO
 - **THEN** o grupo CO é recebido e HP permanece pendente na mesma solicitação
+
+#### Scenario: Solicitação mista bipada por etiqueta de 10 dígitos
+- **WHEN** a solicitação `7712340` possui grupos `CO` (amostra `1`) e `HP` (amostra `2`) pendentes e o usuário bipa `"7712340002"`
+- **THEN** a conferência exibe ambos os grupos pendentes (`CO` e `HP`), com apenas o grupo `HP` pré-marcado e destacado pela amostra bipada e o grupo `CO` visível e desmarcado para seleção direta
 
 #### Scenario: Nenhum grupo selecionado
 - **WHEN** o usuário desmarca todos os grupos e confirma
@@ -345,3 +353,125 @@ O tipo de exame de cada grupo (Histopatológico HP, Citologia geral CG, Citologi
 #### Scenario: Tipo sugerido
 - **WHEN** as amostras da solicitação são do exame APECR
 - **THEN** o passo "Conferir" exibe o bloco "HP · Histopatológico", sem campo para trocar o tipo
+
+### Requirement: Feedback quando a amostra bipada já foi tratada
+Quando a bipagem identificar uma amostra específica cujo grupo de exame já foi recebido ou devolvido, enquanto outros grupos da mesma solicitação permanecem aguardando recebimento, o sistema SHALL sinalizar claramente a situação da amostra bipada sem impedir o recebimento dos demais grupos pendentes.
+
+#### Scenario: Amostra bipada já recebida com outro grupo pendente
+- **WHEN** o grupo `CO` (amostra `1`) da solicitação já foi recebido e o grupo `HP` (amostra `2`) segue pendente, e o usuário bipa `"7712340001"`
+- **THEN** a conferência abre com o grupo `HP` pendente e exibe aviso informando que a amostra bipada (`1`, grupo `CO`) já foi recebida
+
+#### Scenario: Amostra bipada já devolvida com outro grupo pendente
+- **WHEN** o grupo `CO` (amostra `1`) da solicitação já foi devolvido e o grupo `HP` (amostra `2`) segue pendente, e o usuário bipa `"7712340001"`
+- **THEN** a conferência abre com o grupo `HP` pendente e exibe aviso informando que a amostra bipada (`1`, grupo `CO`) já foi devolvida
+
+### Requirement: Situação terminal dos grupos de exame
+Cada grupo de exame da solicitação SHALL possuir uma situação de recepção independente: `AGUARDANDO_RECEBIMENTO`, `RECEBIDA`, `DEVOLVIDA` ou `CANCELADA`. Cancelar um grupo SHALL mantê-lo persistido e registrar no payload o motivo, autor e data/hora. Listagem e contagem de pendentes SHALL considerar somente grupos em `AGUARDANDO_RECEBIMENTO`, preservando os grupos irmãos.
+
+#### Scenario: Solicitação parcialmente cancelada
+- **WHEN** uma solicitação possui HP e IHQ pendentes e o IHQ é cancelado
+- **THEN** a fila continua exibindo a solicitação apenas com HP
+- **AND** HP permanece disponível para recebimento
+
+#### Scenario: Solicitação totalmente cancelada
+- **WHEN** todos os grupos de uma solicitação foram cancelados
+- **THEN** `ler_solicitacao` retorna classificação `CANCELADA` com motivo, autor e data/hora
+- **AND** não classifica a solicitação como `NAO_ENCONTRADA`
+
+#### Scenario: Leitura com grupos em estados distintos
+- **WHEN** uma solicitação contém grupos cancelados e ao menos um grupo aguardando recebimento
+- **THEN** a leitura retorna a conferência dos grupos pendentes
+- **AND** grupos cancelados não aparecem como pendentes
+
+#### Scenario: Bipagem de amostra pertencente a grupo cancelado
+- **WHEN** o código de barras de 10 dígitos identifica uma amostra de grupo cancelado enquanto outro grupo da solicitação aguarda recebimento
+- **THEN** a leitura retorna o grupo pendente restante
+- **AND** a conferência informa que o grupo da amostra bipada foi cancelado
+
+### Requirement: Ação de cancelamento na conferência
+Na etapa de conferência, a interface SHALL oferecer “Cancelar exame” para cada grupo pendente somente a usuários com `CASOS_CANCELAR`. A confirmação SHALL exigir motivo não vazio. Após sucesso, a interface SHALL atualizar a conferência e a contagem de pendentes sem afetar os grupos restantes. Se todos os grupos forem cancelados, SHALL retornar ao passo inicial e informar a conclusão.
+
+#### Scenario: Cancelar um grupo e receber outro
+- **WHEN** o usuário cancela IHQ e confirma o recebimento do HP da mesma solicitação
+- **THEN** somente HP é recebido e IHQ permanece cancelado
+
+#### Scenario: Todos os exames cancelados na conferência
+- **WHEN** o usuário cancela o último grupo pendente da solicitação
+- **THEN** a conferência retorna ao passo inicial com feedback de cancelamento concluído
+
+#### Scenario: Sem permissão na interface
+- **WHEN** o usuário não possui `CASOS_CANCELAR`
+- **THEN** a ação “Cancelar exame” não é apresentada
+- **AND** a API continua protegida independentemente da interface
+
+### Requirement: Leitura de solicitação cancelada
+Quando todos os grupos da solicitação estiverem cancelados, a leitura SHALL apresentar a classificação `CANCELADA` e os metadados disponíveis do cancelamento, sem oferecer recebimento desses grupos.
+
+#### Scenario: Leitura após cancelamento total
+- **WHEN** o usuário lê uma solicitação cujos grupos foram todos cancelados
+- **THEN** recebe estado `CANCELADA`, motivo, autor e data/hora, sem falso aviso de solicitação inexistente
+
+### Requirement: Solicitação regularizada retorna à recepção
+Uma solicitação reaberta após rejeição SHALL aparecer como pendente e exibir o contexto da rejeição anterior durante a nova conferência.
+
+#### Scenario: Solicitação reaparece na fila
+- **WHEN** grupos devolvidos na recepção são regularizados e reabertos
+- **THEN** os grupos elegíveis aparecem em `GET /api/ap/solicitacoes/pendentes` e a leitura da solicitação os classifica como `PENDENTE`
+
+#### Scenario: Metadados da devolução na leitura individual
+- **WHEN** o usuário consulta uma solicitação reaberta por código de 7 dígitos, código com hífen ou etiqueta de 10 dígitos
+- **THEN** a resposta inclui os metadados da devolução regularizada vinculada ao grupo, permitindo exibir o aviso de ocorrência anterior na conferência
+
+#### Scenario: Metadados da devolução na fila pendente
+- **WHEN** o usuário abre uma solicitação reaberta pela listagem de pendentes
+- **THEN** os dados do grupo incluem os mesmos metadados da devolução regularizada retornados pela leitura individual
+
+#### Scenario: Conferência informa rejeição anterior
+- **WHEN** a equipe abre para conferência um grupo cuja rejeição anterior foi regularizada
+- **THEN** a interface exibe um aviso informativo sobre a devolução anterior sem substituir ou alterar os dados originais da ocorrência
+
+#### Scenario: Novo recebimento associa ocorrência anterior
+- **WHEN** o grupo reaberto é recebido por confirmação de entrada ou vinculação IHQ
+- **THEN** os registros anteriores de não conformidade e devolução são associados ao caso criado para esse grupo, sem modificar os horários da rejeição ou da regularização
+
+### Requirement: Vínculo de Revisão ao caso de origem na recepção
+Quando uma Revisão que gera caso próprio for recebida, a recepção SHALL permitir associá-la ao caso principal de origem, mantendo o fluxo de recebimento e o identificador próprios da Revisão.
+
+#### Scenario: Revisão e caso principal na mesma solicitação
+- **WHEN** uma solicitação recebida contém uma Revisão e um caso principal elegível
+- **THEN** o caso principal é pré-selecionado como origem da Revisão
+- **AND** o usuário pode confirmar ou escolher outro caso elegível
+
+#### Scenario: Revisão solicitada posteriormente
+- **WHEN** uma Revisão chega sem caso principal na mesma solicitação
+- **THEN** o usuário pode pesquisar e selecionar manualmente um caso de origem elegível por número interno, prontuário ou nome
+
+#### Scenario: Prontuário divergente na Revisão
+- **WHEN** o caso de origem selecionado para a Revisão possui prontuário diferente do prontuário da solicitação
+- **THEN** o sistema exibe alerta de divergência e só permite confirmar após confirmação explícita do usuário
+
+#### Scenario: Revisão vinculada recebida
+- **WHEN** a recepção confirma uma Revisão vinculada
+- **THEN** o sistema cria o registro próprio da Revisão, persiste o vínculo com a origem e registra o evento de recebimento
+- **AND** o caso de origem mantém seu status e sua identificação
+
+
+### Requirement: Associação da IHQ conforme os grupos da solicitação
+Quando uma solicitação AGHU de IHQ possuir grupo HP próprio, a recepção SHALL vincular a IHQ exclusivamente ao HP da mesma solicitação. A seleção manual SHALL ficar disponível somente quando não houver grupo HP próprio.
+
+#### Scenario: HP e IHQ pendentes juntos
+- **WHEN** HP e IHQ da mesma solicitação estão pendentes e ambos são marcados para receber
+- **THEN** a IHQ é associada automaticamente ao HP criado na conferência, sem seletor de origem
+
+#### Scenario: HP desmarcado e IHQ marcado
+- **WHEN** HP e IHQ estão pendentes, mas somente IHQ está marcada
+- **THEN** a confirmação da IHQ é bloqueada com orientação para receber o HP junto ou antes
+
+#### Scenario: HP recebido anteriormente
+- **WHEN** o HP da mesma solicitação já foi recebido e a IHQ continua pendente
+- **THEN** a tela mostra apenas o número do HP associado, sem radio buttons, busca ou opção para trocar
+
+#### Scenario: IHQ avulsa
+- **WHEN** uma solicitação IHQ não possui grupo HP próprio
+- **THEN** a recepção permite buscar e selecionar manualmente um histopatológico existente
+- **AND** o backend aceita somente caso elegível e preserva a confirmação de divergência de prontuário

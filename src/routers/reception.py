@@ -19,6 +19,7 @@ from ..schemas.reception import (
     AcionarPlantaoInput,
     AtualizarSituacaoDevolucaoInput,
     CancelarCasoInput,
+    CancelarExameSolicitacaoInput,
     ConfirmarEntradaInput,
     RegistrarNaoConformidadeInput,
     VincularIhqInput,
@@ -68,6 +69,23 @@ async def contar_solicitacoes_pendentes(
     return await _controller(provider, session).contar_pendentes()
 
 
+@router.post("/solicitacoes/cancelamento")
+async def cancelar_exame_solicitacao(
+    entrada: CancelarExameSolicitacaoInput,
+    request: Request,
+    usuario: dict[str, Any] = Depends(exigir_permissao(Permissao.CASOS_CANCELAR)),
+    provider: ReceptionProviderInterface = Depends(get_reception_provider),
+    session: AsyncSession = Depends(get_app_db_session),
+) -> dict[str, Any]:
+    """Cancela grupo pendente por tipo de exame com autoria derivada do token."""
+    try:
+        return await _controller(provider, session).cancelar_exame_solicitacao(
+            entrada.solicitacao_id, entrada.motivo, usuario, _ip_origem(request)
+        )
+    except IntegrityError as erro:
+        await _conflito_integridade(session, erro)
+
+
 @router.get("/solicitacoes/{codigo}")
 async def ler_solicitacao(
     codigo: str,
@@ -112,7 +130,8 @@ async def buscar_casos(
     return await _controller(provider, session).buscar_casos(termo, limite)
 
 
-@router.get("/casos/elegiveis-ihq")
+@router.get("/casos/elegiveis-derivacao")
+@router.get("/casos/elegiveis-ihq", include_in_schema=False)
 async def buscar_casos_elegiveis_ihq(
     termo: str = Query(default=""),
     usuario: dict[str, Any] = Depends(exigir_permissao(Permissao.CASOS_CONSULTAR)),
@@ -260,6 +279,7 @@ async def listar_auditoria(
         select(AuditLog)
         .where(or_(
             AuditLog.recurso.like("caso_ap:%"),
+        AuditLog.recurso.like("solicitacao_exame:%"),
             AuditLog.recurso.like("devolucao:%"),
             AuditLog.recurso.like("exame_ihq:%"),
         ))

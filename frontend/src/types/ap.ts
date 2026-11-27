@@ -10,7 +10,7 @@
 // ---------------------------------------------------------------------------
 
 /** Tipos de exame (tabela `tipo_exame`). IHQ é complementar: nunca vira caso próprio. */
-export type TipoExame = 'HP' | 'CG' | 'CCV' | 'CO' | 'IHQ';
+export type TipoExame = 'HP' | 'CG' | 'CCV' | 'CO' | 'REVISAO' | 'IHQ';
 
 /** Tipos que originam um `caso_ap`. */
 export type TipoCasoPrincipal = Exclude<TipoExame, 'IHQ'>;
@@ -51,7 +51,7 @@ export type OrigemAtendimento = 'AMBULATORIO' | 'INTERNACAO' | 'CIRURGIA' | 'EXT
 export type CodStatusItemAghu = 'LI' | 'AC' | 'EX' | 'AE' | 'CA' | 'CO' | 'EC' | 'PE';
 
 /** Situação local da solicitação AGHU diante da recepção do SAP. */
-export type SituacaoRecepcaoSolicitacao = 'AGUARDANDO_RECEBIMENTO' | 'RECEBIDA' | 'DEVOLVIDA';
+export type SituacaoRecepcaoSolicitacao = 'AGUARDANDO_RECEBIMENTO' | 'RECEBIDA' | 'DEVOLVIDA' | 'CANCELADA';
 
 /** Resultado da conferência (`conferencia_recebimento.resultado`). */
 export type ResultadoConferencia = 'ACEITA' | 'REJEITADA' | 'PENDENTE';
@@ -174,6 +174,7 @@ export interface SolicitacaoAghu {
   /** Amostras do exame, em ordem de número. */
   amostras: AmostraAghu[];
   situacaoRecepcao: SituacaoRecepcaoSolicitacao;
+  cancelamento?: CancelamentoExame;
   /** Caso criado a partir do exame (casos principais). */
   casoNumero?: string;
   /** IHQ registrada a partir do exame e o caso de origem. */
@@ -181,6 +182,21 @@ export interface SolicitacaoAghu {
   ihqCasoNumero?: string;
   /** Devolução que encerrou o exame na recepção. */
   devolucaoId?: number;
+  /** Ocorrência anterior preservada após a regularização do grupo. */
+  devolucaoRegularizada?: DevolucaoRegularizada;
+}
+
+/** Metadados imutáveis da devolução regularizada que reabriu o grupo. */
+export interface DevolucaoRegularizada {
+  id: number;
+  situacao: SituacaoDevolucao;
+  devolvidaEm: string;
+  regularizadaEm: string;
+  tipo?: TipoNaoConformidadeCodigo;
+  descricao?: string;
+  observacao?: string;
+  unidadeOrigem?: string;
+  rejeicaoNaRecepcao: boolean;
 }
 
 /** Conferência de recebimento (`conferencia_recebimento`). */
@@ -315,6 +331,10 @@ export interface Cancelamento {
 export interface CasoAp {
   numeroInterno: string;
   tipoExame: TipoCasoPrincipal;
+  casoOrigemNumero?: string | null;
+  tipoDerivacao?: 'REVISAO' | null;
+  casoOrigem?: CasoOrigemResumo | null;
+  examesDerivados?: ExameDerivadoResumo[];
   /** Cópia da solicitação AGHU que originou o caso. */
   solicitacao: SolicitacaoAghu;
   status: StatusCaso;
@@ -337,6 +357,16 @@ export interface CasoAp {
   cancelamento?: Cancelamento;
   historico: HistoricoCaso[];
   plantaoAcionadoEm?: string;
+}
+
+/** Dados específicos necessários para imprimir uma etiqueta de caso ou IHQ recebida. */
+export interface DadosEtiquetaRecepcao {
+  numeroInterno: string;
+  tipoExame: TipoExame;
+  solicitacao: SolicitacaoAghu;
+  urgente: boolean;
+  dataEntradaSap: string;
+  materiais: ItemMaterial[];
 }
 
 /** Registro da trilha de auditoria (espelha `audit_logs` / `registrar_auditoria()`). */
@@ -370,6 +400,30 @@ export interface ConfirmarEntradaInput {
   urgente: boolean;
   procedimento: string;
   observacoes?: string;
+  casoOrigemNumero?: string;
+  tipoDerivacao?: 'REVISAO';
+  divergenciaConfirmada?: boolean;
+}
+
+/** Resumo navegável da origem de uma Revisão derivada. */
+export interface CasoOrigemResumo {
+  numeroInterno: string;
+  tipoExame: TipoCasoPrincipal;
+  status: StatusCaso;
+  dataEntradaSap: string;
+  nomePaciente: string;
+  prontuario: string;
+}
+
+/** Projeção de apresentação que unifica IHQs e casos derivados. */
+export interface ExameDerivadoResumo {
+  codigoInterno: string;
+  numeroInterno?: string;
+  tipo: 'IHQ' | 'REVISAO';
+  status: string;
+  data?: string;
+  solicitacaoAghuCodigo?: string;
+  navegavel: boolean;
 }
 
 /** Confirmação de uma IHQ vinculada a um caso existente. */
@@ -408,11 +462,48 @@ export interface RegistrarNaoConformidadeInput {
 /** Resultado da leitura de uma solicitação na recepção. */
 export type LeituraSolicitacao =
   /** A solicitação tem tipos de exame aguardando recebimento: abre a conferência da solicitação. */
-  | { tipo: 'PENDENTE'; codigoSolicitacao: string; exames: SolicitacaoAghu[] }
+  | {
+      tipo: 'PENDENTE';
+      codigoSolicitacao: string;
+      exames: SolicitacaoAghu[];
+      /** Número da amostra bipada (quando extraído de código de 10 dígitos ou formato código-amostra). */
+      amostraBipada?: string | null;
+      /** ID do grupo pendente correspondente à amostra bipada. */
+      grupoSelecionadoId?: string | null;
+      /** Lista com o grupo pendente correspondente à amostra bipada (ou vazia). */
+      examesFiltrados?: SolicitacaoAghu[];
+      /** Metadados quando a amostra bipada pertence a grupo já recebido/devolvido. */
+      amostraBipadaSituacao?: AmostraBipadaSituacao | null;
+    }
   /** Todos os exames da solicitação já foram recebidos. */
-  | { tipo: 'RECEBIDA'; solicitacao: SolicitacaoAghu; recebimentos: RecebimentoExame[] }
-  | { tipo: 'DEVOLVIDA'; solicitacao: SolicitacaoAghu; devolvidaEm: string; tipoNaoConformidade: TipoNaoConformidadeCodigo }
+  | { tipo: 'RECEBIDA'; solicitacao: SolicitacaoAghu; recebimentos: RecebimentoExame[]; amostraBipada?: string | null }
+  | {
+      tipo: 'DEVOLVIDA';
+      solicitacao: SolicitacaoAghu;
+      devolvidaEm: string;
+      tipoNaoConformidade: TipoNaoConformidadeCodigo;
+      amostraBipada?: string | null;
+    }
+  | { tipo: 'CANCELADA'; solicitacao: SolicitacaoAghu; cancelamentos: (CancelamentoExame | undefined)[]; amostraBipada?: string | null }
   | { tipo: 'NAO_ENCONTRADA' };
+
+/** Situação da amostra bipada que pertence a um grupo já tratado (recebido/devolvido). */
+export interface AmostraBipadaSituacao {
+  grupoId: string;
+  tipoExame: TipoExame;
+  situacaoRecepcao: SituacaoRecepcaoSolicitacao;
+  casoNumero?: string;
+  ihqCodigo?: string;
+  devolucaoId?: number;
+  cancelamento?: CancelamentoExame;
+}
+
+/** Metadados administrativos do cancelamento de um grupo de exame. */
+export interface CancelamentoExame {
+  motivo: string;
+  canceladoPor: Responsavel;
+  canceladoEm: string;
+}
 
 /** Exame já recebido e o caso (ou IHQ) que gerou. */
 export interface RecebimentoExame {
@@ -442,12 +533,13 @@ export interface ResultadoBuscaCasos {
 
 /** Resultado da confirmação na recepção. */
 export type ResultadoRecepcao =
-  | { tipo: 'CASO'; caso: CasoAp }
-  | { tipo: 'IHQ'; caso: CasoAp; ihq: ExameIhq };
+  | { tipo: 'CASO'; caso: CasoAp; etiqueta: DadosEtiquetaRecepcao }
+  | { tipo: 'IHQ'; caso: CasoAp; ihq: ExameIhq; etiqueta: DadosEtiquetaRecepcao };
 
 /** Caso elegível como origem de uma IHQ. */
 export interface CasoElegivelIhq {
   numeroInterno: string;
+  tipoExame: TipoCasoPrincipal;
   nomePaciente: string;
   prontuario: string;
   descricaoMaterial: string;

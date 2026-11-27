@@ -152,3 +152,30 @@ A consulta de detalhe e a operação existente de cancelamento SHALL exigir perm
 
 - **WHEN** usuário sem permissão de cancelamento tenta cancelar um caso diretamente
 - **THEN** o backend responde 403 e mantém caso, histórico e materiais sem alteração
+
+### Requirement: Histórico de reabertura no detalhe do caso
+O detalhe do caso SHALL apresentar o evento de reabertura e as ocorrências anteriores de não conformidade e devolução sem ocultar nem substituir os eventos já registrados.
+
+#### Scenario: Caso devolvido é reaberto
+- **WHEN** uma devolução regularizada reabre um caso existente
+- **THEN** a linha do tempo mantém os eventos anteriores e inclui `FLUXO_REABERTO` citando a devolução regularizada
+
+#### Scenario: Caso criado após rejeição na recepção
+- **WHEN** uma solicitação previamente rejeitada é recebida e gera um novo caso
+- **THEN** o detalhe do caso exibe o contexto da devolução prévia e o evento `FLUXO_REABERTO` associado à solicitação
+
+### Requirement: Navegação entre caso de origem e exames derivados
+O detalhe SHALL exibir a origem do caso derivado e, no caso de origem, uma lista consolidada de IHQs e casos de Revisão vinculados, com acesso direto aos registros que possuam detalhe próprio.
+
+#### Scenario: Detalhe de caso derivado
+- **WHEN** o usuário abre um caso de Revisão com origem vinculada
+- **THEN** o detalhe exibe um resumo navegável do caso de origem com número interno, tipo, status e data de entrada
+
+#### Scenario: Detalhe de caso de origem
+- **WHEN** o usuário abre um caso com IHQs ou Revisões vinculadas
+- **THEN** o detalhe exibe a seção "Exames Derivados" com código interno, tipo, situação e data
+- **AND** cada caso derivado com detalhe próprio oferece navegação direta para seu registro
+
+#### Scenario: Caso sem derivados
+- **WHEN** o usuário abre um caso sem IHQs nem casos derivados vinculados
+- **THEN** o detalhe informa que ainda não há exames derivados registrados
